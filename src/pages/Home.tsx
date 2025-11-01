@@ -89,11 +89,90 @@ export function Home() {
     setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Dotted pattern background component
-  const DottedPattern = ({ className = '' }: { className?: string }) => (
-    <div className={`absolute inset-0 opacity-[0.03] ${className}`} style={{
+  // Dotted pattern background component (stippled/dot grid pattern)
+  const DottedPattern = ({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
+    <div className={`absolute inset-0 ${className}`} style={{
       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
-      backgroundSize: '24px 24px',
+      backgroundSize: `${size} ${size}`,
+      opacity: opacity,
+    }}></div>
+  );
+
+  // Geometric pattern component (polygonal/triangular tessellation)
+  const GeometricPattern = ({ className = '', opacity = 0.02 }: { className?: string; opacity?: number }) => {
+    // Create SVG pattern for geometric shapes with unique ID
+    const patternId = `geometric-pattern-${Math.random().toString(36).substr(2, 9)}`;
+    return (
+      <div className={`absolute inset-0 ${className}`} style={{ opacity }}>
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id={patternId} x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+              <polygon points="30,0 60,30 30,60 0,30" fill="none" stroke="#8B2332" strokeWidth="0.5" opacity="0.3"/>
+              <polygon points="15,0 30,15 15,30 0,15" fill="none" stroke="#7A7A3F" strokeWidth="0.3" opacity="0.2"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+        </svg>
+      </div>
+    );
+  };
+
+  // Abstract geometric shape component (curved/polygonal decorative elements)
+  const AbstractShape = ({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
+    const positions = {
+      right: 'top-0 right-0 translate-x-1/2 -translate-y-1/2',
+      left: 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
+      top: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2',
+      bottom: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2'
+    };
+
+    return (
+      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`}>
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          <path
+            d="M 100,0 Q 150,50 150,100 Q 150,150 100,150 Q 50,150 50,100 Q 50,50 100,0 Z"
+            fill={color}
+            transform="rotate(45 100 100)"
+          />
+          <path
+            d="M 100,30 Q 130,50 130,80 Q 130,110 100,130 Q 70,130 70,100 Q 70,70 100,50 Z"
+            fill={color}
+            opacity="0.6"
+            transform="rotate(45 100 100)"
+          />
+        </svg>
+      </div>
+    );
+  };
+
+  // Additional decorative circle pattern
+  const CirclePattern = ({ position = 'center', size = 200 }: { position?: string; size?: number }) => {
+    const positions = {
+      center: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+      'top-left': 'top-0 left-0',
+      'top-right': 'top-0 right-0',
+      'bottom-left': 'bottom-0 left-0',
+      'bottom-right': 'bottom-0 right-0'
+    };
+
+    return (
+      <div 
+        className={`absolute ${positions[position as keyof typeof positions] || positions.center} opacity-3`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+      >
+        <svg width={size} height={size} viewBox="0 0 200 200" className="w-full h-full">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.1"/>
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.08"/>
+          <circle cx="100" cy="100" r="40" fill="none" stroke="#8B2332" strokeWidth="0.6" opacity="0.06"/>
+        </svg>
+      </div>
+    );
+  };
+
+  // Diagonal line pattern component
+  const DiagonalPattern = ({ angle = 45 }: { angle?: number }) => (
+    <div className="absolute inset-0 opacity-[0.02]" style={{
+      backgroundImage: 'repeating-linear-gradient(' + angle + 'deg, transparent, transparent 10px, #8B2332 10px, #8B2332 11px)',
     }}></div>
   );
 
@@ -209,59 +288,196 @@ export function Home() {
       </section>
 
       {/* About Section with Modern Graphics */}
-      <section className="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-        <DottedPattern />
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white overflow-hidden">
+        {/* Enhanced background patterns - multiple layers */}
+        <DottedPattern opacity={0.04} size="28px" />
+        <DottedPattern opacity={0.02} size="40px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.03} />
+        <DiagonalPattern angle={45} />
+        <DiagonalPattern angle={135} />
+        
+        {/* Abstract geometric shapes - more positions */}
+        <AbstractShape position="right" color="#8B2332" />
+        <AbstractShape position="left" color="#7A7A3F" />
+        <AbstractShape position="top" color="#8B2332" />
+        
+        {/* Additional circle patterns */}
+        <CirclePattern position="top-left" size={300} />
+        <CirclePattern position="bottom-right" size={250} />
+        
+        {/* More dotted patterns with different sizes */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 opacity-[0.02]">
+          <div style={{
+            backgroundImage: 'radial-gradient(circle, #7A7A3F 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            width: '100%',
+            height: '100%'
+          }}></div>
+        </div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-[0.02]">
+          <div style={{
+            backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+            width: '100%',
+            height: '100%'
+          }}></div>
+        </div>
+        
+        {/* Blur elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#8B2332]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#7A7A3F]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/3 rounded-full blur-3xl"></div>
+        
+        {/* Additional geometric shapes */}
+        <div className="absolute top-20 right-20 w-48 h-48 opacity-5 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.4"/>
+            <polygon points="50,20 80,50 50,80 20,50" fill="#7A7A3F" opacity="0.3"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-20 left-20 w-40 h-40 opacity-5 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,86.6 50,100 0,86.6" fill="#7A7A3F" opacity="0.4"/>
+          </svg>
+        </div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Text Content */}
             <div 
-              className="transform transition-all duration-700"
+              className="transform transition-all duration-700 order-2 lg:order-1"
               data-animate-id="about-text"
             >
-              <div className={`${isVisible['about-text'] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-                <span className="inline-block px-4 py-2 bg-[#8B2332]/10 text-[#8B2332] rounded-full text-sm font-semibold mb-6">
-                  WELCOME TO APECK
-                </span>
-                <h2 className="text-5xl md:text-6xl font-bold text-[#8B2332] mb-6 leading-tight">
+              <div className={`space-y-6 ${isVisible['about-text'] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                {/* Modern badge */}
+                <div className="inline-block">
+                  <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg">
+                    WELCOME TO APECK
+                  </span>
+                </div>
+                
+                {/* Main heading with gradient effect */}
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] leading-tight">
                   Who We Are
                 </h2>
-                <p className="text-gray-700 text-lg mb-6 leading-relaxed">
-                  APECK is the premier association uniting Pentecostal and
-                  Evangelical clergy across Kenya. We are dedicated to empowering
-                  spiritual leaders through comprehensive training, mentorship,
-                  and resources that enable them to fulfill their calling with
-                  excellence.
-                </p>
-                <p className="text-gray-700 text-lg mb-8 leading-relaxed">
-                  Our mission is to strengthen the body of Christ by equipping
-                  clergy with the tools, knowledge, and support they need to lead
-                  transformative ministries that impact communities and advance
-                  the Kingdom of God.
-                </p>
+                
+                {/* Content paragraphs with better styling */}
+                <div className="space-y-6">
+                  <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                    <span className="font-semibold text-[#8B2332]">APECK</span> is the premier association uniting Pentecostal and
+                    Evangelical clergy across Kenya. We are dedicated to empowering
+                    spiritual leaders through comprehensive training, mentorship,
+                    and resources that enable them to fulfill their calling with
+                    excellence.
+                  </p>
+                  <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                    Our mission is to strengthen the body of Christ by equipping
+                    clergy with the tools, knowledge, and support they need to lead
+                    transformative ministries that impact communities and advance
+                    the Kingdom of God.
+                  </p>
+                </div>
+
+                {/* Enhanced CTA button */}
                 <Link 
                   to="/about" 
-                  className="group inline-flex items-center space-x-2 text-[#8B2332] font-semibold hover:text-[#7A7A3F] transition-colors text-lg"
+                  className="group inline-flex items-center space-x-3 px-6 py-3 bg-white border-2 border-[#8B2332] text-[#8B2332] font-semibold rounded-full hover:bg-[#8B2332] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform"
                 >
                   <span>Read Our Full Story</span>
                   <ArrowRightIcon size={20} className="transform group-hover:translate-x-1 transition-transform" />
                 </Link>
+
+                {/* Decorative stats or highlights */}
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                  <div>
+                    <div className="text-3xl font-bold text-[#8B2332]">15+</div>
+                    <div className="text-sm text-gray-600">Years Experience</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-[#7A7A3F]">1,500+</div>
+                    <div className="text-sm text-gray-600">Active Members</div>
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Image Content */}
             <div 
-              className="relative transform transition-all duration-700"
+              className="relative transform transition-all duration-700 order-1 lg:order-2"
               data-animate-id="about-image"
             >
               <div className={`${isVisible['about-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
-                <div className="relative">
-                  <img 
-                    src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800" 
-                    alt="Clergy gathering" 
-                    className="rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500" 
-                  />
-                  <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-[#7A7A3F]/20 rounded-full blur-3xl animate-pulse-slow"></div>
-                  <div className="absolute -top-8 -right-8 w-32 h-32 bg-[#8B2332]/20 rounded-full blur-3xl animate-float"></div>
-                  {/* Decorative corner element */}
-                  <div className="absolute top-0 right-0 w-24 h-24 border-t-4 border-r-4 border-[#8B2332]/30 rounded-tr-3xl"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 border-b-4 border-l-4 border-[#7A7A3F]/30 rounded-bl-3xl"></div>
+                <div className="relative group">
+                  {/* Background geometric patterns behind image - multiple layers */}
+                  <div className="absolute -z-10 inset-0 -m-8">
+                    <GeometricPattern opacity={0.08} />
+                    <GeometricPattern opacity={0.05} />
+                    <DottedPattern opacity={0.06} size="20px" />
+                    <DottedPattern opacity={0.04} size="35px" />
+                    <DiagonalPattern angle={30} />
+                    
+                    {/* Large curved geometric shape */}
+                    <div className="absolute -bottom-20 -right-20 w-80 h-80 opacity-10">
+                      <svg viewBox="0 0 200 200" className="w-full h-full">
+                        <path
+                          d="M 100,0 Q 180,50 180,100 Q 180,150 100,180 Q 20,150 20,100 Q 20,50 100,0 Z"
+                          fill="#8B2332"
+                        />
+                      </svg>
+                    </div>
+                    
+                    {/* Additional curved shapes */}
+                    <div className="absolute -top-16 -left-16 w-64 h-64 opacity-8">
+                      <svg viewBox="0 0 200 200" className="w-full h-full">
+                        <path
+                          d="M 50,50 Q 100,0 150,50 Q 200,100 150,150 Q 100,200 50,150 Q 0,100 50,50 Z"
+                          fill="#7A7A3F"
+                        />
+                      </svg>
+                    </div>
+                    
+                    {/* Circle patterns */}
+                    <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-72 h-72 opacity-5">
+                      <svg viewBox="0 0 200 200" className="w-full h-full">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#8B2332" strokeWidth="2" opacity="0.3"/>
+                        <circle cx="100" cy="100" r="70" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.2"/>
+                        <circle cx="100" cy="100" r="50" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.15"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Main image with modern styling */}
+                  <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white p-1">
+                    <div className="relative overflow-hidden rounded-3xl">
+                      <img 
+                        src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800" 
+                        alt="Clergy gathering" 
+                        className="w-full h-auto transform group-hover:scale-110 transition-transform duration-700" 
+                      />
+                      {/* Overlay gradient on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      {/* Dotted pattern overlay on image (subtle) */}
+                      <div className="absolute inset-0 opacity-[0.04]" style={{
+                        backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+                        backgroundSize: '16px 16px',
+                      }}></div>
+                    </div>
+                  </div>
+
+                  {/* Enhanced decorative elements */}
+                  <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-[#7A7A3F]/30 to-[#7A7A3F]/10 rounded-3xl blur-2xl animate-pulse-slow hidden md:block"></div>
+                  <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#8B2332]/30 to-[#8B2332]/10 rounded-3xl blur-2xl animate-float hidden md:block"></div>
+                  
+                  {/* Modern decorative corner accents */}
+                  <div className="absolute top-4 right-4 w-20 h-20 border-t-4 border-r-4 border-white/50 rounded-tr-3xl shadow-lg backdrop-blur-sm"></div>
+                  <div className="absolute bottom-4 left-4 w-20 h-20 border-b-4 border-l-4 border-white/50 rounded-bl-3xl shadow-lg backdrop-blur-sm"></div>
+
+                  {/* Floating badge element */}
+                  <div className="absolute -bottom-4 right-8 bg-white px-6 py-3 rounded-full shadow-xl border-2 border-[#8B2332]/20 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                    <div className="text-sm font-bold text-[#8B2332]">Since 2009</div>
+                    <div className="text-xs text-gray-600">Serving Kenya</div>
+                  </div>
                 </div>
               </div>
             </div>
