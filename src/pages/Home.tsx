@@ -1859,53 +1859,92 @@ export function Home() {
         </div>
       </section>
 
-      {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
-        <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#8B2332"/>
+      {/* CTA Section */}
+      <section className="relative py-24 md:py-32 bg-gradient-to-b from-gray-50 via-[#7A7A3F]/5 to-gray-50 overflow-hidden">
+        {/* Enhanced background graphics */}
+        <DottedPattern opacity={0.04} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.03} />
+        <div className="opacity-[0.02]">
+          <DiagonalPattern angle={45} />
+        </div>
+        <div className="opacity-[0.02]">
+          <DiagonalPattern angle={135} />
+        </div>
+        
+        {/* Circle patterns with goldish accents */}
+        <CirclePattern position="top-left" size={300} />
+        <CirclePattern position="bottom-right" size={350} />
+        
+        {/* Blur effects with goldish/maroon accents */}
+        <div className="absolute top-20 left-20 w-96 h-96 bg-[#7A7A3F]/8 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-[#8B2332]/5 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#7A7A3F]/3 rounded-full blur-3xl"></div>
+        
+        {/* Additional geometric shapes with color accents */}
+        <div className="absolute top-1/4 right-1/4 w-48 h-48 opacity-3 hidden md:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#7A7A3F" opacity="0.1"/>
+            <polygon points="50,20 80,50 50,80 20,50" fill="#8B2332" opacity="0.08"/>
           </svg>
         </div>
-        <div className="relative h-16 bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center space-x-3">
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
-            <div className="w-24 h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20"></div>
-            <div className="w-1 h-1 bg-white/40 rounded-full"></div>
-            <div className="w-24 h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20"></div>
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
-          </div>
+        <div className="absolute bottom-1/4 left-1/4 w-44 h-44 opacity-3 hidden md:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 80,25 80,60 Q 80,95 50,85 Q 20,95 20,60 Q 20,25 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.1"
+            />
+          </svg>
         </div>
-      </div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-32 left-1/4 w-2 h-2 bg-[#7A7A3F]/40 rounded-full animate-pulse"></div>
+        <div className="absolute top-48 right-1/3 w-1.5 h-1.5 bg-[#8B2332]/50 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-32 left-1/3 w-2.5 h-2.5 bg-[#7A7A3F]/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-[#8B2332]/45 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
 
-      {/* CTA Section */}
-      <section className="relative py-24 bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28] text-white overflow-hidden">
-        <DottedPattern className="opacity-10" />
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-[#7A7A3F]/10 rounded-full blur-3xl animate-float"></div>
-        </div>
+        {/* Subtle accent border at top */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/20 to-transparent"></div>
+
         <div 
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 transform transition-all duration-700"
           data-animate-id="cta-final"
         >
+          {/* Carousel indicators at top */}
+          <div className="flex justify-center items-center space-x-2 mb-4 relative z-10">
+            <div className="w-2 h-2 bg-[#7A7A3F]/40 rounded-full"></div>
+            <div className="w-3 h-3 bg-[#7A7A3F]/70 rounded-full shadow-lg"></div>
+            <div className="w-2 h-2 bg-[#7A7A3F]/40 rounded-full"></div>
+          </div>
+          
+          {/* Thin horizontal line below indicators */}
+          <div className="flex justify-center mb-12 md:mb-16">
+            <div className="w-32 md:w-48 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/30 to-transparent"></div>
+          </div>
+          
           <div className={`${isVisible['cta-final'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">Ready to Make an Impact?</h2>
-            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight text-[#8B2332]">
+              Ready to Make an Impact?
+            </h2>
+            <p className="text-lg md:text-xl text-gray-700 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
               Join a community of passionate clergy committed to transforming
               Kenya through the Gospel
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
               <Link 
                 to="/membership" 
-                className="px-10 py-5 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+                className="px-8 md:px-10 py-4 md:py-5 bg-white text-[#8B2332] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
               >
-                Become a Member
+                <span className="relative z-10">Become a Member</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
               <Link 
                 to="/contact" 
-                className="px-10 py-5 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#8B2332] transition-all hover:scale-105 transform"
+                className="px-8 md:px-10 py-4 md:py-5 bg-[#7A7A3F] border-2 border-[#7A7A3F] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#6A6A35] hover:border-[#6A6A35] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
               >
-                Get in Touch
+                <span className="relative z-10">Get in Touch</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
             </div>
           </div>
