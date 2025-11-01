@@ -697,96 +697,276 @@ export function Home() {
       </section>
 
       {/* Programs Preview with Modern Card Design */}
-      <section className="relative py-24 bg-white overflow-hidden">
-        <DottedPattern />
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
+        {/* Enhanced background patterns - multiple layers */}
+        <DottedPattern opacity={0.04} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <DottedPattern opacity={0.015} size="64px" />
+        <GeometricPattern opacity={0.03} />
+        <GeometricPattern opacity={0.02} />
+        <DiagonalPattern angle={45} />
+        <DiagonalPattern angle={135} />
+        <DiagonalPattern angle={30} />
+        
+        {/* Circle patterns */}
+        <CirclePattern position="top-left" size={350} />
+        <CirclePattern position="bottom-right" size={400} />
+        <CirclePattern position="top-right" size={280} />
+        <CirclePattern position="bottom-left" size={320} />
+        
+        {/* Decorative geometric shapes - more variety */}
+        <div className="absolute top-20 right-20 w-48 h-48 opacity-3 hidden md:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.2"/>
+            <polygon points="50,15 85,50 50,85 15,50" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-20 left-20 w-56 h-56 opacity-3 hidden md:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 90,30 90,70 Q 90,100 50,90 Q 10,100 10,70 Q 10,30 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.2"
+            />
+            <path
+              d="M 50,15 Q 80,35 80,65 Q 80,85 50,80 Q 20,85 20,65 Q 20,35 50,15 Z"
+              fill="#7A7A3F"
+              opacity="0.1"
+            />
+          </svg>
+        </div>
+        
+        {/* Additional geometric shapes */}
+        <div className="absolute top-1/2 right-10 w-32 h-32 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,10 90,50 50,90 10,50" fill="#8B2332" opacity="0.15"/>
+            <polygon points="50,25 75,50 50,75 25,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-1/4 left-10 w-40 h-40 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,50 L 50,100 L 0,50 Z"
+              fill="#7A7A3F"
+              opacity="0.15"
+            />
+          </svg>
+        </div>
+        <div className="absolute top-1/4 left-1/4 w-36 h-36 opacity-3 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.1"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Abstract curved shapes */}
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 opacity-4 hidden md:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,0 Q 160,40 160,100 Q 160,160 100,160 Q 40,160 40,100 Q 40,40 100,0 Z"
+              fill="#8B2332"
+              opacity="0.08"
+            />
+          </svg>
+        </div>
+        <div className="absolute bottom-10 right-1/4 w-52 h-52 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 50,50 Q 100,0 150,50 Q 200,100 150,150 Q 100,200 50,150 Q 0,100 50,50 Z"
+              fill="#7A7A3F"
+              opacity="0.1"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects - enhanced */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/3 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/3 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-[#7A7A3F]/4 rounded-full blur-3xl"></div>
+        
+        {/* Additional dotted pattern clusters */}
+        <div className="absolute top-1/3 left-0 w-64 h-64 opacity-[0.02]">
+          <div style={{
+            backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+            width: '100%',
+            height: '100%'
+          }}></div>
+        </div>
+        <div className="absolute bottom-1/3 right-0 w-72 h-72 opacity-[0.02]">
+          <div style={{
+            backgroundImage: 'radial-gradient(circle, #7A7A3F 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            width: '100%',
+            height: '100%'
+          }}></div>
+        </div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-32 left-1/4 w-2 h-2 bg-[#8B2332] rounded-full opacity-30 animate-pulse"></div>
+        <div className="absolute top-48 right-1/3 w-1.5 h-1.5 bg-[#7A7A3F] rounded-full opacity-40 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-32 left-1/3 w-2.5 h-2.5 bg-[#8B2332] rounded-full opacity-25 animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-48 right-1/4 w-2 h-2 bg-[#7A7A3F] rounded-full opacity-35 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
-            className="text-center mb-16 transform transition-all duration-700"
+            className="text-center mb-16 md:mb-20 transform transition-all duration-700"
             data-animate-id="programs-header"
           >
-            <div className={`${isVisible['programs-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              <span className="inline-block px-4 py-2 bg-[#8B2332]/10 text-[#8B2332] rounded-full text-sm font-semibold mb-6">
-                OUR SERVICES
-              </span>
-              <h2 className="text-5xl md:text-6xl font-bold text-[#8B2332] mb-4">
+            <div className={`space-y-6 ${isVisible['programs-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              {/* Modern badge with gradient */}
+              <div className="inline-block">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                  OUR SERVICES
+                </span>
+              </div>
+              
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Programs & Initiatives
               </h2>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
                 Comprehensive programs designed to empower clergy and strengthen
                 ministry impact
               </p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
               { 
                 icon: BookOpenIcon, 
                 title: 'Training Programs', 
                 description: 'Comprehensive theological and leadership training for clergy at all levels',
-                color: 'bg-[#8B2332]/10 text-[#8B2332]'
+                iconBg: 'bg-gradient-to-br from-[#8B2332]/15 to-[#8B2332]/8',
+                iconColor: 'text-[#8B2332]',
+                accent: '#8B2332'
               },
               { 
                 icon: UsersIcon, 
                 title: 'Clergy Empowerment', 
                 description: 'Resources and support for personal and ministerial growth',
-                color: 'bg-[#7A7A3F]/10 text-[#7A7A3F]'
+                iconBg: 'bg-gradient-to-br from-[#7A7A3F]/15 to-[#7A7A3F]/8',
+                iconColor: 'text-[#7A7A3F]',
+                accent: '#7A7A3F'
               },
               { 
                 icon: SparklesIcon, 
                 title: 'Leadership Development', 
                 description: 'Mentorship and coaching for emerging and established leaders',
-                color: 'bg-[#8B2332]/10 text-[#8B2332]'
+                iconBg: 'bg-gradient-to-br from-[#8B2332]/15 to-[#8B2332]/8',
+                iconColor: 'text-[#8B2332]',
+                accent: '#8B2332'
               },
               { 
                 icon: HeartIcon, 
                 title: 'Community Outreach', 
                 description: 'Collaborative initiatives to serve communities across Kenya',
-                color: 'bg-[#7A7A3F]/10 text-[#7A7A3F]'
+                iconBg: 'bg-gradient-to-br from-[#7A7A3F]/15 to-[#7A7A3F]/8',
+                iconColor: 'text-[#7A7A3F]',
+                accent: '#7A7A3F'
               }
-            ].map((program, index) => (
-              <div 
-                key={index}
-                className="group relative transform transition-all duration-700"
-                data-animate-id={`program-${index}`}
-              >
-                <div className={`${isVisible[`program-${index}`] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                  <div className="relative bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 h-full transform hover:-translate-y-2 hover:scale-105">
-                    {/* Dotted pattern overlay */}
-                    <div className="absolute inset-0 rounded-3xl opacity-[0.03]" style={{
-                      backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
-                      backgroundSize: '20px 20px',
-                      backgroundPosition: '0 0'
-                    }}></div>
-                    
-                    <div className={`w-20 h-20 ${program.color} rounded-2xl flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 relative z-10`}>
-                      <program.icon size={36} />
+            ].map((program, index) => {
+              const delay = index * 100;
+              const isAnimated = isVisible[`program-${index}`];
+              
+              return (
+                <div 
+                  key={index}
+                  className="group relative transform transition-all duration-700"
+                  data-animate-id={`program-${index}`}
+                  style={{ transitionDelay: isAnimated ? `${delay}ms` : '0ms' }}
+                >
+                  <div 
+                    className={`transition-all duration-700 ease-out ${
+                      isAnimated 
+                        ? 'opacity-100 translate-y-0 scale-100 rotate-0' 
+                        : 'opacity-0 translate-y-12 scale-90 rotate-2'
+                    }`}
+                    style={{ transitionDelay: `${delay}ms` }}
+                  >
+                    <div className="relative bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 h-full transform hover:-translate-y-3 hover:scale-[1.02] group-hover:border-[#8B2332]/20">
+                      {/* Enhanced dotted pattern overlay */}
+                      <div className="absolute inset-0 rounded-3xl opacity-[0.04]" style={{
+                        backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+                        backgroundSize: '20px 20px',
+                        backgroundPosition: '0 0'
+                      }}></div>
+                      
+                      {/* Gradient overlay on hover */}
+                      <div 
+                        className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: `linear-gradient(135deg, transparent, transparent, ${program.accent}08)` }}
+                      ></div>
+                      
+                      {/* Icon container with enhanced styling */}
+                      <div className="relative mb-6 md:mb-8">
+                        {/* Outer glow */}
+                        <div 
+                          className={`absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg`}
+                          style={{ backgroundColor: `${program.accent}15` }}
+                        ></div>
+                        
+                        {/* Icon background with gradient - matching reference style */}
+                        <div 
+                          className={`relative w-20 h-20 md:w-24 md:h-24 ${program.iconBg} rounded-2xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-xl z-10 border border-[${program.accent}]/10`}
+                        >
+                          {/* Shine effect */}
+                          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                          
+                          <program.icon 
+                            size={40} 
+                            className={`${program.iconColor} md:w-10 md:h-10 transform group-hover:scale-110 transition-transform duration-300 relative z-10`}
+                          />
+                        </div>
+                        
+                        {/* Decorative corner dots */}
+                        <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: program.accent }}></div>
+                        <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: program.accent }}></div>
+                      </div>
+                      
+                      {/* Title */}
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 relative z-10 group-hover:text-[#6B1A28] transition-colors">
+                        {program.title}
+                      </h3>
+                      
+                      {/* Description */}
+                      <p className="text-gray-600 mb-4 leading-relaxed relative z-10 text-sm md:text-base">
+                        {program.description}
+                      </p>
+                      
+                      {/* Decorative elements */}
+                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${program.accent}20` }}></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${program.accent}15` }}></div>
+                      
+                      {/* Animated underline */}
+                      <div 
+                        className="mt-4 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 w-0 group-hover:w-full"
+                        style={{ 
+                          background: `linear-gradient(to right, transparent, ${program.accent}, transparent)` 
+                        }}
+                      ></div>
                     </div>
-                    <h3 className="text-xl font-bold text-[#8B2332] mb-4 relative z-10">
-                      {program.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed relative z-10">
-                      {program.description}
-                    </p>
-                    {/* Decorative corner */}
-                    <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[#8B2332]/10 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div 
-            className="text-center mt-16 transform transition-all duration-700"
+            className="text-center mt-16 md:mt-20 transform transition-all duration-700"
             data-animate-id="programs-cta"
           >
-            <div className={`${isVisible['programs-cta'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className={`${isVisible['programs-cta'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'}`}>
               <Link 
                 to="/programs" 
-                className="group inline-flex items-center space-x-2 px-10 py-5 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform"
+                className="group relative inline-flex items-center space-x-3 px-8 md:px-10 py-4 md:py-5 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden"
               >
-                <span>Explore All Programs</span>
-                <ArrowRightIcon size={20} className="transform group-hover:translate-x-1 transition-transform" />
+                {/* Shine effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
+                <span className="relative z-10">Explore All Programs</span>
+                <ArrowRightIcon size={20} className="relative z-10 transform group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
