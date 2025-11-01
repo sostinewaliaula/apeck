@@ -5,6 +5,7 @@ import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, Chevr
 export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
+  const [countedValues, setCountedValues] = useState<{ [key: number]: number }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const slides = [{
@@ -57,6 +58,25 @@ export function Home() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
+  // Counter animation function
+  const animateCounter = (index: number, target: number) => {
+    const duration = 2000; // 2 seconds
+    const steps = 60;
+    const increment = target / steps;
+    let current = 0;
+    
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        setCountedValues((prev) => ({ ...prev, [index]: Math.round(current) }));
+        clearInterval(timer);
+      } else {
+        setCountedValues((prev) => ({ ...prev, [index]: Math.round(current) }));
+      }
+    }, duration / steps);
+  };
+
   useEffect(() => {
     // Intersection Observer for scroll animations
     observerRef.current = new IntersectionObserver(
@@ -66,6 +86,21 @@ export function Home() {
             const id = entry.target.getAttribute('data-animate-id');
             if (id) {
               setIsVisible((prev) => ({ ...prev, [id]: true }));
+              
+              // Trigger counter animation for stats
+              if (id.startsWith('stat-')) {
+                const index = parseInt(id.split('-')[1]);
+                const statValues = [
+                  { num: 1500, suffix: '+' },
+                  { num: 47, suffix: '' },
+                  { num: 250, suffix: '+' },
+                  { num: 15, suffix: '' }
+                ];
+                
+                if (statValues[index] && !countedValues[index]) {
+                  animateCounter(index, statValues[index].num);
+                }
+              }
             }
           }
         });
@@ -79,7 +114,7 @@ export function Home() {
     return () => {
       elements.forEach((el) => observerRef.current?.unobserve(el));
     };
-  }, []);
+  }, [countedValues]);
 
   const nextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % slides.length);
@@ -486,37 +521,178 @@ export function Home() {
       </section>
 
       {/* Stats Section with Animated Numbers */}
-      <section className="relative py-24 bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28] text-white overflow-hidden">
-        <DottedPattern className="opacity-10" />
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#7A7A3F]/10 rounded-full blur-3xl animate-float"></div>
+      <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28] text-white overflow-hidden">
+        {/* Enhanced background patterns */}
+        <DottedPattern opacity={0.12} size="32px" />
+        <DottedPattern opacity={0.08} size="48px" className="mix-blend-overlay" />
+        <GeometricPattern opacity={0.05} />
+        <DiagonalPattern angle={45} />
+        
+        {/* Decorative geometric shapes */}
+        <div className="absolute top-0 left-0 w-64 h-64 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <polygon points="100,0 200,100 100,200 0,100" fill="#7A7A3F" opacity="0.3"/>
+            <polygon points="100,30 170,100 100,170 30,100" fill="#8B2332" opacity="0.2"/>
+          </svg>
         </div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,0 Q 160,40 160,100 Q 160,160 100,160 Q 40,160 40,100 Q 40,40 100,0 Z"
+              fill="#7A7A3F"
+              opacity="0.3"
+            />
+          </svg>
+        </div>
+
+        {/* Enhanced blur and glow effects */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-white/8 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#7A7A3F]/15 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+        </div>
+
+        {/* Circle patterns */}
+        <CirclePattern position="top-left" size={400} />
+        <CirclePattern position="bottom-right" size={350} />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
             {[
-              { value: '1,500+', label: 'Members', icon: UsersIcon },
-              { value: '47', label: 'Counties Reached', icon: TrendingUpIcon },
-              { value: '250+', label: 'Training Programs', icon: BookOpenIcon },
-              { value: '15', label: 'Years of Impact', icon: AwardIcon }
-            ].map((stat, index) => (
-              <div 
-                key={index}
-                className="text-center transform transition-all duration-700"
-                data-animate-id={`stat-${index}`}
-              >
-                <div className={`${isVisible[`stat-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'}`}>
-                  <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6 backdrop-blur-sm border border-white/20">
-                    <stat.icon size={40} className="text-[#7A7A3F]" />
+              { value: '1,500+', label: 'Members', icon: UsersIcon, suffix: '+', baseNum: 1500 },
+              { value: '47', label: 'Counties Reached', icon: TrendingUpIcon, suffix: '', baseNum: 47 },
+              { value: '250+', label: 'Training Programs', icon: BookOpenIcon, suffix: '+', baseNum: 250 },
+              { value: '15', label: 'Years of Impact', icon: AwardIcon, suffix: '', baseNum: 15 }
+            ].map((stat, index) => {
+              const displayedValue = countedValues[index] !== undefined 
+                ? `${countedValues[index].toLocaleString()}${stat.suffix}` 
+                : '0';
+              const isAnimated = isVisible[`stat-${index}`];
+              const delay = index * 150; // Staggered animation delay
+              
+              return (
+                <div 
+                  key={index}
+                  className="text-center transform transition-all duration-700 group"
+                  data-animate-id={`stat-${index}`}
+                  style={{
+                    transitionDelay: isAnimated ? `${delay}ms` : '0ms'
+                  }}
+                >
+                  <div 
+                    className={`transition-all duration-1000 ease-out ${
+                      isAnimated 
+                        ? 'opacity-100 translate-y-0 scale-100 rotate-0' 
+                        : 'opacity-0 translate-y-12 scale-75 rotate-3'
+                    }`}
+                    style={{
+                      transitionDelay: `${delay}ms`
+                    }}
+                  >
+                    {/* Icon with modern styling - semi-transparent circular background */}
+                    <div className="relative inline-flex items-center justify-center mb-6 md:mb-8">
+                      {/* Outer glow effect with pulse */}
+                      <div 
+                        className={`absolute inset-0 bg-[#8B2332]/30 rounded-full blur-xl transition-all duration-500 group-hover:bg-[#8B2332]/50 ${
+                          isAnimated ? 'animate-pulse-slow' : ''
+                        }`}
+                      ></div>
+                      
+                      {/* Animated ring on appear */}
+                      <div 
+                        className={`absolute inset-0 rounded-full border-2 border-[#7A7A3F]/30 transition-all duration-1000 ${
+                          isAnimated ? 'scale-125 opacity-0' : 'scale-100 opacity-100'
+                        }`}
+                        style={{ transitionDelay: `${delay + 200}ms` }}
+                      ></div>
+                      
+                      {/* Semi-transparent circular background */}
+                      <div 
+                        className={`relative inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-[#8B2332]/40 rounded-full backdrop-blur-sm border-2 border-white/20 shadow-lg transition-all duration-500 group-hover:border-white/40 group-hover:scale-110 group-hover:rotate-6 ${
+                          isAnimated ? 'scale-100 rotate-0' : 'scale-0 rotate-180'
+                        }`}
+                        style={{ transitionDelay: `${delay + 300}ms` }}
+                      >
+                        <stat.icon 
+                          size={44} 
+                          className={`text-[#7A7A3F] md:w-12 md:h-12 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 ${
+                            isAnimated ? 'scale-100 rotate-0' : 'scale-0 -rotate-180'
+                          }`}
+                          style={{ transitionDelay: `${delay + 400}ms` }}
+                        />
+                      </div>
+                      
+                      {/* Decorative dots around icon with entrance animation */}
+                      <div 
+                        className={`absolute -top-2 -right-2 w-3 h-3 bg-[#7A7A3F] rounded-full transition-all duration-500 group-hover:opacity-100 group-hover:scale-125 ${
+                          isAnimated ? 'opacity-60 scale-100' : 'opacity-0 scale-0'
+                        }`}
+                        style={{ transitionDelay: `${delay + 500}ms` }}
+                      ></div>
+                      <div 
+                        className={`absolute -bottom-2 -left-2 w-2 h-2 bg-[#7A7A3F] rounded-full transition-all duration-500 group-hover:opacity-100 group-hover:scale-125 ${
+                          isAnimated ? 'opacity-60 scale-100' : 'opacity-0 scale-0'
+                        }`}
+                        style={{ transitionDelay: `${delay + 600}ms` }}
+                      ></div>
+                    </div>
+                    
+                    {/* Number with counting animation */}
+                    <div className="relative mb-3 md:mb-4">
+                      <div 
+                        className={`text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
+                          isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                        }`}
+                        style={{ transitionDelay: `${delay + 700}ms` }}
+                      >
+                        {displayedValue}
+                      </div>
+                      {/* Animated glow behind number */}
+                      <div 
+                        className={`absolute inset-0 text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
+                          isAnimated ? 'opacity-100 animate-pulse-slow' : 'opacity-0'
+                        }`}
+                        style={{ transitionDelay: `${delay + 700}ms` }}
+                      >
+                        {displayedValue}
+                      </div>
+                      {/* Pulse ring effect */}
+                      <div 
+                        className={`absolute inset-0 rounded-lg border-2 border-[#7A7A3F]/20 transition-all duration-1000 ${
+                          isAnimated ? 'scale-150 opacity-0 animate-ping' : 'scale-100 opacity-0'
+                        }`}
+                        style={{ transitionDelay: `${delay + 800}ms` }}
+                      ></div>
+                    </div>
+                    
+                    {/* Label with slide-up animation */}
+                    <div 
+                      className={`text-white/95 text-sm md:text-base lg:text-lg font-semibold tracking-wide uppercase transition-all duration-700 ${
+                        isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                      }`}
+                      style={{ transitionDelay: `${delay + 900}ms` }}
+                    >
+                      {stat.label}
+                    </div>
+
+                    {/* Decorative line with width animation */}
+                    <div 
+                      className={`mt-4 mx-auto h-0.5 bg-gradient-to-r from-transparent via-[#7A7A3F]/50 to-transparent transition-all duration-500 group-hover:opacity-100 group-hover:w-24 ${
+                        isAnimated ? 'opacity-100 w-16' : 'opacity-0 w-0'
+                      }`}
+                      style={{ transitionDelay: `${delay + 1000}ms` }}
+                    ></div>
                   </div>
-                  <div className="text-5xl md:text-6xl font-bold text-[#7A7A3F] mb-3">
-                    {stat.value}
-                  </div>
-                  <div className="text-white/90 text-lg font-medium">{stat.label}</div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          {/* Additional decorative elements */}
+          <div className="absolute top-1/2 left-0 w-px h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 right-0 w-px h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 left-1/4 w-px h-24 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 right-1/4 w-px h-24 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
         </div>
       </section>
 
