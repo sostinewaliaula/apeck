@@ -45,7 +45,7 @@ export function Navigation() {
               className="w-16 h-16 object-contain transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl drop-shadow-lg filter brightness-110 shadow-xl border-2 border-[#8B2332]/20 rounded-lg p-1 bg-white" 
             />
             <div className="flex flex-col text-left">
-              <span className="text-xs text-[#8B2332] font-medium">Association of</span>
+              <span className="text-xs text-[#8B2332] font-bold">Association of</span>
               <span className="text-[#8B2332] font-bold text-sm leading-tight">PENTECOSTAL &</span>
               <span className="text-[#8B2332] font-bold text-sm leading-tight">EVANGELICAL</span>
               <span className="text-[#8B2332] font-bold text-sm leading-tight">CLERGY OF KENYA</span>
@@ -78,3 +78,4 @@ export function Navigation() {
           </div>
         </div>}
     </nav>;
+}
