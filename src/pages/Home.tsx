@@ -559,14 +559,14 @@ export function Home() {
                 </div>
                 
                 {/* Main heading with gradient effect */}
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] leading-tight">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] leading-tight">
                   Who We Are
                 </h2>
                 
                 {/* Content paragraphs with better styling */}
                 <div className="space-y-6">
                   <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed">
-                    <span className="font-semibold text-[#8B2332]">APECK</span> is the premier association uniting Pentecostal and
+                    <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">APECK</span> is the premier association uniting Pentecostal and
                     Evangelical clergy across Kenya. We are dedicated to empowering
                     spiritual leaders through comprehensive training, mentorship,
                     and resources that enable them to fulfill their calling with
@@ -583,20 +583,20 @@ export function Home() {
                 {/* Enhanced CTA button */}
                 <Link 
                   to="/about" 
-                  className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white border-2 border-[#8B2332] text-[#8B2332] font-semibold rounded-full hover:bg-[#8B2332] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
+                  className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-gray-800 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] font-semibold rounded-full hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
                 >
                   <span>Read Our Full Story</span>
                   <ArrowRightIcon size={18} className="transform group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 {/* Decorative stats or highlights */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div>
-                    <div className="text-2xl md:text-3xl font-bold text-[#8B2332]">15+</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#8B2332] dark:text-[#B85C6D]">15+</div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
                   </div>
                   <div>
-                    <div className="text-2xl md:text-3xl font-bold text-[#7A7A3F]">1,500+</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#7A7A3F] dark:text-[#9B9B5F]">1,500+</div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Active Members</div>
                   </div>
                 </div>
@@ -678,9 +678,9 @@ export function Home() {
                   <div className="absolute bottom-4 left-4 w-20 h-20 border-b-4 border-l-4 border-white/50 rounded-bl-3xl shadow-lg backdrop-blur-sm"></div>
 
                   {/* Floating badge element */}
-                  <div className="absolute -bottom-4 right-8 bg-white px-6 py-3 rounded-full shadow-xl border-2 border-[#8B2332]/20 transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                    <div className="text-sm font-bold text-[#8B2332]">Since 2009</div>
-                    <div className="text-xs text-gray-600">Serving Kenya</div>
+                  <div className="absolute -bottom-4 right-8 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-xl border-2 border-[#8B2332]/20 dark:border-[#B85C6D]/20 transform rotate-3 hover:rotate-0 transition-all duration-300">
+                    <div className="text-sm font-bold text-[#8B2332] dark:text-[#B85C6D]">Since 2009</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">Serving Kenya</div>
                   </div>
                 </div>
               </div>
@@ -706,7 +706,7 @@ export function Home() {
       </div>
 
       {/* Stats Section with Animated Numbers */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28] text-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background patterns */}
         <DottedPattern opacity={0.12} size="32px" />
         <DottedPattern opacity={0.08} size="48px" className="mix-blend-overlay" />
@@ -732,9 +732,9 @@ export function Home() {
 
         {/* Enhanced blur and glow effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white/8 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#7A7A3F]/15 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+          <div className="absolute top-10 left-10 w-72 h-72 bg-[#8B2332]/5 dark:bg-[#B85C6D]/5 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#7A7A3F]/5 dark:bg-[#9B9B5F]/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B2332]/3 dark:bg-[#B85C6D]/3 rounded-full blur-3xl"></div>
         </div>
 
         {/* Circle patterns */}
@@ -778,14 +778,14 @@ export function Home() {
                     <div className="relative inline-flex items-center justify-center mb-6 md:mb-8">
                       {/* Outer glow effect with pulse */}
                       <div 
-                        className={`absolute inset-0 bg-[#8B2332]/30 rounded-full blur-xl transition-all duration-500 group-hover:bg-[#8B2332]/50 ${
+                        className={`absolute inset-0 bg-[#8B2332]/20 dark:bg-[#B85C6D]/20 rounded-full blur-xl transition-all duration-500 group-hover:bg-[#8B2332]/30 dark:group-hover:bg-[#B85C6D]/30 ${
                           isAnimated ? 'animate-pulse-slow' : ''
                         }`}
                       ></div>
                       
                       {/* Animated ring on appear */}
                       <div 
-                        className={`absolute inset-0 rounded-full border-2 border-[#7A7A3F]/30 transition-all duration-1000 ${
+                        className={`absolute inset-0 rounded-full border-2 border-[#7A7A3F]/20 dark:border-[#9B9B5F]/20 transition-all duration-1000 ${
                           isAnimated ? 'scale-125 opacity-0' : 'scale-100 opacity-100'
                         }`}
                         style={{ transitionDelay: `${delay + 200}ms` }}
@@ -793,14 +793,14 @@ export function Home() {
                       
                       {/* Semi-transparent circular background */}
                       <div 
-                        className={`relative inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-[#8B2332]/40 rounded-full backdrop-blur-sm border-2 border-white/20 shadow-lg transition-all duration-500 group-hover:border-white/40 group-hover:scale-110 group-hover:rotate-6 ${
+                        className={`relative inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-[#8B2332]/15 dark:bg-[#B85C6D]/15 rounded-full backdrop-blur-sm border-2 border-[#8B2332]/20 dark:border-[#B85C6D]/20 shadow-lg transition-all duration-500 group-hover:border-[#8B2332]/40 dark:group-hover:border-[#B85C6D]/40 group-hover:scale-110 group-hover:rotate-6 ${
                           isAnimated ? 'scale-100 rotate-0' : 'scale-0 rotate-180'
                         }`}
                         style={{ transitionDelay: `${delay + 300}ms` }}
                       >
                         <stat.icon 
                           size={44} 
-                          className={`text-[#7A7A3F] md:w-12 md:h-12 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 ${
+                          className={`text-[#8B2332] dark:text-[#B85C6D] md:w-12 md:h-12 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 ${
                             isAnimated ? 'scale-100 rotate-0' : 'scale-0 -rotate-180'
                           }`}
                           style={{ transitionDelay: `${delay + 400}ms` }}
@@ -825,7 +825,7 @@ export function Home() {
                     {/* Number with counting animation */}
                     <div className="relative mb-3 md:mb-4">
                       <div 
-                        className={`text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
+                        className={`text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] inline-block ${
                           isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -834,7 +834,7 @@ export function Home() {
                       </div>
                       {/* Animated glow behind number */}
                       <div 
-                        className={`absolute inset-0 text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
+                        className={`absolute inset-0 text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332]/20 dark:text-[#B85C6D]/20 blur-lg -z-10 transition-all duration-1000 ${
                           isAnimated ? 'opacity-100 animate-pulse-slow' : 'opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -852,7 +852,7 @@ export function Home() {
                     
                     {/* Label with slide-up animation */}
                     <div 
-                      className={`text-white/95 text-xs md:text-sm font-semibold tracking-wide uppercase transition-all duration-700 ${
+                      className={`text-gray-600 dark:text-gray-400 text-xs md:text-sm font-semibold tracking-wide uppercase transition-all duration-700 ${
                         isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
                       }`}
                       style={{ transitionDelay: `${delay + 900}ms` }}
@@ -862,7 +862,7 @@ export function Home() {
 
                     {/* Decorative line with width animation */}
                     <div 
-                      className={`mt-4 mx-auto h-0.5 bg-gradient-to-r from-transparent via-[#7A7A3F]/50 to-transparent transition-all duration-500 group-hover:opacity-100 group-hover:w-24 ${
+                      className={`mt-4 mx-auto h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/50 dark:via-[#B85C6D]/50 to-transparent transition-all duration-500 group-hover:opacity-100 group-hover:w-24 ${
                         isAnimated ? 'opacity-100 w-16' : 'opacity-0 w-0'
                       }`}
                       style={{ transitionDelay: `${delay + 1000}ms` }}
@@ -874,27 +874,27 @@ export function Home() {
           </div>
 
           {/* Additional decorative elements */}
-          <div className="absolute top-1/2 left-0 w-px h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden lg:block"></div>
-          <div className="absolute top-1/2 right-0 w-px h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden lg:block"></div>
-          <div className="absolute top-1/2 left-1/4 w-px h-24 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
-          <div className="absolute top-1/2 right-1/4 w-px h-24 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 left-0 w-px h-32 bg-gradient-to-b from-transparent via-[#8B2332]/20 dark:via-[#B85C6D]/20 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 right-0 w-px h-32 bg-gradient-to-b from-transparent via-[#7A7A3F]/20 dark:via-[#9B9B5F]/20 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 left-1/4 w-px h-24 bg-gradient-to-b from-transparent via-[#8B2332]/10 dark:via-[#B85C6D]/10 to-transparent hidden lg:block"></div>
+          <div className="absolute top-1/2 right-1/4 w-px h-24 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 dark:via-[#9B9B5F]/10 to-transparent hidden lg:block"></div>
         </div>
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-br from-[#8B2332] via-[#8B2332] to-[#6B1A28]">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-20">
-              <path d="M0,120 Q300,60 600,80 T1200,100 L1200,120 L0,120 Z" fill="white"/>
+              <path d="M0,120 Q300,60 600,80 T1200,100 L1200,120 L0,120 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
             </svg>
           </div>
         </div>
-        <div className="relative h-20 bg-white"></div>
+        <div className="relative h-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"></div>
       </div>
 
       {/* Programs Preview with Modern Card Design */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background patterns - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1200,7 +1200,7 @@ export function Home() {
       </div>
 
       {/* Testimonials Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1359,7 +1359,7 @@ export function Home() {
             <div className={`space-y-6 ${isVisible['testimonials-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {/* Modern badge with light pink background matching reference */}
               <div className="inline-block">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   TESTIMONIALS
                 </span>
               </div>
@@ -1378,14 +1378,14 @@ export function Home() {
             {/* Navigation Arrows */}
             <button 
               onClick={prevTestimonialSlide} 
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 lg:-translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white rounded-full shadow-xl border-2 border-gray-200 flex items-center justify-center text-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 hover:scale-110 hidden md:flex"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 lg:-translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white dark:bg-gray-800 rounded-full shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center text-[#8B2332] dark:text-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 hover:scale-110 hidden md:flex"
               aria-label="Previous testimonials"
             >
               <ChevronLeftIcon size={24} className="md:w-7 md:h-7" />
             </button>
             <button 
               onClick={nextTestimonialSlide} 
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 lg:translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white rounded-full shadow-xl border-2 border-gray-200 flex items-center justify-center text-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 hover:scale-110 hidden md:flex"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 lg:translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white dark:bg-gray-800 rounded-full shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center text-[#8B2332] dark:text-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 hover:scale-110 hidden md:flex"
               aria-label="Next testimonials"
             >
               <ChevronRightIcon size={24} className="md:w-7 md:h-7" />
@@ -1422,7 +1422,7 @@ export function Home() {
                             style={{ transitionDelay: isAnimated ? `${delay}ms` : '0ms' }}
                           >
                             <div 
-                              className={`bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 h-full transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group-hover:border-[#8B2332]/20 ${
+                              className={`bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 h-full transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 dark:border-gray-700 group-hover:border-[#8B2332]/20 dark:group-hover:border-[#B85C6D]/20 ${
                                 isAnimated ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                               }`}
                               style={{ transitionDelay: `${delay}ms` }}
@@ -1462,8 +1462,8 @@ export function Home() {
                               </p>
                               
                               {/* Author info */}
-                              <div className="border-t border-gray-200 pt-6 relative z-10">
-                                <div className="font-bold text-[#8B2332] text-xs md:text-sm mb-1 group-hover:text-[#6B1A28] transition-colors">
+                              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 relative z-10">
+                                <div className="font-bold text-[#8B2332] dark:text-[#B85C6D] text-xs md:text-sm mb-1 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                                   {testimonial.name}
                                 </div>
                                 <div className="text-gray-600 dark:text-gray-400 text-xs">
@@ -1495,8 +1495,8 @@ export function Home() {
                   onClick={() => setCurrentTestimonialSlide(index)}
                   className={`h-2.5 md:h-3 rounded-full transition-all duration-300 ${
                     index === currentTestimonialSlide 
-                      ? 'bg-[#8B2332] w-8 md:w-10' 
-                      : 'bg-gray-300 hover:bg-gray-400 w-2.5 md:w-3'
+                      ? 'bg-[#8B2332] dark:bg-[#B85C6D] w-8 md:w-10' 
+                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 w-2.5 md:w-3'
                   }`}
                   aria-label={`Go to testimonial slide ${index + 1}`}
                 />
@@ -1513,13 +1513,13 @@ export function Home() {
             <path d="M0,0 Q400,50 600,40 T1200,50 L1200,100 L0,100 Z" fill="white"/>
           </svg>
         </div>
-        <div className="relative h-16 bg-white">
+        <div className="relative h-16 bg-white dark:bg-gray-900 transition-colors duration-300">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent"></div>
         </div>
       </div>
 
       {/* Recent Updates */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1732,7 +1732,7 @@ export function Home() {
             <div className={`space-y-6 ${isVisible['news-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {/* Modern badge with light brown matching reference */}
               <div className="inline-block">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   NEWS & UPDATES
                 </span>
               </div>
@@ -1751,14 +1751,14 @@ export function Home() {
             {/* Navigation Arrows */}
             <button 
               onClick={prevNewsSlide} 
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 lg:-translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white rounded-full shadow-xl border-2 border-gray-200 flex items-center justify-center text-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 hover:scale-110 hidden md:flex"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 lg:-translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white dark:bg-gray-800 rounded-full shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center text-[#8B2332] dark:text-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 hover:scale-110 hidden md:flex"
               aria-label="Previous news"
             >
               <ChevronLeftIcon size={24} className="md:w-7 md:h-7" />
             </button>
             <button 
               onClick={nextNewsSlide} 
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 lg:translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white rounded-full shadow-xl border-2 border-gray-200 flex items-center justify-center text-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 hover:scale-110 hidden md:flex"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 lg:translate-x-8 z-30 w-12 h-12 md:w-14 md:h-14 bg-white dark:bg-gray-800 rounded-full shadow-xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center text-[#8B2332] dark:text-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 hover:scale-110 hidden md:flex"
               aria-label="Next news"
             >
               <ChevronRightIcon size={24} className="md:w-7 md:h-7" />
@@ -1795,7 +1795,7 @@ export function Home() {
                             style={{ transitionDelay: isAnimated ? `${delay}ms` : '0ms' }}
                           >
                             <div 
-                              className={`bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group-hover:border-[#8B2332]/20 ${
+                              className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 dark:border-gray-700 group-hover:border-[#8B2332]/20 dark:group-hover:border-[#B85C6D]/20 ${
                                 isAnimated ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                               }`}
                               style={{ transitionDelay: `${delay}ms` }}
@@ -1834,17 +1834,17 @@ export function Home() {
                               
                               {/* Content */}
                               <div className="p-6 md:p-8 relative z-10">
-                                <h3 className="text-base md:text-lg font-bold text-[#8B2332] mb-3 md:mb-4 group-hover:text-[#6B1A28] transition-colors">
+                                <h3 className="text-base md:text-lg font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 md:mb-4 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                                   {update.title}
                                 </h3>
-                                <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-xs">
+                                <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 leading-relaxed text-xs">
                                   {update.description}
                                 </p>
                                 
                                 {/* Read More link with enhanced styling */}
                                 <Link 
                                   to="/news" 
-                                  className="group inline-flex items-center space-x-2 text-[#8B2332] font-semibold hover:text-[#7A7A3F] transition-colors"
+                                  className="group inline-flex items-center space-x-2 text-[#8B2332] dark:text-[#B85C6D] font-semibold hover:text-[#7A7A3F] dark:hover:text-[#9B9B5F] transition-colors"
                                 >
                                   <span>Read More</span>
                                   <ArrowRightIcon size={18} className="transform group-hover:translate-x-2 transition-transform duration-300" />
@@ -1875,8 +1875,8 @@ export function Home() {
                   onClick={() => setCurrentNewsSlide(index)}
                   className={`h-2.5 md:h-3 rounded-full transition-all duration-300 ${
                     index === currentNewsSlide 
-                      ? 'bg-[#8B2332] w-8 md:w-10' 
-                      : 'bg-gray-300 hover:bg-gray-400 w-2.5 md:w-3'
+                      ? 'bg-[#8B2332] dark:bg-[#B85C6D] w-8 md:w-10' 
+                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 w-2.5 md:w-3'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -1887,7 +1887,7 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-b from-gray-50 via-[#7A7A3F]/5 to-gray-50 overflow-hidden">
+      <section className="relative py-24 md:py-32 bg-gradient-to-b from-gray-50 via-[#7A7A3F]/5 to-gray-50 dark:from-gray-800 dark:via-gray-900/50 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1951,7 +1951,7 @@ export function Home() {
           </div>
           
           <div className={`${isVisible['cta-final'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight text-[#8B2332]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
               Ready to Make an Impact?
             </h2>
             <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -1961,7 +1961,7 @@ export function Home() {
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
               <Link 
                 to="/membership" 
-                className="px-8 md:px-10 py-4 md:py-5 bg-white text-[#8B2332] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] hover:bg-[#8B2332] hover:text-white hover:border-[#8B2332] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
+                className="px-8 md:px-10 py-4 md:py-5 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] dark:border-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
               >
                 <span className="relative z-10">Become a Member</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
