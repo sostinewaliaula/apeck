@@ -204,10 +204,10 @@ export function Gallery() {
                   MEMORY LANE
                 </span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                 Gallery
               </h1>
-              <p className="text-xl md:text-2xl text-white/95 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
                 Capturing moments of faith, fellowship, and transformation across our ministry
               </p>
             </div>
@@ -500,8 +500,8 @@ export function Gallery() {
                     {/* Title overlay */}
                     <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                       <h3 className="text-white font-bold text-lg mb-2">
-                        {photo.title}
-                      </h3>
+                      {photo.title}
+                    </h3>
                       <div className="flex items-center space-x-2 text-white/80 text-sm">
                         <CameraIcon size={16} />
                         <span>Click to View</span>
@@ -708,12 +708,12 @@ export function Gallery() {
                   OUR IMPACT
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                Our Impact in Pictures
-              </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
-                Documenting our journey of faith and service
-              </p>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              Our Impact in Pictures
+            </h2>
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+              Documenting our journey of faith and service
+            </p>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -732,13 +732,13 @@ export function Gallery() {
                   <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#8B2332]/10 to-[#7A7A3F]/10 rounded-full mb-6 shadow-lg">
                     <CameraIcon size={32} className="text-[#8B2332]" strokeWidth={2.5} />
                   </div>
-                  <div className="text-5xl md:text-6xl font-bold mb-3" style={{ color: stat.color }}>
+                  <div className="text-4xl md:text-5xl font-bold mb-3" style={{ color: stat.color }}>
                     {stat.value}
                   </div>
                   <div className="text-gray-600 font-semibold text-lg">
                     {stat.label}
                   </div>
-                </div>
+            </div>
               </div>
             ))}
           </div>

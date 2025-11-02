@@ -22,32 +22,32 @@ export function Navigation() {
 
   const navLinks = [
     {
-      path: '/',
-      label: 'Home'
+    path: '/',
+    label: 'Home'
     },
     {
-      path: '/about',
-      label: 'About Us'
+    path: '/about',
+    label: 'About Us'
     },
     {
-      path: '/programs',
-      label: 'Programs'
+    path: '/programs',
+    label: 'Programs'
     },
     {
-      path: '/membership',
-      label: 'Membership'
+    path: '/membership',
+    label: 'Membership'
     },
     {
-      path: '/news',
-      label: 'News & Events'
+    path: '/news',
+    label: 'News & Events'
     },
     {
-      path: '/gallery',
-      label: 'Gallery'
+    path: '/gallery',
+    label: 'Gallery'
     },
     {
-      path: '/contact',
-      label: 'Contact'
+    path: '/contact',
+    label: 'Contact'
     }
   ];
 
@@ -105,7 +105,7 @@ export function Navigation() {
                 <Link 
                   key={link.path} 
                   to={link.path}
-                  className={`relative px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-lg group ${
+                  className={`relative px-3 py-1.5 text-xs md:text-sm font-semibold transition-all duration-300 rounded-lg group ${
                     isActive 
                       ? 'text-[#8B2332]' 
                       : 'text-gray-700 hover:text-[#8B2332]'
@@ -137,7 +137,7 @@ export function Navigation() {
           <div className="hidden lg:flex items-center space-x-4 ml-6">
             <Link 
               to="/membership" 
-              className="relative px-6 py-2.5 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-full font-semibold text-sm transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-105 group overflow-hidden"
+              className="relative px-5 py-2 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-full font-semibold text-xs md:text-sm transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-105 group overflow-hidden"
             >
               {/* Shimmer effect */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
@@ -200,7 +200,7 @@ export function Navigation() {
                 key={link.path} 
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 relative group ${
+                className={`block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative group ${
                   isActive 
                     ? 'text-[#8B2332] bg-gradient-to-r from-[#8B2332]/10 via-[#8B2332]/15 to-[#8B2332]/10' 
                     : 'text-gray-700 hover:text-[#8B2332] hover:bg-gray-50'
@@ -229,7 +229,7 @@ export function Navigation() {
           <Link 
             to="/membership" 
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block w-full mt-4 px-6 py-3.5 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-xl font-semibold text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-[1.02] relative overflow-hidden group"
+            className="block w-full mt-4 px-5 py-3 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-xl font-semibold text-sm text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-[1.02] relative overflow-hidden group"
           >
             {/* Shimmer effect */}
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
@@ -237,8 +237,8 @@ export function Navigation() {
               <span>Join Us</span>
               <ChevronRight size={18} />
             </span>
-          </Link>
-        </div>
+            </Link>
+          </div>
       </div>
     </nav>
   );

@@ -399,21 +399,21 @@ export function Home() {
         ))}
 
         {/* Content */}
-        <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
+        <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)] py-12 md:py-16">
           {/* Main Heading with staggered animation */}
-          <div className="mb-8 md:mb-12">
+          <div className="mb-4 md:mb-6">
             {slides.map((slide, index) => (
               <div 
                 key={index} 
                 className={`transition-all duration-1000 ${index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 absolute w-full left-0'}`}
                 data-animate-id={`slide-${index}`}
               >
-                <h1 className={`text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight transform transition-all duration-700 drop-shadow-2xl ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                <h1 className={`text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 leading-tight transform transition-all duration-700 drop-shadow-2xl ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
                   {slide.title}
                   <br />
-                  <span className="text-[#7A7A3F] inline-block mt-2 drop-shadow-lg">{slide.subtitle}</span>
+                  <span className="text-[#7A7A3F] inline-block mt-1 md:mt-2 drop-shadow-lg">{slide.subtitle}</span>
                 </h1>
-                <p className={`text-lg md:text-xl lg:text-2xl text-white/95 mb-8 md:mb-12 max-w-3xl mx-auto transform transition-all duration-700 delay-200 drop-shadow-lg ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                <p className={`text-base md:text-lg lg:text-xl text-white/95 mb-4 md:mb-6 max-w-3xl mx-auto transform transition-all duration-700 delay-200 drop-shadow-lg ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
                   {slide.description}
                 </p>
               </div>
@@ -422,32 +422,34 @@ export function Home() {
 
           {/* CTA Buttons with animation - positioned above indicators */}
           <div 
-            className={`flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center flex-wrap transform transition-all duration-700 delay-300 mb-6 ${isVisible['cta'] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+            className={`flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center flex-wrap transform transition-all duration-700 delay-300 ${isVisible['cta'] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
             data-animate-id="cta"
           >
             <Link 
               to="/membership" 
-              className="group px-6 md:px-8 py-3 md:py-4 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-sm md:text-base"
+              className="group px-5 md:px-7 py-2.5 md:py-3 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-xs md:text-sm"
             >
               <span>Join APECK</span>
-              <ArrowRightIcon size={18} className="md:w-5 md:h-5 transform group-hover:translate-x-1 transition-transform" />
+              <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               to="/about" 
-              className="px-6 md:px-8 py-3 md:py-4 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform shadow-xl hover:shadow-2xl text-sm md:text-base"
+              className="px-5 md:px-7 py-2.5 md:py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform shadow-xl hover:shadow-2xl text-xs md:text-sm"
             >
               <span>Learn More</span>
             </Link>
             <a 
               href="#donate" 
-              className="group px-6 md:px-8 py-3 md:py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#8B2332] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform text-sm md:text-base"
+              className="group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#8B2332] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform text-xs md:text-sm"
             >
-              <HeartIcon size={18} className="md:w-5 md:h-5 transform group-hover:scale-110 transition-transform" />
-              <span>Partner With Us</span>
+              <HeartIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />
+              <span className="hidden sm:inline">Partner With Us</span>
+              <span className="sm:hidden">Partner</span>
             </a>
-            <button className="group px-6 md:px-8 py-3 md:py-4 border-2 border-white/70 text-white rounded-full font-semibold hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform backdrop-blur-sm text-sm md:text-base shadow-lg">
-              <PlayIcon size={18} className="md:w-5 md:h-5 transform group-hover:scale-110 transition-transform" />
-              <span>Watch Video</span>
+            <button className="group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white/70 text-white rounded-full font-semibold hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform backdrop-blur-sm text-xs md:text-sm shadow-lg">
+              <PlayIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />
+              <span className="hidden sm:inline">Watch Video</span>
+              <span className="sm:hidden">Video</span>
             </button>
           </div>
         </div>
@@ -557,20 +559,20 @@ export function Home() {
                 </div>
                 
                 {/* Main heading with gradient effect */}
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] leading-tight">
                   Who We Are
                 </h2>
                 
                 {/* Content paragraphs with better styling */}
                 <div className="space-y-6">
-                  <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                  <p className="text-gray-700 text-sm md:text-base leading-relaxed">
                     <span className="font-semibold text-[#8B2332]">APECK</span> is the premier association uniting Pentecostal and
                     Evangelical clergy across Kenya. We are dedicated to empowering
                     spiritual leaders through comprehensive training, mentorship,
                     and resources that enable them to fulfill their calling with
                     excellence.
                   </p>
-                  <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                  <p className="text-gray-700 text-sm md:text-base leading-relaxed">
                     Our mission is to strengthen the body of Christ by equipping
                     clergy with the tools, knowledge, and support they need to lead
                     transformative ministries that impact communities and advance
@@ -581,21 +583,21 @@ export function Home() {
                 {/* Enhanced CTA button */}
                 <Link 
                   to="/about" 
-                  className="group inline-flex items-center space-x-3 px-6 py-3 bg-white border-2 border-[#8B2332] text-[#8B2332] font-semibold rounded-full hover:bg-[#8B2332] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform"
+                  className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white border-2 border-[#8B2332] text-[#8B2332] font-semibold rounded-full hover:bg-[#8B2332] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
                 >
                   <span>Read Our Full Story</span>
-                  <ArrowRightIcon size={20} className="transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRightIcon size={18} className="transform group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 {/* Decorative stats or highlights */}
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                   <div>
-                    <div className="text-3xl font-bold text-[#8B2332]">15+</div>
-                    <div className="text-sm text-gray-600">Years Experience</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#8B2332]">15+</div>
+                    <div className="text-xs md:text-sm text-gray-600">Years Experience</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-[#7A7A3F]">1,500+</div>
-                    <div className="text-sm text-gray-600">Active Members</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#7A7A3F]">1,500+</div>
+                    <div className="text-xs md:text-sm text-gray-600">Active Members</div>
                   </div>
                 </div>
               </div>
@@ -823,7 +825,7 @@ export function Home() {
                     {/* Number with counting animation */}
                     <div className="relative mb-3 md:mb-4">
                       <div 
-                        className={`text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
+                        className={`text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
                           isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -832,7 +834,7 @@ export function Home() {
                       </div>
                       {/* Animated glow behind number */}
                       <div 
-                        className={`absolute inset-0 text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
+                        className={`absolute inset-0 text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
                           isAnimated ? 'opacity-100 animate-pulse-slow' : 'opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -850,7 +852,7 @@ export function Home() {
                     
                     {/* Label with slide-up animation */}
                     <div 
-                      className={`text-white/95 text-sm md:text-base lg:text-lg font-semibold tracking-wide uppercase transition-all duration-700 ${
+                      className={`text-white/95 text-xs md:text-sm font-semibold tracking-wide uppercase transition-all duration-700 ${
                         isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
                       }`}
                       style={{ transitionDelay: `${delay + 900}ms` }}
@@ -1017,10 +1019,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Programs & Initiatives
               </h2>
-              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
                 Comprehensive programs designed to empower clergy and strengthen
                 ministry impact
               </p>
@@ -1121,12 +1123,12 @@ export function Home() {
                       </div>
                       
                       {/* Title */}
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 relative z-10 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-lg md:text-xl font-bold text-[#8B2332] mb-4 relative z-10 group-hover:text-[#6B1A28] transition-colors">
                         {program.title}
                       </h3>
                       
                       {/* Description */}
-                      <p className="text-gray-600 mb-4 leading-relaxed relative z-10 text-sm md:text-base">
+                      <p className="text-gray-600 mb-4 leading-relaxed relative z-10 text-xs md:text-sm">
                         {program.description}
                       </p>
                       
@@ -1155,7 +1157,7 @@ export function Home() {
             <div className={`${isVisible['programs-cta'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'}`}>
               <Link 
                 to="/programs" 
-                className="group relative inline-flex items-center space-x-3 px-8 md:px-10 py-4 md:py-5 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden"
+                className="group relative inline-flex items-center space-x-2 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-sm md:text-base"
               >
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -1362,10 +1364,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 What Our Members Say
               </h2>
-              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Real stories from clergy transformed through APECK
               </p>
             </div>
@@ -1455,16 +1457,16 @@ export function Home() {
                               </div>
 
                               {/* Quote text */}
-                              <p className="text-gray-700 text-base md:text-lg mb-6 md:mb-8 leading-relaxed relative z-10">
+                              <p className="text-gray-700 text-sm md:text-base mb-6 md:mb-8 leading-relaxed relative z-10">
                                 "{testimonial.content}"
                               </p>
                               
                               {/* Author info */}
                               <div className="border-t border-gray-200 pt-6 relative z-10">
-                                <div className="font-bold text-[#8B2332] text-base md:text-lg mb-1 group-hover:text-[#6B1A28] transition-colors">
+                                <div className="font-bold text-[#8B2332] text-sm md:text-base mb-1 group-hover:text-[#6B1A28] transition-colors">
                                   {testimonial.name}
                                 </div>
-                                <div className="text-gray-600 text-sm md:text-base">
+                                <div className="text-gray-600 text-xs md:text-sm">
                                   {testimonial.role}
                                 </div>
                               </div>
@@ -1735,10 +1737,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Recent Updates
               </h2>
-              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Stay informed about our latest activities and events
               </p>
             </div>
@@ -1832,10 +1834,10 @@ export function Home() {
                               
                               {/* Content */}
                               <div className="p-6 md:p-8 relative z-10">
-                                <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-3 md:mb-4 group-hover:text-[#6B1A28] transition-colors">
+                                <h3 className="text-lg md:text-xl font-bold text-[#8B2332] mb-3 md:mb-4 group-hover:text-[#6B1A28] transition-colors">
                                   {update.title}
                                 </h3>
-                                <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
+                                <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-xs md:text-sm">
                                   {update.description}
                                 </p>
                                 

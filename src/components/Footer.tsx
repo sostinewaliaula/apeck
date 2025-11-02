@@ -94,7 +94,7 @@ export function Footer() {
                 className="w-full max-w-[280px] md:max-w-[320px] h-auto object-contain transition-all duration-300 hover:scale-105 hover:drop-shadow-2xl drop-shadow-lg filter brightness-110" 
               />
             </div>
-            <p className="text-white/90 text-sm md:text-base mb-6 leading-relaxed max-w-xs">
+            <p className="text-white/90 text-xs md:text-sm mb-6 leading-relaxed max-w-xs">
               Empowering the Clergy for Kingdom Impact across Kenya
             </p>
             <div className="flex space-x-3">
@@ -127,7 +127,7 @@ export function Footer() {
           
           {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-lg md:text-xl mb-6 text-white relative inline-block">
+            <h3 className="font-bold text-base md:text-lg mb-5 text-white relative inline-block">
               Quick Links
               <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#7A7A3F] to-transparent"></span>
             </h3>
@@ -135,7 +135,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/about" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">About Us</span>
                 </Link>
@@ -143,7 +143,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/programs" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Programs</span>
                 </Link>
@@ -151,7 +151,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/membership" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Membership</span>
                 </Link>
@@ -159,7 +159,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/news" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">News & Events</span>
                 </Link>
@@ -169,7 +169,7 @@ export function Footer() {
           
           {/* Resources */}
           <div>
-            <h3 className="font-bold text-lg md:text-xl mb-6 text-white relative inline-block">
+            <h3 className="font-bold text-base md:text-lg mb-5 text-white relative inline-block">
               Resources
               <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#7A7A3F] to-transparent"></span>
             </h3>
@@ -177,7 +177,7 @@ export function Footer() {
               <li>
                 <a 
                   href="#" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Training Materials</span>
                 </a>
@@ -185,7 +185,7 @@ export function Footer() {
               <li>
                 <a 
                   href="#" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Publications</span>
                 </a>
@@ -193,7 +193,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/gallery" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Gallery</span>
                 </Link>
@@ -201,7 +201,7 @@ export function Footer() {
               <li>
                 <Link 
                   to="/contact" 
-                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-sm md:text-base"
+                  className="text-white/80 hover:text-white transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
                 >
                   <span className="group-hover:border-b border-white/30">Contact</span>
                 </Link>
@@ -211,7 +211,7 @@ export function Footer() {
           
           {/* Contact Info */}
           <div>
-            <h3 className="font-bold text-lg md:text-xl mb-6 text-white relative inline-block">
+            <h3 className="font-bold text-base md:text-lg mb-5 text-white relative inline-block">
               Contact Info
               <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#7A7A3F] to-transparent"></span>
             </h3>
@@ -220,13 +220,13 @@ export function Footer() {
                 <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 transition-all">
                   <MapPinIcon size={12} className="group-hover:scale-110 transition-transform" />
                 </div>
-                <span className="text-white/80 hover:text-white transition-colors text-sm md:text-base">Nairobi, Kenya</span>
+                <span className="text-white/80 hover:text-white transition-colors text-xs md:text-sm">Nairobi, Kenya</span>
               </li>
               <li className="flex items-center space-x-3 group">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 transition-all">
                   <PhoneIcon size={12} className="group-hover:scale-110 transition-transform" />
                 </div>
-                <a href="tel:+254700000000" className="text-white/80 hover:text-white transition-colors text-sm md:text-base">
+                <a href="tel:+254700000000" className="text-white/80 hover:text-white transition-colors text-xs md:text-sm">
                   +254 700 000 000
                 </a>
               </li>
@@ -234,7 +234,7 @@ export function Footer() {
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/15 flex items-center justify-center group-hover:bg-white/25 transition-all">
                   <MailIcon size={12} className="group-hover:scale-110 transition-transform" />
                 </div>
-                <a href="mailto:info@apeck.or.ke" className="text-white/80 hover:text-white transition-colors text-sm md:text-base">
+                <a href="mailto:info@apeck.or.ke" className="text-white/80 hover:text-white transition-colors text-xs md:text-sm">
                   info@apeck.or.ke
                 </a>
               </li>

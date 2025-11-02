@@ -128,8 +128,8 @@ export function Programs() {
                   OUR PROGRAMS
                 </span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">Our Programs</h1>
-              <p className="text-xl md:text-2xl text-white/95 max-w-3xl leading-relaxed">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">Our Programs</h1>
+              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
                 Comprehensive training and development programs designed to empower
                 clergy for effective ministry and Kingdom impact
               </p>
@@ -406,7 +406,7 @@ export function Programs() {
                   FEATURED PROGRAMS
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Featured Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -435,7 +435,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
                         <BookOpenIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Theological Training
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -517,7 +517,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#7A7A3F]/20 to-[#7A7A3F]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#7A7A3F]/20">
                         <TrendingUpIcon size={36} className="text-[#7A7A3F]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Leadership Development
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -575,7 +575,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
                         <HeartIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Pastoral Care & Counseling
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -822,7 +822,7 @@ export function Programs() {
                   ADDITIONAL PROGRAMS
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Additional Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -962,7 +962,7 @@ export function Programs() {
                   PROGRAM FEATURES
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Program Features
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">

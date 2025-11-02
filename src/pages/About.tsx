@@ -156,10 +156,10 @@ export function About() {
                   ABOUT US
                 </span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 About APECK
               </h1>
-              <p className="text-xl md:text-2xl text-white/90 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-white/90 max-w-3xl leading-relaxed">
                 Building a unified community of Pentecostal and Evangelical clergy
                 dedicated to excellence in ministry and Kingdom impact
               </p>
@@ -203,12 +203,12 @@ export function About() {
                   OUR STORY
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
                 Our Story
               </h2>
               
               {/* Text content with image floating inside */}
-              <div className="space-y-6 text-gray-700 leading-relaxed text-base md:text-lg">
+              <div className="space-y-6 text-gray-700 leading-relaxed text-sm md:text-base">
                 <p className="transform transition-all duration-500 hover:translate-x-2">
                   APECK was founded in <span className="font-semibold text-[#8B2332]">2009</span> by a group of visionary clergy
                   leaders who recognized the urgent need for a unified platform to
@@ -489,7 +489,7 @@ export function About() {
                   </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center md:text-left">Our Mission</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Mission</h2>
                 <p className="text-base md:text-lg text-white leading-relaxed">
                   To empower, equip, and unite Pentecostal and Evangelical clergy
                   across Kenya through comprehensive training, spiritual
@@ -523,7 +523,7 @@ export function About() {
                   </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center md:text-left">Our Vision</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Vision</h2>
                 <p className="text-base md:text-lg text-white leading-relaxed">
                   A Kenya where every Pentecostal and Evangelical clergy member is
                   fully equipped, spiritually vibrant, and effectively leading
@@ -661,7 +661,7 @@ export function About() {
                   OUR VALUES
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Core Values
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -913,7 +913,7 @@ export function About() {
                   LEADERSHIP
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Leadership
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">

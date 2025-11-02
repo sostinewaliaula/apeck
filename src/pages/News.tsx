@@ -248,10 +248,10 @@ export function News() {
                   NEWS & EVENTS
                 </span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                 News & Events
               </h1>
-              <p className="text-xl md:text-2xl text-white/95 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
                 Stay updated with the latest news, events, and activities from APECK
               </p>
             </div>
@@ -452,7 +452,7 @@ export function News() {
                   UPCOMING EVENTS
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Upcoming Events
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -481,7 +481,7 @@ export function News() {
                           backgroundSize: '20px 20px',
                         }}></div>
                         <div className="relative z-10">
-                          <div className="text-5xl md:text-6xl font-bold mb-2">{event.date}</div>
+                          <div className="text-4xl md:text-5xl font-bold mb-2">{event.date}</div>
                           <div className="text-xl md:text-2xl font-semibold mb-1">{event.month}</div>
                           <div className="text-sm opacity-80">{event.year}</div>
                         </div>
@@ -723,7 +723,7 @@ export function News() {
                   LATEST NEWS
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Latest News
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -1009,10 +1009,10 @@ export function News() {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full mb-6 shadow-lg">
                 <BellIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-[#8B2332]">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight text-[#8B2332]">
                 Stay Updated
               </h2>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 Subscribe to our newsletter for the latest news, events, and resources
               </p>
               <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
