@@ -1,24 +1,26 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { TargetIcon, EyeIcon, HeartIcon, AwardIcon } from 'lucide-react';
 
 export function About() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Dotted pattern background component
-  const DottedPattern = ({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
+  // Memoized Dotted pattern background component
+  const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
     <div className={`absolute inset-0 ${className}`} style={{
       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
       backgroundSize: `${size} ${size}`,
       opacity: opacity,
+      willChange: 'opacity',
     }}></div>
-  );
+  ));
+  DottedPattern.displayName = 'DottedPattern';
 
-  // Geometric pattern component
-  const GeometricPattern = ({ className = '', opacity = 0.02 }: { className?: string; opacity?: number }) => {
-    const patternId = `geometric-pattern-${Math.random().toString(36).substr(2, 9)}`;
+  // Memoized Geometric pattern component
+  const GeometricPattern = memo(({ className = '', opacity = 0.02 }: { className?: string; opacity?: number }) => {
+    const patternId = useMemo(() => `geometric-pattern-${Math.random().toString(36).substr(2, 9)}`, []);
     return (
-      <div className={`absolute inset-0 ${className}`} style={{ opacity }}>
+      <div className={`absolute inset-0 ${className}`} style={{ opacity, willChange: 'opacity' }}>
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id={patternId} x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -30,10 +32,11 @@ export function About() {
         </svg>
       </div>
     );
-  };
+  });
+  GeometricPattern.displayName = 'GeometricPattern';
 
-  // Abstract shape component
-  const AbstractShape = ({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
+  // Memoized Abstract shape component
+  const AbstractShape = memo(({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
     const positions = {
       right: 'top-0 right-0 translate-x-1/2 -translate-y-1/2',
       left: 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
@@ -42,7 +45,7 @@ export function About() {
     };
 
     return (
-      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`}>
+      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`} style={{ willChange: 'transform' }}>
         <svg viewBox="0 0 200 200" className="w-full h-full">
           <path
             d="M 100,0 Q 150,50 150,100 Q 150,150 100,150 Q 50,150 50,100 Q 50,50 100,0 Z"
@@ -52,7 +55,8 @@ export function About() {
         </svg>
       </div>
     );
-  };
+  });
+  AbstractShape.displayName = 'AbstractShape';
 
   // Circle pattern component
   const CirclePattern = ({ position = 'center', size = 200 }: { position?: string; size?: number }) => {
@@ -81,25 +85,35 @@ export function About() {
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        const updates: { [key: string]: boolean } = {};
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute('data-animate-id');
-            if (id) {
-              setIsVisible((prev) => ({ ...prev, [id]: true }));
+            if (id && !isVisible[id]) {
+              updates[id] = true;
+              // Unobserve after first intersection for better performance
+              observerRef.current?.unobserve(entry.target);
             }
           }
         });
+        
+        if (Object.keys(updates).length > 0) {
+          setIsVisible((prev) => ({ ...prev, ...updates }));
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '50px' }
     );
 
     const elements = document.querySelectorAll('[data-animate-id]');
     elements.forEach((el) => observerRef.current?.observe(el));
 
     return () => {
-      elements.forEach((el) => observerRef.current?.unobserve(el));
+      if (observerRef.current) {
+        elements.forEach((el) => observerRef.current?.unobserve(el));
+        observerRef.current.disconnect();
+      }
     };
-  }, []);
+  }, [isVisible]);
 
   return <div className="w-full bg-white pt-20">
       {/* Hero Section */}
@@ -108,7 +122,8 @@ export function About() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600)'
+            backgroundImage: 'url(https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=75)',
+            willChange: 'background-image'
           }}
         ></div>
         
@@ -177,118 +192,126 @@ export function About() {
         <AbstractShape position="top" color="#8B2332" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div 
-              className="transform transition-all duration-700"
-              data-animate-id="history-text"
-            >
-              <div className={`${isVisible['history-text'] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-                <div className="inline-block mb-6">
-                  <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
-                    OUR STORY
-                  </span>
-                </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
-                  Our Story
-                </h2>
-                <div className="space-y-6 text-gray-700 leading-relaxed text-base md:text-lg">
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    APECK was founded in <span className="font-semibold text-[#8B2332]">2009</span> by a group of visionary clergy
-                    leaders who recognized the urgent need for a unified platform to
-                    support, empower, and connect Pentecostal and Evangelical
-                    ministers across Kenya. These founding members, representing diverse
-                    denominations and regions, shared a common vision: to create an
-                    organization that would bridge divides, foster collaboration, and
-                    elevate the standards of clergy practice nationwide.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    The initial meetings took place in Nairobi, where <span className="font-semibold text-[#7A7A3F]">15 founding
-                    pastors</span> gathered to discuss the challenges facing clergy in
-                    Kenya. They identified critical gaps in training, support systems,
-                    and networking opportunities. From these humble beginnings, APECK
-                    was officially registered as a national association, establishing
-                    its first headquarters in the capital city.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    What began as a small gathering of passionate pastors has
-                    grown into a national movement representing over <span className="font-semibold text-[#7A7A3F]">1,500 clergy
-                    members</span> from all <span className="font-semibold text-[#8B2332]">47 counties</span> of Kenya. Our growth
-                    has been marked by strategic expansion into regional chapters,
-                    each led by dedicated coordinators who understand the unique
-                    ministry contexts of their areas. From the coastal regions of
-                    Mombasa to the highlands of the Rift Valley, APECK has established
-                    a presence that truly represents the diversity of Kenya's
-                    Pentecostal and Evangelical community.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    Over the past <span className="font-semibold text-[#8B2332]">15 years</span>, we have facilitated hundreds of
-                    training programs, provided mentorship to emerging leaders,
-                    and created a supportive community where clergy can grow,
-                    learn, and thrive in their calling. Our training initiatives
-                    have covered topics ranging from biblical exegesis and theological
-                    studies to practical ministry skills including counseling,
-                    leadership development, financial management, and community
-                    engagement. We've organized <span className="font-semibold text-[#7A7A3F]">250+ workshops</span>, <span className="font-semibold text-[#8B2332]">47 annual
-                    conferences</span>, and numerous online learning opportunities.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    Our impact extends beyond training. APECK has facilitated
-                    partnerships with international organizations, securing resources
-                    and expertise to enhance our programs. We've launched initiatives
-                    supporting clergy welfare, including health insurance programs,
-                    emergency relief funds, and professional development scholarships.
-                    Our advocacy efforts have seen us engage with government bodies
-                    on matters affecting religious freedom, clergy welfare, and
-                    community development.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    The association has been instrumental in establishing
-                    mentorship programs that pair experienced clergy with emerging
-                    leaders. These relationships have resulted in <span className="font-semibold text-[#7A7A3F]">300+ mentorship
-                    pairings</span>, creating pathways for knowledge transfer and
-                    spiritual growth. Through our networking events, regional
-                    conferences, and digital platforms, clergy members have found
-                    lasting friendships, ministry partnerships, and collaborative
-                    opportunities.
-                  </p>
-                  <p className="transform transition-all duration-500 hover:translate-x-2">
-                    Today, APECK stands as a beacon of unity, excellence, and
-                    impact in the Kenyan church landscape, continuing to fulfill
-                    our mission of empowering clergy for Kingdom impact. We remain
-                    committed to our founding principles while adapting to the
-                    changing needs of ministry in the 21st century. Our vision for
-                    the future includes expanded training facilities, increased
-                    digital resources, enhanced member services, and deeper community
-                    engagement across all regions of Kenya. We believe that empowered,
-                    equipped, and united clergy are essential for the transformation
-                    of our nation and the advancement of God's Kingdom.
-                  </p>
-                </div>
+          <div 
+            className="transform transition-all duration-700"
+            data-animate-id="history-text"
+          >
+            <div className={`${isVisible['history-text'] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+              {/* Badge and Title */}
+              <div className="inline-block mb-6">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                  OUR STORY
+                </span>
               </div>
-            </div>
-            
-            <div 
-              className="relative transform transition-all duration-700"
-              data-animate-id="history-image"
-            >
-              <div className={`${isVisible['history-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
-                <div className="relative group">
-                  <img 
-                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800" 
-                    alt="Church gathering" 
-                    className="rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#8B2332]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#7A7A3F]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
-                  {/* Corner accents */}
-                  <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
+                Our Story
+              </h2>
+              
+              {/* Text content with image floating inside */}
+              <div className="space-y-6 text-gray-700 leading-relaxed text-base md:text-lg">
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  APECK was founded in <span className="font-semibold text-[#8B2332]">2009</span> by a group of visionary clergy
+                  leaders who recognized the urgent need for a unified platform to
+                  support, empower, and connect Pentecostal and Evangelical
+                  ministers across Kenya. These founding members, representing diverse
+                  denominations and regions, shared a common vision: to create an
+                  organization that would bridge divides, foster collaboration, and
+                  elevate the standards of clergy practice nationwide.
+                </p>
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  The initial meetings took place in Nairobi, where <span className="font-semibold text-[#7A7A3F]">15 founding
+                  pastors</span> gathered to discuss the challenges facing clergy in
+                  Kenya. They identified critical gaps in training, support systems,
+                  and networking opportunities. From these humble beginnings, APECK
+                  was officially registered as a national association, establishing
+                  its first headquarters in the capital city.
+                </p>
+                
+                {/* Image floated to the right - positioned in the middle of text flow */}
+                <div 
+                  className="relative transform transition-all duration-700 my-8 md:my-12"
+                  data-animate-id="history-image"
+                >
+                  <div className={`md:float-right md:ml-8 mb-6 md:mb-8 w-full md:w-96 lg:w-[420px] mx-auto md:mx-0 ${isVisible['history-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
+                    <div className="relative group">
+                      <img 
+                        src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=75"
+                        loading="lazy" 
+                        alt="Church gathering" 
+                        className="rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700 w-full" 
+                        style={{ willChange: 'transform' }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                      
+                      {/* Decorative elements */}
+                      <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#8B2332]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#7A7A3F]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      
+                      {/* Corner accents */}
+                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                  </div>
                 </div>
+                
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  What began as a small gathering of passionate pastors has
+                  grown into a national movement representing over <span className="font-semibold text-[#7A7A3F]">1,500 clergy
+                  members</span> from all <span className="font-semibold text-[#8B2332]">47 counties</span> of Kenya. Our growth
+                  has been marked by strategic expansion into regional chapters,
+                  each led by dedicated coordinators who understand the unique
+                  ministry contexts of their areas. From the coastal regions of
+                  Mombasa to the highlands of the Rift Valley, APECK has established
+                  a presence that truly represents the diversity of Kenya's
+                  Pentecostal and Evangelical community.
+                </p>
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  Over the past <span className="font-semibold text-[#8B2332]">15 years</span>, we have facilitated hundreds of
+                  training programs, provided mentorship to emerging leaders,
+                  and created a supportive community where clergy can grow,
+                  learn, and thrive in their calling. Our training initiatives
+                  have covered topics ranging from biblical exegesis and theological
+                  studies to practical ministry skills including counseling,
+                  leadership development, financial management, and community
+                  engagement. We've organized <span className="font-semibold text-[#7A7A3F]">250+ workshops</span>, <span className="font-semibold text-[#8B2332]">47 annual
+                  conferences</span>, and numerous online learning opportunities.
+                </p>
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  Our impact extends beyond training. APECK has facilitated
+                  partnerships with international organizations, securing resources
+                  and expertise to enhance our programs. We've launched initiatives
+                  supporting clergy welfare, including health insurance programs,
+                  emergency relief funds, and professional development scholarships.
+                  Our advocacy efforts have seen us engage with government bodies
+                  on matters affecting religious freedom, clergy welfare, and
+                  community development.
+                </p>
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  The association has been instrumental in establishing
+                  mentorship programs that pair experienced clergy with emerging
+                  leaders. These relationships have resulted in <span className="font-semibold text-[#7A7A3F]">300+ mentorship
+                  pairings</span>, creating pathways for knowledge transfer and
+                  spiritual growth. Through our networking events, regional
+                  conferences, and digital platforms, clergy members have found
+                  lasting friendships, ministry partnerships, and collaborative
+                  opportunities.
+                </p>
+                <p className="transform transition-all duration-500 hover:translate-x-2">
+                  Today, APECK stands as a beacon of unity, excellence, and
+                  impact in the Kenyan church landscape, continuing to fulfill
+                  our mission of empowering clergy for Kingdom impact. We remain
+                  committed to our founding principles while adapting to the
+                  changing needs of ministry in the 21st century. Our vision for
+                  the future includes expanded training facilities, increased
+                  digital resources, enhanced member services, and deeper community
+                  engagement across all regions of Kenya. We believe that empowered,
+                  equipped, and united clergy are essential for the transformation
+                  of our nation and the advancement of God's Kingdom.
+                </p>
               </div>
+              
+              {/* Clear float to prevent layout issues */}
+              <div className="clear-both"></div>
             </div>
           </div>
         </div>

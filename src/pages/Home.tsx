@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
 
@@ -10,23 +10,28 @@ export function Home() {
   const [countedValues, setCountedValues] = useState<{ [key: number]: number }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Optimized image sizes - use smaller widths and add quality parameter
   const slides = [{
-    image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600',
+    image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&q=75',
+    imageMobile: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&q=75',
     title: 'Empowering the Clergy',
     subtitle: 'for Kingdom Impact',
     description: 'Uniting Pentecostal and Evangelical clergy across Kenya through training, leadership development, and spiritual empowerment'
   }, {
-    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1600',
+    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&q=75',
+    imageMobile: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=75',
     title: 'Comprehensive Training',
     subtitle: 'Programs',
     description: 'Over 250+ training programs designed to equip clergy for effective ministry and leadership excellence'
   }, {
-    image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1600',
+    image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1200&q=75',
+    imageMobile: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=75',
     title: 'Community Impact',
     subtitle: 'Across Kenya',
     description: 'Reaching all 47 counties with transformative ministry initiatives and humanitarian outreach programs'
   }, {
-    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600',
+    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=75',
+    imageMobile: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=75',
     title: 'Join 1,500+ Clergy',
     subtitle: 'Members',
     description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth'
@@ -96,58 +101,58 @@ export function Home() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  // News updates data - expanded with more items
+  // News updates data - expanded with more items (optimized image sizes)
   const newsUpdates = [
     { 
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600', 
+      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&q=75', 
       date: 'DECEMBER 15, 2024',
       title: 'Annual Leadership Conference 2024',
       description: 'Join us for three days of powerful teaching, networking, and spiritual renewal'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600', 
+      image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=75', 
       date: 'DECEMBER 10, 2024',
       title: 'New Training Program Launch',
       description: 'Introducing our comprehensive pastoral care and counseling certification'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600', 
+      image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&q=75', 
       date: 'DECEMBER 5, 2024',
       title: 'Community Outreach Success',
       description: 'Over 5,000 families reached through our latest humanitarian initiative'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600', 
+      image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&q=75', 
       date: 'NOVEMBER 28, 2024',
       title: 'Pastors Retreat 2024',
       description: 'A time of refreshing and renewal for ministry leaders across all regions'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600', 
+      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=75', 
       date: 'NOVEMBER 20, 2024',
       title: 'Youth Ministry Summit',
       description: 'Empowering the next generation of church leaders and ministers'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600', 
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=75', 
       date: 'NOVEMBER 15, 2024',
       title: 'Biblical Counseling Workshop',
       description: 'Advanced training in pastoral care and biblical counseling techniques'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600', 
+      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=75', 
       date: 'NOVEMBER 10, 2024',
       title: 'Women in Ministry Conference',
       description: 'Celebrating and empowering women leaders in the church across Kenya'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600', 
+      image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&q=75', 
       date: 'NOVEMBER 5, 2024',
       title: 'Church Planting Initiative',
       description: 'Launching new church plants in underserved communities nationwide'
     },
     { 
-      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600', 
+      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600&q=75', 
       date: 'OCTOBER 30, 2024',
       title: 'Music & Worship Training',
       description: 'Comprehensive worship leadership training for music ministers and teams'
@@ -214,14 +219,15 @@ export function Home() {
   };
 
   useEffect(() => {
-    // Intersection Observer for scroll animations
+    // Optimized Intersection Observer for scroll animations
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        const updates: { [key: string]: boolean } = {};
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute('data-animate-id');
-            if (id) {
-              setIsVisible((prev) => ({ ...prev, [id]: true }));
+            if (id && !isVisible[id]) {
+              updates[id] = true;
               
               // Trigger counter animation for stats
               if (id.startsWith('stat-')) {
@@ -237,20 +243,30 @@ export function Home() {
                   animateCounter(index, statValues[index].num);
                 }
               }
+              
+              // Unobserve after first intersection for better performance
+              observerRef.current?.unobserve(entry.target);
             }
           }
         });
+        
+        if (Object.keys(updates).length > 0) {
+          setIsVisible((prev) => ({ ...prev, ...updates }));
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '50px' }
     );
 
     const elements = document.querySelectorAll('[data-animate-id]');
     elements.forEach((el) => observerRef.current?.observe(el));
 
     return () => {
-      elements.forEach((el) => observerRef.current?.unobserve(el));
+      if (observerRef.current) {
+        elements.forEach((el) => observerRef.current?.unobserve(el));
+        observerRef.current.disconnect();
+      }
     };
-  }, [countedValues]);
+  }, [isVisible, countedValues]); // Keep dependencies but optimize inside
 
   const nextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % slides.length);
@@ -260,21 +276,23 @@ export function Home() {
     setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Dotted pattern background component (stippled/dot grid pattern)
-  const DottedPattern = ({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
+  // Memoized pattern components for better performance
+  const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
     <div className={`absolute inset-0 ${className}`} style={{
       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
       backgroundSize: `${size} ${size}`,
       opacity: opacity,
+      willChange: 'opacity',
     }}></div>
-  );
+  ));
+  DottedPattern.displayName = 'DottedPattern';
 
-  // Geometric pattern component (polygonal/triangular tessellation)
-  const GeometricPattern = ({ className = '', opacity = 0.02 }: { className?: string; opacity?: number }) => {
-    // Create SVG pattern for geometric shapes with unique ID
-    const patternId = `geometric-pattern-${Math.random().toString(36).substr(2, 9)}`;
+  // Geometric pattern component (polygonal/triangular tessellation) - memoized
+  const GeometricPattern = memo(({ className = '', opacity = 0.02 }: { className?: string; opacity?: number }) => {
+    // Use useMemo for pattern ID to avoid regeneration
+    const patternId = useMemo(() => `geometric-pattern-${Math.random().toString(36).substr(2, 9)}`, []);
     return (
-      <div className={`absolute inset-0 ${className}`} style={{ opacity }}>
+      <div className={`absolute inset-0 ${className}`} style={{ opacity, willChange: 'opacity' }}>
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id={patternId} x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -286,10 +304,11 @@ export function Home() {
         </svg>
       </div>
     );
-  };
+  });
+  GeometricPattern.displayName = 'GeometricPattern';
 
-  // Abstract geometric shape component (curved/polygonal decorative elements)
-  const AbstractShape = ({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
+  // Abstract geometric shape component (curved/polygonal decorative elements) - memoized
+  const AbstractShape = memo(({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
     const positions = {
       right: 'top-0 right-0 translate-x-1/2 -translate-y-1/2',
       left: 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
@@ -298,7 +317,7 @@ export function Home() {
     };
 
     return (
-      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`}>
+      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`} style={{ willChange: 'transform' }}>
         <svg viewBox="0 0 200 200" className="w-full h-full">
           <path
             d="M 100,0 Q 150,50 150,100 Q 150,150 100,150 Q 50,150 50,100 Q 50,50 100,0 Z"
@@ -314,7 +333,8 @@ export function Home() {
         </svg>
       </div>
     );
-  };
+  });
+  AbstractShape.displayName = 'AbstractShape';
 
   // Additional decorative circle pattern
   const CirclePattern = ({ position = 'center', size = 200 }: { position?: string; size?: number }) => {
@@ -370,8 +390,9 @@ export function Home() {
             <div 
               className="absolute inset-0 bg-cover bg-center transform transition-transform duration-[10s] ease-out z-0"
               style={{
-                backgroundImage: `url('${slide.image}')`,
-                transform: index === currentSlide ? 'scale(1.05)' : 'scale(1)'
+                backgroundImage: `url('${window.innerWidth < 768 ? slide.imageMobile || slide.image : slide.image}')`,
+                transform: index === currentSlide ? 'scale(1.05)' : 'scale(1)',
+                willChange: 'transform, background-image'
               }}
             ></div>
           </div>
@@ -629,9 +650,11 @@ export function Home() {
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white p-1">
                     <div className="relative overflow-hidden rounded-3xl">
                       <img 
-                        src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800" 
+                        src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=75" 
                         alt="Clergy gathering" 
+                        loading="lazy"
                         className="w-full h-auto transform group-hover:scale-110 transition-transform duration-700" 
+                        style={{ willChange: 'transform' }}
                       />
                       {/* Overlay gradient on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -1789,8 +1812,10 @@ export function Home() {
                                 {/* Image with zoom effect */}
                                 <img 
                                   src={update.image} 
-                                  alt={update.title} 
+                                  alt={update.title}
+                                  loading="lazy"
                                   className="w-full h-56 md:h-64 object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                                  style={{ willChange: 'transform' }}
                                 />
                                 
                                 {/* Gradient overlay on image */}
