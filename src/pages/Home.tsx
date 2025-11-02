@@ -369,7 +369,7 @@ export function Home() {
 
   return <div className="w-full bg-white overflow-hidden">
       {/* Hero Carousel Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 z-0">
           <DottedPattern />
