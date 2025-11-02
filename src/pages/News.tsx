@@ -248,10 +248,10 @@ export function News() {
                   NEWS & EVENTS
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
                 News & Events
               </h1>
-              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
+              <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
                 Stay updated with the latest news, events, and activities from APECK
               </p>
             </div>
@@ -452,10 +452,10 @@ export function News() {
                   UPCOMING EVENTS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Upcoming Events
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Mark your calendar for these important dates
               </p>
             </div>
@@ -481,7 +481,7 @@ export function News() {
                           backgroundSize: '20px 20px',
                         }}></div>
                         <div className="relative z-10">
-                          <div className="text-4xl md:text-5xl font-bold mb-2">{event.date}</div>
+                          <div className="text-3xl md:text-4xl font-bold mb-2">{event.date}</div>
                           <div className="text-xl md:text-2xl font-semibold mb-1">{event.month}</div>
                           <div className="text-sm opacity-80">{event.year}</div>
                         </div>
@@ -513,7 +513,7 @@ export function News() {
                             });
                             setIsFormOpen(true);
                           }}
-                          className={`px-6 py-3 ${isMaroon ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-[#7A7A3F] hover:bg-[#6A6A35]'} text-white rounded-full font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105`}
+                          className={`px-5 py-2.5 ${isMaroon ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-[#7A7A3F] hover:bg-[#6A6A35]'} text-white rounded-full font-semibold text-xs md:text-sm transition-all shadow-lg hover:shadow-xl hover:scale-105`}
                         >
                           {index === 1 ? 'Enroll Now' : 'Register Now'}
                         </button>
@@ -723,10 +723,10 @@ export function News() {
                   LATEST NEWS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Latest News
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Recent updates and announcements
               </p>
             </div>
@@ -1009,19 +1009,19 @@ export function News() {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full mb-6 shadow-lg">
                 <BellIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight text-[#8B2332]">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight text-[#8B2332]">
                 Stay Updated
               </h2>
-              <p className="text-base md:text-lg text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 Subscribe to our newsletter for the latest news, events, and resources
               </p>
               <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
                 <input 
                   type="email" 
                   placeholder="Enter your email address" 
-                  className="flex-1 px-6 py-4 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8B2332] shadow-lg border border-gray-200"
+                  className="flex-1 px-5 py-3 rounded-full text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B2332] shadow-lg border border-gray-200"
                 />
-                <button className="px-8 py-4 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all shadow-xl hover:shadow-2xl hover:scale-105">
+                <button className="px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold text-xs md:text-sm hover:bg-[#6B1A28] transition-all shadow-xl hover:shadow-2xl hover:scale-105">
                   Subscribe
                 </button>
               </form>

@@ -146,10 +146,10 @@ export function Membership() {
                   JOIN APECK
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
                 Membership
               </h1>
-              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed mb-8">
+              <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed mb-8">
                 Join a community of passionate clergy committed to excellence in
                 ministry and Kingdom impact
               </p>
@@ -358,7 +358,7 @@ export function Membership() {
                   MEMBERSHIP BENEFITS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Membership Benefits
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -617,7 +617,7 @@ export function Membership() {
                   MEMBERSHIP CATEGORIES
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Membership Categories
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -643,7 +643,7 @@ export function Membership() {
                   <div className="relative z-10">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">Associate Member</h3>
                     <p className="text-white/80 mb-4">For emerging clergy</p>
-                    <div className="text-3xl md:text-4xl font-bold mb-1">KSh 5,000</div>
+                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 5,000</div>
                     <p className="text-white/80 text-sm">per year</p>
                   </div>
                 </div>
@@ -701,7 +701,7 @@ export function Membership() {
                   <div className="relative z-10">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">Full Member</h3>
                     <p className="text-white/80 mb-4">For established clergy</p>
-                    <div className="text-3xl md:text-4xl font-bold mb-1">KSh 10,000</div>
+                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 10,000</div>
                     <p className="text-white/80 text-sm">per year</p>
                   </div>
                 </div>
@@ -758,7 +758,7 @@ export function Membership() {
                   <div className="relative z-10">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">Lifetime Member</h3>
                     <p className="text-white/80 mb-4">For senior clergy</p>
-                    <div className="text-3xl md:text-4xl font-bold mb-1">KSh 50,000</div>
+                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 50,000</div>
                     <p className="text-white/80 text-sm">one-time payment</p>
                   </div>
                 </div>
@@ -880,7 +880,7 @@ export function Membership() {
                   MEMBERSHIP REQUIREMENTS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Membership Requirements
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">

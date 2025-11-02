@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -27,25 +28,29 @@ const PageLoader = () => (
 );
 
 export function App() {
-  return <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen bg-white">
-        <Navigation />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/programs" element={<Programs />} />
-            <Route path="/programs/:programId" element={<ProgramDetail />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/news/:newsId" element={<NewsDetail />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </Suspense>
-        <Footer />
-        <ScrollToTopButton />
-      </div>
-    </BrowserRouter>;
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+          <Navigation />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/programs" element={<Programs />} />
+              <Route path="/programs/:programId" element={<ProgramDetail />} />
+              <Route path="/membership" element={<Membership />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:newsId" element={<NewsDetail />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </Suspense>
+          <Footer />
+          <ScrollToTopButton />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
 }

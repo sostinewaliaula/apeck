@@ -156,10 +156,10 @@ export function About() {
                   ABOUT US
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                 About APECK
               </h1>
-              <p className="text-base md:text-lg text-white/90 max-w-3xl leading-relaxed">
+              <p className="text-sm md:text-base text-white/90 max-w-3xl leading-relaxed">
                 Building a unified community of Pentecostal and Evangelical clergy
                 dedicated to excellence in ministry and Kingdom impact
               </p>
@@ -203,7 +203,7 @@ export function About() {
                   OUR STORY
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
                 Our Story
               </h2>
               
@@ -490,7 +490,7 @@ export function About() {
                 </div>
                 
                 <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Mission</h2>
-                <p className="text-base md:text-lg text-white leading-relaxed">
+                <p className="text-xs md:text-sm text-white leading-relaxed">
                   To empower, equip, and unite Pentecostal and Evangelical clergy
                   across Kenya through comprehensive training, spiritual
                   development, and collaborative ministry initiatives that advance
@@ -524,7 +524,7 @@ export function About() {
                 </div>
                 
                 <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Vision</h2>
-                <p className="text-base md:text-lg text-white leading-relaxed">
+                <p className="text-xs md:text-sm text-white leading-relaxed">
                   A Kenya where every Pentecostal and Evangelical clergy member is
                   fully equipped, spiritually vibrant, and effectively leading
                   transformative ministries that impact individuals, families, and
@@ -661,7 +661,7 @@ export function About() {
                   OUR VALUES
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Core Values
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -913,7 +913,7 @@ export function About() {
                   LEADERSHIP
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Leadership
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">

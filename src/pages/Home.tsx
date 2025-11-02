@@ -367,7 +367,7 @@ export function Home() {
     }}></div>
   );
 
-  return <div className="w-full bg-white overflow-hidden">
+  return <div className="w-full bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
       {/* Hero Carousel Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
         {/* Animated Background Pattern */}
@@ -408,12 +408,12 @@ export function Home() {
                 className={`transition-all duration-1000 ${index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 absolute w-full left-0'}`}
                 data-animate-id={`slide-${index}`}
               >
-                <h1 className={`text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 leading-tight transform transition-all duration-700 drop-shadow-2xl ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                <h1 className={`text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 leading-tight transform transition-all duration-700 drop-shadow-2xl ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
                   {slide.title}
                   <br />
                   <span className="text-[#7A7A3F] inline-block mt-1 md:mt-2 drop-shadow-lg">{slide.subtitle}</span>
                 </h1>
-                <p className={`text-base md:text-lg lg:text-xl text-white/95 mb-4 md:mb-6 max-w-3xl mx-auto transform transition-all duration-700 delay-200 drop-shadow-lg ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                <p className={`text-sm md:text-base text-white/95 mb-4 md:mb-6 max-w-3xl mx-auto transform transition-all duration-700 delay-200 drop-shadow-lg ${isVisible[`slide-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
                   {slide.description}
                 </p>
               </div>
@@ -427,7 +427,7 @@ export function Home() {
           >
             <Link 
               to="/membership" 
-              className="group px-5 md:px-7 py-2.5 md:py-3 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-xs md:text-sm"
+              className="group px-5 md:px-7 py-2.5 md:py-3 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-xs md:text-sm"
             >
               <span>Join APECK</span>
               <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -490,7 +490,7 @@ export function Home() {
       </div>
 
       {/* About Section with Modern Graphics */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background patterns - multiple layers */}
         <DottedPattern opacity={0.04} size="28px" />
         <DottedPattern opacity={0.02} size="40px" className="mix-blend-multiply" />
@@ -559,20 +559,20 @@ export function Home() {
                 </div>
                 
                 {/* Main heading with gradient effect */}
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] leading-tight">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] leading-tight">
                   Who We Are
                 </h2>
                 
                 {/* Content paragraphs with better styling */}
                 <div className="space-y-6">
-                  <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed">
                     <span className="font-semibold text-[#8B2332]">APECK</span> is the premier association uniting Pentecostal and
                     Evangelical clergy across Kenya. We are dedicated to empowering
                     spiritual leaders through comprehensive training, mentorship,
                     and resources that enable them to fulfill their calling with
                     excellence.
                   </p>
-                  <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed">
                     Our mission is to strengthen the body of Christ by equipping
                     clergy with the tools, knowledge, and support they need to lead
                     transformative ministries that impact communities and advance
@@ -593,11 +593,11 @@ export function Home() {
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                   <div>
                     <div className="text-2xl md:text-3xl font-bold text-[#8B2332]">15+</div>
-                    <div className="text-xs md:text-sm text-gray-600">Years Experience</div>
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
                   </div>
                   <div>
                     <div className="text-2xl md:text-3xl font-bold text-[#7A7A3F]">1,500+</div>
-                    <div className="text-xs md:text-sm text-gray-600">Active Members</div>
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Active Members</div>
                   </div>
                 </div>
               </div>
@@ -649,7 +649,7 @@ export function Home() {
                   </div>
 
                   {/* Main image with modern styling */}
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white p-1">
+                  <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-gray-800 p-1 transition-colors duration-300">
                     <div className="relative overflow-hidden rounded-3xl">
                       <img 
                         src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=75" 
@@ -825,7 +825,7 @@ export function Home() {
                     {/* Number with counting animation */}
                     <div className="relative mb-3 md:mb-4">
                       <div 
-                        className={`text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
+                        className={`text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#7A7A3F] drop-shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:text-[#8BFFFF] inline-block ${
                           isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -834,7 +834,7 @@ export function Home() {
                       </div>
                       {/* Animated glow behind number */}
                       <div 
-                        className={`absolute inset-0 text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
+                        className={`absolute inset-0 text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#7A7A3F]/20 blur-lg -z-10 transition-all duration-1000 ${
                           isAnimated ? 'opacity-100 animate-pulse-slow' : 'opacity-0'
                         }`}
                         style={{ transitionDelay: `${delay + 700}ms` }}
@@ -1019,10 +1019,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Programs & Initiatives
               </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
                 Comprehensive programs designed to empower clergy and strengthen
                 ministry impact
               </p>
@@ -1082,7 +1082,7 @@ export function Home() {
                     }`}
                     style={{ transitionDelay: `${delay}ms` }}
                   >
-                    <div className="relative bg-white p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 h-full transform hover:-translate-y-3 hover:scale-[1.02] group-hover:border-[#8B2332]/20">
+                    <div className="relative bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 h-full transform hover:-translate-y-3 hover:scale-[1.02] group-hover:border-[#8B2332]/20 dark:group-hover:border-[#B85C6D]/20">
                       {/* Enhanced dotted pattern overlay */}
                       <div className="absolute inset-0 rounded-3xl opacity-[0.04]" style={{
                         backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
@@ -1123,12 +1123,12 @@ export function Home() {
                       </div>
                       
                       {/* Title */}
-                      <h3 className="text-lg md:text-xl font-bold text-[#8B2332] mb-4 relative z-10 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-base md:text-lg font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4 relative z-10 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                         {program.title}
                       </h3>
                       
                       {/* Description */}
-                      <p className="text-gray-600 mb-4 leading-relaxed relative z-10 text-xs md:text-sm">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed relative z-10 text-xs">
                         {program.description}
                       </p>
                       
@@ -1157,7 +1157,7 @@ export function Home() {
             <div className={`${isVisible['programs-cta'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'}`}>
               <Link 
                 to="/programs" 
-                className="group relative inline-flex items-center space-x-2 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-sm md:text-base"
+                className="group relative inline-flex items-center space-x-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-xs md:text-sm"
               >
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -1364,10 +1364,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 What Our Members Say
               </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
                 Real stories from clergy transformed through APECK
               </p>
             </div>
@@ -1457,16 +1457,16 @@ export function Home() {
                               </div>
 
                               {/* Quote text */}
-                              <p className="text-gray-700 text-sm md:text-base mb-6 md:mb-8 leading-relaxed relative z-10">
+                              <p className="text-gray-700 dark:text-gray-300 text-xs md:text-sm mb-6 md:mb-8 leading-relaxed relative z-10">
                                 "{testimonial.content}"
                               </p>
                               
                               {/* Author info */}
                               <div className="border-t border-gray-200 pt-6 relative z-10">
-                                <div className="font-bold text-[#8B2332] text-sm md:text-base mb-1 group-hover:text-[#6B1A28] transition-colors">
+                                <div className="font-bold text-[#8B2332] text-xs md:text-sm mb-1 group-hover:text-[#6B1A28] transition-colors">
                                   {testimonial.name}
                                 </div>
-                                <div className="text-gray-600 text-xs md:text-sm">
+                                <div className="text-gray-600 dark:text-gray-400 text-xs">
                                   {testimonial.role}
                                 </div>
                               </div>
@@ -1737,10 +1737,10 @@ export function Home() {
                 </span>
               </div>
               
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Recent Updates
               </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
                 Stay informed about our latest activities and events
               </p>
             </div>
@@ -1834,10 +1834,10 @@ export function Home() {
                               
                               {/* Content */}
                               <div className="p-6 md:p-8 relative z-10">
-                                <h3 className="text-lg md:text-xl font-bold text-[#8B2332] mb-3 md:mb-4 group-hover:text-[#6B1A28] transition-colors">
+                                <h3 className="text-base md:text-lg font-bold text-[#8B2332] mb-3 md:mb-4 group-hover:text-[#6B1A28] transition-colors">
                                   {update.title}
                                 </h3>
-                                <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-xs md:text-sm">
+                                <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-xs">
                                   {update.description}
                                 </p>
                                 
@@ -1954,7 +1954,7 @@ export function Home() {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight text-[#8B2332]">
               Ready to Make an Impact?
             </h2>
-            <p className="text-lg md:text-xl text-gray-700 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
               Join a community of passionate clergy committed to transforming
               Kenya through the Gospel
             </p>

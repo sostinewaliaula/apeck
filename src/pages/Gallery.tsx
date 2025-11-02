@@ -204,10 +204,10 @@ export function Gallery() {
                   MEMORY LANE
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
                 Gallery
               </h1>
-              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
+              <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
                 Capturing moments of faith, fellowship, and transformation across our ministry
               </p>
             </div>
@@ -281,7 +281,7 @@ export function Gallery() {
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`inline-flex items-center space-x-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
+                    className={`inline-flex items-center space-x-2 px-5 py-2.5 rounded-full font-semibold text-xs md:text-sm transition-all duration-300 transform hover:scale-105 ${
                       isSelected
                         ? 'bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white shadow-xl shadow-[#8B2332]/30'
                         : 'bg-white text-gray-700 hover:bg-gray-100 shadow-lg hover:shadow-xl'
@@ -708,7 +708,7 @@ export function Gallery() {
                   OUR IMPACT
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
               Our Impact in Pictures
             </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
@@ -732,10 +732,10 @@ export function Gallery() {
                   <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#8B2332]/10 to-[#7A7A3F]/10 rounded-full mb-6 shadow-lg">
                     <CameraIcon size={32} className="text-[#8B2332]" strokeWidth={2.5} />
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold mb-3" style={{ color: stat.color }}>
+                  <div className="text-3xl md:text-4xl font-bold mb-3" style={{ color: stat.color }}>
                     {stat.value}
                   </div>
-                  <div className="text-gray-600 font-semibold text-lg">
+                  <div className="text-gray-600 font-semibold text-sm md:text-base">
                     {stat.label}
                   </div>
             </div>

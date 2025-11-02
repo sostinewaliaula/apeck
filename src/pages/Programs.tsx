@@ -128,8 +128,8 @@ export function Programs() {
                   OUR PROGRAMS
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">Our Programs</h1>
-              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">Our Programs</h1>
+              <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
                 Comprehensive training and development programs designed to empower
                 clergy for effective ministry and Kingdom impact
               </p>
@@ -406,7 +406,7 @@ export function Programs() {
                   FEATURED PROGRAMS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Featured Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -435,7 +435,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
                         <BookOpenIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Theological Training
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -517,7 +517,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#7A7A3F]/20 to-[#7A7A3F]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#7A7A3F]/20">
                         <TrendingUpIcon size={36} className="text-[#7A7A3F]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Leadership Development
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -575,7 +575,7 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
                         <HeartIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
                         Pastoral Care & Counseling
                       </h3>
                       <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
@@ -822,7 +822,7 @@ export function Programs() {
                   ADDITIONAL PROGRAMS
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Additional Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -943,13 +943,221 @@ export function Programs() {
 
       {/* Program Features */}
       <section className="relative py-20 md:py-32 bg-white overflow-hidden">
-        {/* Enhanced background graphics */}
-        <DottedPattern opacity={0.03} size="32px" />
-        <GeometricPattern opacity={0.02} />
+        {/* Enhanced background graphics - multiple layers */}
+        <DottedPattern opacity={0.04} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <DottedPattern opacity={0.015} size="64px" className="opacity-30" />
+        <GeometricPattern opacity={0.025} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
+        <GeometricPattern opacity={0.01} className="rotate-90" />
         
-        {/* Blur effects */}
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/2 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/2 rounded-full blur-3xl"></div>
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        <AbstractShape position="left" color="#8B2332" />
+        <AbstractShape position="right" color="#7A7A3F" />
+        
+        {/* Additional decorative geometric shapes */}
+        <div className="absolute top-1/4 left-1/5 w-56 h-56 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.15"/>
+            <polygon points="50,15 85,50 50,85 15,50" fill="#7A7A3F" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-1/5 w-52 h-52 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 80,25 80,60 Q 80,95 50,85 Q 20,95 20,60 Q 20,25 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.15"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute top-1/3 right-1/4 w-44 h-44 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 left-1/4 w-40 h-40 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* More floating shapes */}
+        <div className="absolute top-1/5 left-1/3 w-36 h-36 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,8 92,50 50,92 8,50" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/5 right-1/3 w-32 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.1"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/3 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-0 w-72 h-72 bg-[#7A7A3F]/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-0 w-72 h-72 bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-64 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-64 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-px bg-gradient-to-r from-transparent via-[#8B2332]/8 to-transparent hidden lg:block"></div>
+        <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 translate-y-1/2 w-40 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/8 to-transparent hidden lg:block"></div>
+        
+        {/* Diagonal accent lines */}
+        <div className="absolute top-1/2 right-1/4 w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/15 to-transparent transform rotate-45 hidden xl:block"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-32 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/15 to-transparent transform -rotate-45 hidden xl:block"></div>
+        <div className="absolute top-1/3 left-1/3 w-24 h-px bg-gradient-to-r from-transparent via-[#8B2332]/12 to-transparent transform rotate-12 hidden xl:block"></div>
+        <div className="absolute bottom-1/2 right-1/3 w-24 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/12 to-transparent transform -rotate-12 hidden xl:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-16 left-10 w-2.5 h-2.5 bg-[#8B2332]/25 rounded-full hidden md:block"></div>
+        <div className="absolute top-24 right-12 w-2 h-2 bg-[#7A7A3F]/25 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-20 left-12 w-2 h-2 bg-[#8B2332]/25 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 right-10 w-2.5 h-2.5 bg-[#7A7A3F]/25 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-1/6 -translate-y-1/2 w-1.5 h-1.5 bg-[#8B2332]/20 rounded-full hidden xl:block"></div>
+        <div className="absolute bottom-1/2 right-1/6 translate-y-1/2 w-1.5 h-1.5 bg-[#7A7A3F]/20 rounded-full hidden xl:block"></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#8B2332]/20 rounded-full hidden lg:block"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden lg:block"></div>
+        
+        {/* Circle patterns */}
+        <div className="absolute top-1/4 left-0 w-64 h-64 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="65" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.18"/>
+            <circle cx="100" cy="100" r="45" fill="none" stroke="#8B2332" strokeWidth="0.6" opacity="0.15"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-0 w-60 h-60 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.22"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.18"/>
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#7A7A3F" strokeWidth="0.6" opacity="0.15"/>
+          </svg>
+        </div>
+        
+        {/* Additional scattered shapes */}
+        <div className="absolute top-1/5 right-1/5 w-28 h-28 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <rect x="25" y="25" width="50" height="50" rx="5" fill="#8B2332" opacity="0.08" transform="rotate(45 50 50)"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/5 left-1/5 w-24 h-24 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,10 90,50 50,90 10,50" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Star-like shapes */}
+        <div className="absolute top-1/6 right-1/3 w-20 h-20 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,5 L55,35 L85,40 L60,55 L70,85 L50,65 L30,85 L40,55 L15,40 L45,35 Z" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/6 left-1/3 w-18 h-18 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,8 L53,33 L78,38 L58,50 L68,75 L50,60 L32,75 L42,50 L22,38 L47,33 Z" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        {/* Hexagonal patterns */}
+        <div className="absolute top-1/3 left-1/6 w-32 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 right-1/6 w-30 h-30 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,8 88,30 88,70 50,92 12,70 12,30" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        {/* Wave patterns */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-32 opacity-5 hidden lg:block">
+          <svg viewBox="0 0 800 100" className="w-full h-full">
+            <path d="M0,50 Q100,30 200,50 T400,50 T600,50 T800,50" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.15"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-32 opacity-5 hidden lg:block">
+          <svg viewBox="0 0 800 100" className="w-full h-full">
+            <path d="M0,50 Q100,70 200,50 T400,50 T600,50 T800,50" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.15"/>
+          </svg>
+        </div>
+        
+        {/* Grid pattern accents */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: `
+            linear-gradient(to right, #8B2332 1px, transparent 1px),
+            linear-gradient(to bottom, #8B2332 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px'
+        }}></div>
+        
+        {/* Spiral-like decorative elements */}
+        <div className="absolute top-1/4 right-1/6 w-36 h-36 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,50 Q70,30 90,50 Q70,70 50,50" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.1"/>
+            <path d="M50,50 Q60,40 70,50 Q60,60 50,50" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 left-1/6 w-34 h-34 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,50 Q30,70 50,90 Q70,70 50,50" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.1"/>
+            <path d="M50,50 Q40,60 50,70 Q60,60 50,50" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Organic shapes */}
+        <div className="absolute top-1/2 right-1/5 w-40 h-40 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <ellipse cx="50" cy="50" rx="35" ry="25" fill="#8B2332" opacity="0.06" transform="rotate(45 50 50)"/>
+            <ellipse cx="50" cy="50" rx="25" ry="18" fill="#7A7A3F" opacity="0.05" transform="rotate(-30 50 50)"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/2 left-1/5 w-38 h-38 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <ellipse cx="50" cy="50" rx="32" ry="22" fill="#7A7A3F" opacity="0.06" transform="rotate(-45 50 50)"/>
+            <ellipse cx="50" cy="50" rx="22" ry="16" fill="#8B2332" opacity="0.05" transform="rotate(30 50 50)"/>
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-32 h-32 opacity-3 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M0,0 L40,0 L0,40 Z" fill="#8B2332" opacity="0.08"/>
+            <path d="M0,0 L30,0 L0,30 Z" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-3 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M100,100 L60,100 L100,60 Z" fill="#7A7A3F" opacity="0.08"/>
+            <path d="M100,100 L70,100 L100,70 Z" fill="#8B2332" opacity="0.06"/>
+          </svg>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
@@ -962,10 +1170,10 @@ export function Programs() {
                   PROGRAM FEATURES
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Program Features
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 What makes our programs exceptional
               </p>
             </div>
@@ -1028,19 +1236,68 @@ export function Programs() {
       </div>
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#8B2332] via-[#7B1F32] to-[#6B1A28] text-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] overflow-hidden">
         {/* Enhanced background graphics */}
-        <DottedPattern opacity={0.08} size="32px" />
-        <DottedPattern opacity={0.05} size="48px" />
-        <GeometricPattern opacity={0.04} />
-        
-        {/* Blur effects */}
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <DottedPattern opacity={0.03} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.02} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
         
         {/* Abstract shapes */}
-        <AbstractShape position="top" color="#ffffff" />
-        <AbstractShape position="bottom" color="#ffffff" />
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        <AbstractShape position="left" color="#8B2332" />
+        <AbstractShape position="right" color="#7A7A3F" />
+        
+        {/* Additional decorative geometric shapes */}
+        <div className="absolute top-1/4 left-1/5 w-52 h-52 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.12"/>
+            <polygon points="50,15 85,50 50,85 15,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-1/5 w-48 h-48 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 80,25 80,60 Q 80,95 50,85 Q 20,95 20,60 Q 20,25 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/2 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/1.5 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-56 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-56 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#8B2332]/8 to-transparent hidden lg:block"></div>
+        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/8 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-16 left-10 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-24 right-12 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-20 left-12 w-2 h-2 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 right-10 w-2.5 h-2.5 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        
+        {/* Circle patterns */}
+        <div className="absolute top-1/4 left-0 w-56 h-56 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.18"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-0 w-52 h-52 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="75" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.22"/>
+            <circle cx="100" cy="100" r="55" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.18"/>
+          </svg>
+        </div>
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div 
@@ -1049,28 +1306,28 @@ export function Programs() {
           >
             <div className={`${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg border border-white/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
                   GET STARTED
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight text-[#8B2332]">
                 Ready to Grow in Your Ministry?
               </h2>
-              <p className="text-xl md:text-2xl text-white/95 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 Enroll in one of our programs and take your ministry to the next
                 level
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link 
                   to="/membership"
-                  className="group/btn px-8 py-4 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-xl hover:shadow-2xl"
+                  className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-xl hover:shadow-2xl text-xs md:text-sm"
                 >
                   <span>Enroll Now</span>
-                  <ArrowRightIcon size={20} className="transform group-hover/btn:translate-x-1 transition-transform" />
+                  <ArrowRightIcon size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
                   to="/contact"
-                  className="px-8 py-4 border-2 border-white/70 text-white rounded-full font-semibold hover:bg-white/10 hover:border-white transition-all inline-flex items-center space-x-2 hover:scale-105 backdrop-blur-sm shadow-lg"
+                  className="px-6 py-3 border-2 border-[#8B2332] text-[#8B2332] rounded-full font-semibold hover:bg-[#8B2332] hover:text-white transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl text-xs md:text-sm"
                 >
                   <span>Contact Us</span>
                 </Link>

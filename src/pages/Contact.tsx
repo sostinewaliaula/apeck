@@ -236,10 +236,10 @@ export function Contact() {
                   GET IN TOUCH
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
                 Contact Us
               </h1>
-              <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
+              <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
                 Get in touch with us. We are here to answer your questions and support your ministry
               </p>
             </div>
@@ -441,7 +441,7 @@ export function Contact() {
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] rounded-full mb-6 shadow-lg">
                     <SendIcon size={28} className="text-white" strokeWidth={2.5} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-6">
                     Send Us a Message
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -548,7 +548,7 @@ export function Contact() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full mb-6 shadow-lg">
                   <MailIcon size={28} className="text-white" strokeWidth={2.5} />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-[#8B2332] mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-8">
                   Contact Information
                 </h2>
                 <div className="space-y-6 mb-12">
@@ -907,7 +907,7 @@ export function Contact() {
                   LOCATION
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Find Us
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">

@@ -36,7 +36,7 @@ export function ScrollToTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 z-50 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center group backdrop-blur-sm border-2 border-white/20"
+      className="fixed bottom-8 right-8 z-50 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center group backdrop-blur-sm border-2 border-white/20"
       aria-label="Scroll to top"
     >
       {/* Glow effect */}
@@ -44,8 +44,8 @@ export function ScrollToTopButton() {
       
       {/* Arrow icon */}
       <ArrowUpIcon 
-        size={24} 
-        className="md:w-7 md:h-7 transform transition-transform duration-300 group-hover:-translate-y-1" 
+        size={20} 
+        className="md:w-6 md:h-6 transform transition-transform duration-300 group-hover:-translate-y-1" 
         strokeWidth={2.5}
       />
       

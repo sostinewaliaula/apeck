@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MenuIcon, XIcon, ChevronRight } from 'lucide-react';
+import { MenuIcon, XIcon, ChevronRight, MoonIcon, SunIcon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,8 +57,8 @@ export function Navigation() {
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? 'bg-white/98 backdrop-blur-md shadow-xl border-b border-gray-100' 
-          : 'bg-white/90 backdrop-blur-sm border-b border-transparent'
+          ? 'bg-white/98 dark:bg-gray-900/98 backdrop-blur-md shadow-xl border-b border-gray-100 dark:border-gray-800' 
+          : 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-transparent'
       }`}
     >
       {/* Subtle background pattern */}
@@ -90,10 +92,10 @@ export function Navigation() {
               <div className="absolute inset-0 bg-[#8B2332]/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-[10px] md:text-xs text-[#8B2332] font-bold leading-tight">Association of</span>
-              <span className="text-[#8B2332] font-bold text-xs md:text-sm leading-tight">PENTECOSTAL &</span>
-              <span className="text-[#8B2332] font-bold text-xs md:text-sm leading-tight">EVANGELICAL</span>
-              <span className="text-[#8B2332] font-bold text-xs md:text-sm leading-tight">CLERGY OF KENYA</span>
+              <span className="text-[10px] md:text-xs text-[#8B2332] dark:text-[#B85C6D] font-bold leading-tight">Association of</span>
+              <span className="text-[#8B2332] dark:text-[#B85C6D] font-bold text-xs md:text-sm leading-tight">PENTECOSTAL &</span>
+              <span className="text-[#8B2332] dark:text-[#B85C6D] font-bold text-xs md:text-sm leading-tight">EVANGELICAL</span>
+              <span className="text-[#8B2332] dark:text-[#B85C6D] font-bold text-xs md:text-sm leading-tight">CLERGY OF KENYA</span>
             </div>
           </Link>
 
@@ -107,8 +109,8 @@ export function Navigation() {
                   to={link.path}
                   className={`relative px-3 py-1.5 text-xs md:text-sm font-semibold transition-all duration-300 rounded-lg group ${
                     isActive 
-                      ? 'text-[#8B2332]' 
-                      : 'text-gray-700 hover:text-[#8B2332]'
+                      ? 'text-[#8B2332] dark:text-[#B85C6D]' 
+                      : 'text-gray-700 dark:text-gray-300 hover:text-[#8B2332] dark:hover:text-[#B85C6D]'
                   }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
@@ -133,8 +135,21 @@ export function Navigation() {
             })}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center space-x-4 ml-6">
+          {/* Dark Mode Toggle & CTA Button */}
+          <div className="hidden lg:flex items-center space-x-3 ml-6">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 hover:scale-110 group"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? (
+                <SunIcon size={18} className="transition-transform group-hover:rotate-180 duration-500" />
+              ) : (
+                <MoonIcon size={18} className="transition-transform group-hover:-rotate-12 duration-300" />
+              )}
+            </button>
+            
             <Link 
               to="/membership" 
               className="relative px-5 py-2 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-full font-semibold text-xs md:text-sm transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-105 group overflow-hidden"
@@ -153,15 +168,29 @@ export function Navigation() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className={`lg:hidden relative p-2 rounded-lg transition-all duration-300 z-50 ${
-              isMobileMenuOpen 
-                ? 'bg-[#8B2332] text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            aria-label="Toggle menu"
-          >
+          <div className="lg:hidden flex items-center space-x-2">
+            {/* Mobile Dark Mode Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="relative p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? (
+                <SunIcon size={20} />
+              ) : (
+                <MoonIcon size={20} />
+              )}
+            </button>
+            
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+              className={`relative p-2 rounded-lg transition-all duration-300 z-50 ${
+                isMobileMenuOpen 
+                  ? 'bg-[#8B2332] text-white' 
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+              aria-label="Toggle menu"
+            >
             <div className="relative w-6 h-6 flex items-center justify-center">
               {isMobileMenuOpen ? (
                 <XIcon size={24} className="animate-scale-in" />
@@ -170,12 +199,13 @@ export function Navigation() {
               )}
             </div>
           </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <div 
-        className={`lg:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-md border-t border-gray-100 shadow-2xl transition-all duration-500 overflow-hidden ${
+        className={`lg:hidden absolute top-full left-0 right-0 bg-white/98 dark:bg-gray-900/98 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 shadow-2xl transition-all duration-500 overflow-hidden ${
           isMobileMenuOpen 
             ? 'max-h-[600px] opacity-100' 
             : 'max-h-0 opacity-0'
@@ -202,8 +232,8 @@ export function Navigation() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative group ${
                   isActive 
-                    ? 'text-[#8B2332] bg-gradient-to-r from-[#8B2332]/10 via-[#8B2332]/15 to-[#8B2332]/10' 
-                    : 'text-gray-700 hover:text-[#8B2332] hover:bg-gray-50'
+                    ? 'text-[#8B2332] dark:text-[#B85C6D] bg-gradient-to-r from-[#8B2332]/10 via-[#8B2332]/15 to-[#8B2332]/10 dark:from-[#B85C6D]/10 dark:via-[#B85C6D]/15 dark:to-[#B85C6D]/10' 
+                    : 'text-gray-700 dark:text-gray-300 hover:text-[#8B2332] dark:hover:text-[#B85C6D] hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
                 style={{ 
                   animationDelay: `${index * 50}ms`,

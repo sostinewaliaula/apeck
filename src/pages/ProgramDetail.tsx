@@ -708,10 +708,10 @@ export function ProgramDetail() {
                   <Icon size={40} className="text-white" strokeWidth={2.5} />
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-4 leading-tight">
                     {program.title}
                   </h1>
-                  <p className="text-base md:text-lg text-white/95 max-w-3xl leading-relaxed">
+                  <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
                     {program.description}
                   </p>
                 </div>
@@ -920,7 +920,7 @@ export function ProgramDetail() {
                     >
                       <TargetIcon size={28} style={{ color: programColor }} strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold" style={{ color: programColor }}>
+                    <h2 className="text-xl md:text-2xl font-bold" style={{ color: programColor }}>
                       Program Objectives
                     </h2>
                   </div>
@@ -950,7 +950,7 @@ export function ProgramDetail() {
                     >
                       <BookOpenIcon size={28} style={{ color: programColor }} strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold" style={{ color: programColor }}>
+                    <h2 className="text-xl md:text-2xl font-bold" style={{ color: programColor }}>
                       Program Content
                     </h2>
                   </div>
@@ -989,7 +989,7 @@ export function ProgramDetail() {
                     >
                       <AwardIcon size={28} style={{ color: programColor }} strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold" style={{ color: programColor }}>
+                    <h2 className="text-xl md:text-2xl font-bold" style={{ color: programColor }}>
                       Learning Outcomes
                     </h2>
                   </div>
