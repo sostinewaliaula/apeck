@@ -10,6 +10,7 @@ const Programs = lazy(() => import('./pages/Programs').then(module => ({ default
 const ProgramDetail = lazy(() => import('./pages/ProgramDetail').then(module => ({ default: module.ProgramDetail })));
 const Membership = lazy(() => import('./pages/Membership').then(module => ({ default: module.Membership })));
 const News = lazy(() => import('./pages/News').then(module => ({ default: module.News })));
+const NewsDetail = lazy(() => import('./pages/NewsDetail').then(module => ({ default: module.NewsDetail })));
 const Gallery = lazy(() => import('./pages/Gallery').then(module => ({ default: module.Gallery })));
 const Contact = lazy(() => import('./pages/Contact').then(module => ({ default: module.Contact })));
 
@@ -35,6 +36,7 @@ export function App() {
             <Route path="/programs/:programId" element={<ProgramDetail />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/news" element={<News />} />
+            <Route path="/news/:newsId" element={<NewsDetail />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

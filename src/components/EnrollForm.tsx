@@ -1,31 +1,40 @@
 import { useState, useEffect } from 'react';
-import { XIcon, UserIcon, MailIcon, PhoneIcon, MessageSquareIcon, BookOpenIcon } from 'lucide-react';
+import { XIcon, UserIcon, MailIcon, PhoneIcon, MessageSquareIcon, BookOpenIcon, CalendarIcon } from 'lucide-react';
 
 interface EnrollFormProps {
   isOpen: boolean;
   onClose: () => void;
   programName?: string;
   programId?: string;
+  eventName?: string;
+  eventType?: 'register' | 'enroll';
 }
 
-export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFormProps) {
+export function EnrollForm({ isOpen, onClose, programName, programId, eventName, eventType }: EnrollFormProps) {
+  const isEvent = !!eventName;
+  const formType = isEvent ? (eventType === 'enroll' ? 'event-enrollment' : 'event-registration') : 'program-enrollment';
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     program: programName || '',
+    event: eventName || '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // Update program field when programName prop changes
+  // Update fields when props change
   useEffect(() => {
     if (programName) {
       setFormData(prev => ({ ...prev, program: programName }));
     }
-  }, [programName]);
+    if (eventName) {
+      setFormData(prev => ({ ...prev, event: eventName }));
+    }
+  }, [programName, eventName]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +45,7 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     // In a real application, you would send this data to your backend
-    console.log('Form submitted:', { ...formData, programId });
+    console.log('Form submitted:', { ...formData, programId, formType, isEvent, eventType });
     
     setIsSubmitting(false);
     setSubmitStatus('success');
@@ -49,6 +58,7 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
         email: '',
         phone: '',
         program: programName || '',
+        event: eventName || '',
         message: ''
       });
       setSubmitStatus('idle');
@@ -87,12 +97,23 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
           {/* Header */}
           <div className="px-8 pt-10 pb-6 border-b border-gray-200">
             <div className="flex items-center space-x-4 mb-2">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center">
-                <BookOpenIcon size={28} className="text-[#8B2332]" strokeWidth={2.5} />
+              <div className={`w-14 h-14 bg-gradient-to-br ${isEvent ? 'from-[#7A7A3F]/20 to-[#7A7A3F]/10' : 'from-[#8B2332]/20 to-[#8B2332]/10'} rounded-full flex items-center justify-center`}>
+                {isEvent ? (
+                  <CalendarIcon size={28} className={isEvent && eventType === 'enroll' ? 'text-[#7A7A3F]' : 'text-[#8B2332]'} strokeWidth={2.5} />
+                ) : (
+                  <BookOpenIcon size={28} className="text-[#8B2332]" strokeWidth={2.5} />
+                )}
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-[#8B2332]">Enroll in Program</h2>
-                <p className="text-gray-600 mt-1">Fill in your details to get started</p>
+                <h2 className="text-3xl font-bold text-[#8B2332]">
+                  {isEvent 
+                    ? (eventType === 'enroll' ? 'Enroll for Event' : 'Register for Event')
+                    : 'Enroll in Program'
+                  }
+                </h2>
+                <p className="text-gray-600 mt-1">
+                  {isEvent ? 'Fill in your details to register' : 'Fill in your details to get started'}
+                </p>
               </div>
             </div>
           </div>
@@ -106,8 +127,15 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Enrollment Submitted!</h3>
-                <p className="text-gray-600">We'll contact you shortly with more information.</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {isEvent ? (eventType === 'enroll' ? 'Enrollment Submitted!' : 'Registration Submitted!') : 'Enrollment Submitted!'}
+                </h3>
+                <p className="text-gray-600">
+                  {isEvent 
+                    ? 'We\'ll send you event details and confirmation shortly.'
+                    : 'We\'ll contact you shortly with more information.'
+                  }
+                </p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -182,25 +210,45 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
                   </div>
                 </div>
 
-                {/* Program Selection */}
-                <div>
-                  <label htmlFor="program" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Program of Interest *
-                  </label>
-                  <input
-                    type="text"
-                    id="program"
-                    name="program"
-                    required
-                    value={formData.program}
-                    onChange={handleChange}
-                    readOnly={!!programName}
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#8B2332] focus:border-transparent transition-all ${
-                      programName ? 'bg-gray-50 cursor-not-allowed' : ''
-                    }`}
-                    placeholder="Select a program"
-                  />
-                </div>
+                {/* Program/Event Selection */}
+                {isEvent ? (
+                  <div>
+                    <label htmlFor="event" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <CalendarIcon size={16} className="inline mr-2" />
+                      Event *
+                    </label>
+                    <input
+                      type="text"
+                      id="event"
+                      name="event"
+                      required
+                      value={formData.event}
+                      onChange={handleChange}
+                      readOnly={!!eventName}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#8B2332] focus:border-transparent transition-all bg-gray-50 cursor-not-allowed"
+                      placeholder="Select an event"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label htmlFor="program" className="block text-sm font-semibold text-gray-700 mb-2">
+                      Program of Interest *
+                    </label>
+                    <input
+                      type="text"
+                      id="program"
+                      name="program"
+                      required
+                      value={formData.program}
+                      onChange={handleChange}
+                      readOnly={!!programName}
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#8B2332] focus:border-transparent transition-all ${
+                        programName ? 'bg-gray-50 cursor-not-allowed' : ''
+                      }`}
+                      placeholder="Select a program"
+                    />
+                  </div>
+                )}
 
                 {/* Message */}
                 <div>
@@ -235,7 +283,9 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
                         Submitting...
                       </span>
                     ) : (
-                      'Submit Enrollment'
+                      isEvent 
+                        ? (eventType === 'enroll' ? 'Submit Enrollment' : 'Submit Registration')
+                        : 'Submit Enrollment'
                     )}
                   </button>
                   <button
@@ -248,7 +298,7 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
                 </div>
 
                 <p className="text-xs text-gray-500 text-center pt-2">
-                  By submitting this form, you agree to be contacted about the program. We respect your privacy.
+                  By submitting this form, you agree to be contacted about {isEvent ? 'the event' : 'the program'}. We respect your privacy.
                 </p>
               </div>
             )}
