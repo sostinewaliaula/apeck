@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
+import { ScrollToTop } from './components/ScrollToTop';
+import { ScrollToTopButton } from './components/ScrollToTopButton';
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
@@ -26,6 +28,7 @@ const PageLoader = () => (
 
 export function App() {
   return <BrowserRouter>
+      <ScrollToTop />
       <div className="min-h-screen bg-white">
         <Navigation />
         <Suspense fallback={<PageLoader />}>
@@ -42,6 +45,7 @@ export function App() {
           </Routes>
         </Suspense>
         <Footer />
+        <ScrollToTopButton />
       </div>
     </BrowserRouter>;
 }
