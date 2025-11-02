@@ -482,10 +482,10 @@ export function Home() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full h-1 bg-gradient-to-r from-transparent via-[#8B2332]/10 to-transparent"></div>
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full h-1 bg-gradient-to-r from-transparent via-[#8B2332]/10 dark:via-[#B85C6D]/10 to-transparent"></div>
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent"></div>
+          <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 dark:via-[#B85C6D]/20 to-transparent"></div>
         </div>
       </div>
 
@@ -690,15 +690,15 @@ export function Home() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute inset-0 flex items-center justify-center py-8">
           <div className="relative w-full max-w-4xl">
             <div className="absolute inset-0 flex items-center">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-              <div className="mx-4 w-3 h-3 bg-[#8B2332]/20 rounded-full"></div>
-              <div className="mx-4 w-2 h-2 bg-[#7A7A3F]/20 rounded-full"></div>
-              <div className="mx-4 w-3 h-3 bg-[#8B2332]/20 rounded-full"></div>
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+              <div className="mx-4 w-3 h-3 bg-[#8B2332]/20 dark:bg-[#B85C6D]/20 rounded-full"></div>
+              <div className="mx-4 w-2 h-2 bg-[#7A7A3F]/20 dark:bg-[#9B9B5F]/20 rounded-full"></div>
+              <div className="mx-4 w-3 h-3 bg-[#8B2332]/20 dark:bg-[#B85C6D]/20 rounded-full"></div>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
             </div>
           </div>
         </div>
@@ -890,7 +890,13 @@ export function Home() {
             </svg>
           </div>
         </div>
-        <div className="relative h-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"></div>
+        <div className="relative h-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center space-x-2">
+            <div className="w-1.5 h-1.5 bg-[#8B2332]/40 dark:bg-[#B85C6D]/40 rounded-full"></div>
+            <div className="w-2 h-2 bg-[#8B2332]/60 dark:bg-[#B85C6D]/60 rounded-full"></div>
+            <div className="w-1.5 h-1.5 bg-[#8B2332]/40 dark:bg-[#B85C6D]/40 rounded-full"></div>
+          </div>
+        </div>
       </div>
 
       {/* Programs Preview with Modern Card Design */}
@@ -1171,17 +1177,17 @@ export function Home() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute inset-0 flex items-center justify-center py-12">
           <div className="relative w-full max-w-6xl px-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/10 via-[#7A7A3F]/10 to-transparent"></div>
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/10 dark:via-[#B85C6D]/10 via-[#7A7A3F]/10 dark:via-[#9B9B5F]/10 to-transparent"></div>
               <div className="mx-6 flex items-center space-x-2">
-                <div className="w-2 h-2 bg-[#8B2332]/30 rounded-full"></div>
-                <div className="w-1 h-1 bg-[#7A7A3F]/30 rounded-full"></div>
-                <div className="w-2 h-2 bg-[#8B2332]/30 rounded-full"></div>
+                <div className="w-2 h-2 bg-[#8B2332]/30 dark:bg-[#B85C6D]/30 rounded-full"></div>
+                <div className="w-1 h-1 bg-[#7A7A3F]/30 dark:bg-[#9B9B5F]/30 rounded-full"></div>
+                <div className="w-2 h-2 bg-[#8B2332]/30 dark:bg-[#B85C6D]/30 rounded-full"></div>
               </div>
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/10 via-[#7A7A3F]/10 to-transparent"></div>
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/10 dark:via-[#B85C6D]/10 via-[#7A7A3F]/10 dark:via-[#9B9B5F]/10 to-transparent"></div>
             </div>
           </div>
         </div>
@@ -1507,14 +1513,14 @@ export function Home() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,50 600,40 T1200,50 L1200,100 L0,100 Z" fill="white"/>
+            <path d="M0,0 Q400,50 600,40 T1200,50 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
-        <div className="relative h-16 bg-white dark:bg-gray-900 transition-colors duration-300">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent"></div>
+        <div className="relative h-16 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 dark:via-[#B85C6D]/20 to-transparent"></div>
         </div>
       </div>
 
