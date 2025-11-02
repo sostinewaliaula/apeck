@@ -327,57 +327,175 @@ export function About() {
       </div>
 
       {/* Mission & Vision */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
-        {/* Enhanced background graphics */}
-        <DottedPattern opacity={0.04} size="28px" />
-        <DottedPattern opacity={0.02} size="40px" className="mix-blend-multiply" />
-        <GeometricPattern opacity={0.03} />
-        <CirclePattern position="top-left" size={300} />
-        <CirclePattern position="bottom-right" size={280} />
+      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+        {/* Enhanced background graphics - multiple layers */}
+        <DottedPattern opacity={0.04} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.025} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
         
-        {/* Blur effects */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#8B2332]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#7A7A3F]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+        {/* Circle patterns in corners */}
+        <CirclePattern position="top-left" size={400} />
+        <CirclePattern position="top-right" size={350} />
+        <CirclePattern position="bottom-left" size={380} />
+        <CirclePattern position="bottom-right" size={320} />
         
         {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
         <AbstractShape position="left" color="#8B2332" />
         <AbstractShape position="right" color="#7A7A3F" />
+        
+        {/* Subtle circular graphics in corners */}
+        <div className="absolute top-0 left-0 w-64 h-64 opacity-6">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.3"/>
+            <circle cx="100" cy="100" r="70" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.2"/>
+            <circle cx="100" cy="100" r="50" fill="none" stroke="#8B2332" strokeWidth="0.6" opacity="0.15"/>
+          </svg>
+        </div>
+        
+        <div className="absolute top-0 right-0 w-56 h-56 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="65" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.2"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 left-0 w-60 h-60 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.18"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-52 h-52 opacity-4">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="75" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.3"/>
+            <circle cx="100" cy="100" r="55" fill="none" stroke="#8B2332" strokeWidth="0.7" opacity="0.2"/>
+          </svg>
+        </div>
+        
+        {/* Geometric shapes scattered */}
+        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.1"/>
+            <polygon points="50,20 80,50 50,80 20,50" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute top-1/3 right-1/4 translate-x-1/2 -translate-y-1/2 w-36 h-36 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 left-1/3 -translate-x-1/2 translate-y-1/2 w-38 h-38 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,10 90,50 50,90 10,50" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 right-1/3 translate-x-1/2 translate-y-1/2 w-34 h-34 opacity-4 hidden lg:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 75,100 25,100 0,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/3 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-48 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-48 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/8 to-transparent hidden lg:block"></div>
+        <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 translate-y-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/8 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-20 left-10 w-3 h-3 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-32 right-16 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-24 left-20 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-32 right-12 w-3 h-3 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-8 -translate-y-1/2 w-2 h-2 bg-[#8B2332]/15 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 right-8 -translate-y-1/2 w-2.5 h-2.5 bg-[#7A7A3F]/15 rounded-full hidden lg:block"></div>
+        
+        {/* Additional organic shapes */}
+        <div className="absolute top-0 left-1/3 -translate-x-1/2 w-80 h-80 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,20 Q 160,40 180,100 Q 160,160 100,140 Q 40,160 20,100 Q 40,40 100,20 Z"
+              fill="#8B2332"
+              opacity="0.06"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/3 translate-x-1/2 w-72 h-72 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 60,60 Q 100,20 140,60 Q 180,100 140,140 Q 100,180 60,140 Q 20,100 60,60 Z"
+              fill="#7A7A3F"
+              opacity="0.07"
+            />
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-24 h-24 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 100,0 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="0,0 50,50 0,100" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-28 h-28 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 0,100 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="100,100 50,50 100,0" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 max-w-6xl mx-auto">
             {/* Mission Card */}
             <div 
               className="transform transition-all duration-700"
               data-animate-id="mission"
             >
-              <div className={`bg-gradient-to-br from-[#8B2332] via-[#7B1F32] to-[#6B1A28] text-white p-8 md:p-12 rounded-3xl shadow-2xl hover:shadow-[0_20px_60px_rgba(139,34,50,0.4)] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] relative overflow-hidden group ${
-                isVisible['mission'] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
+              <div className={`bg-[#8B2332] text-white p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 relative overflow-hidden group ${
+                isVisible['mission'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
               }`}>
-                {/* Decorative background pattern */}
-                <div className="absolute inset-0 opacity-[0.03]" style={{
-                  backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}></div>
-                
-                {/* Icon with enhanced styling */}
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl animate-pulse-slow"></div>
-                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center relative z-10 border-2 border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-                    <TargetIcon size={40} className="group-hover:scale-110 transition-transform" />
+                {/* Icon - white outline on transparent circle background */}
+                <div className="flex justify-center mb-8">
+                  <div className="relative">
+                    {/* Transparent lighter maroon circle background */}
+                    <div className="w-24 h-24 bg-[#8B2332]/40 rounded-full flex items-center justify-center">
+                      {/* White outline target icon */}
+                      <TargetIcon 
+                        size={48} 
+                        className="text-white"
+                        strokeWidth={2.5}
+                        fill="none"
+                      />
+                    </div>
                   </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 relative z-10">Our Mission</h2>
-                <p className="text-lg text-white/90 leading-relaxed relative z-10">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center md:text-left">Our Mission</h2>
+                <p className="text-base md:text-lg text-white leading-relaxed">
                   To empower, equip, and unite Pentecostal and Evangelical clergy
                   across Kenya through comprehensive training, spiritual
                   development, and collaborative ministry initiatives that advance
                   the Kingdom of God and transform communities.
                 </p>
-                
-                {/* Decorative corner accents */}
-                <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-white/20 rounded-tr-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-white/20 rounded-bl-3xl"></div>
               </div>
             </div>
 
@@ -386,34 +504,32 @@ export function About() {
               className="transform transition-all duration-700"
               data-animate-id="vision"
             >
-              <div className={`bg-gradient-to-br from-[#7A7A3F] via-[#6A6A35] to-[#5A5A2D] text-white p-8 md:p-12 rounded-3xl shadow-2xl hover:shadow-[0_20px_60px_rgba(122,122,63,0.4)] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] relative overflow-hidden group ${
-                isVisible['vision'] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 -rotate-2'
+              <div className={`bg-[#7A7A3F] text-white p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 relative overflow-hidden group ${
+                isVisible['vision'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
               }`} style={{ transitionDelay: '150ms' }}>
-                {/* Decorative background pattern */}
-                <div className="absolute inset-0 opacity-[0.03]" style={{
-                  backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}></div>
-                
-                {/* Icon with enhanced styling */}
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl animate-pulse-slow"></div>
-                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center relative z-10 border-2 border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-                    <EyeIcon size={40} className="group-hover:scale-110 transition-transform" />
+                {/* Icon - white outline on transparent circle background */}
+                <div className="flex justify-center mb-8">
+                  <div className="relative">
+                    {/* Transparent lighter olive green circle background */}
+                    <div className="w-24 h-24 bg-[#7A7A3F]/40 rounded-full flex items-center justify-center">
+                      {/* White outline eye icon */}
+                      <EyeIcon 
+                        size={48} 
+                        className="text-white"
+                        strokeWidth={2.5}
+                        fill="none"
+                      />
+                    </div>
                   </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 relative z-10">Our Vision</h2>
-                <p className="text-lg text-white/90 leading-relaxed relative z-10">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center md:text-left">Our Vision</h2>
+                <p className="text-base md:text-lg text-white leading-relaxed">
                   A Kenya where every Pentecostal and Evangelical clergy member is
                   fully equipped, spiritually vibrant, and effectively leading
                   transformative ministries that impact individuals, families, and
                   communities for Christ.
                 </p>
-                
-                {/* Decorative corner accents */}
-                <div className="absolute top-0 left-0 w-32 h-32 border-t-2 border-l-2 border-white/20 rounded-tl-3xl"></div>
-                <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-white/20 rounded-br-3xl"></div>
               </div>
             </div>
           </div>
