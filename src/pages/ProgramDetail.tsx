@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { EnrollForm } from '../components/EnrollForm';
 import { 
   BookOpenIcon, 
   UsersIcon, 
@@ -512,6 +513,7 @@ const programData: { [key: string]: any } = {
 export function ProgramDetail() {
   const { programId } = useParams<{ programId: string }>();
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
+  const [isEnrollFormOpen, setIsEnrollFormOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const program = programData[programId || ''];
@@ -544,6 +546,33 @@ export function ProgramDetail() {
     );
   });
   GeometricPattern.displayName = 'GeometricPattern';
+
+  const AbstractShape = memo(({ position = 'right', color = '#8B2332' }: { position?: 'left' | 'right' | 'top' | 'bottom'; color?: string }) => {
+    const positions = {
+      right: 'top-0 right-0 translate-x-1/2 -translate-y-1/2',
+      left: 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
+      top: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2',
+      bottom: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2'
+    };
+
+    return (
+      <div className={`absolute ${positions[position]} w-64 h-64 md:w-96 md:h-96 opacity-5`} style={{ willChange: 'transform' }}>
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          <path
+            d="M 100,0 Q 150,50 150,100 Q 150,150 100,150 Q 50,150 50,100 Q 50,50 100,0 Z"
+            fill={color}
+            opacity="0.08"
+          />
+          <path
+            d="M 80,20 Q 130,70 130,120 Q 130,170 80,130 Q 30,130 30,80 Q 30,30 80,20 Z"
+            fill={color === '#8B2332' ? '#7A7A3F' : '#8B2332'}
+            opacity="0.06"
+          />
+        </svg>
+      </div>
+    );
+  });
+  AbstractShape.displayName = 'AbstractShape';
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -608,9 +637,44 @@ export function ProgramDetail() {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#8B2332]/85 via-[#8B2332]/80 to-[#6B1A28]/85"></div>
         
-        {/* Background graphics */}
+        {/* Enhanced background graphics */}
         <DottedPattern opacity={0.08} size="32px" />
+        <DottedPattern opacity={0.05} size="48px" />
         <GeometricPattern opacity={0.04} />
+        <GeometricPattern opacity={0.025} className="rotate-45" />
+        
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#ffffff" />
+        <AbstractShape position="bottom" color="#ffffff" />
+        
+        {/* Additional floating shapes */}
+        <div className="absolute top-1/4 right-1/6 w-48 h-48 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#ffffff" opacity="0.15"/>
+            <polygon points="50,18 82,50 50,82 18,50" fill="#ffffff" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 left-1/6 w-44 h-44 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#ffffff" strokeWidth="2" opacity="0.12"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        {/* Blur effects */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-64 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-64 bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-20 left-12 w-3 h-3 bg-white/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-28 right-16 w-2 h-2 bg-white/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-24 left-16 w-2.5 h-2.5 bg-white/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-32 right-12 w-3 h-3 bg-white/20 rounded-full hidden md:block"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link 
@@ -668,9 +732,174 @@ export function ProgramDetail() {
 
       {/* Program Details */}
       <section className="relative py-20 md:py-32 bg-white overflow-hidden">
-        {/* Background graphics */}
+        {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
         <GeometricPattern opacity={0.02} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
+        
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        
+        {/* Additional decorative geometric shapes */}
+        <div className="absolute top-1/4 right-1/5 w-48 h-48 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.12"/>
+            <polygon points="50,18 82,50 50,82 18,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 left-1/5 w-44 h-44 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 75,20 75,50 Q 75,80 50,75 Q 25,80 25,50 Q 25,20 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* More floating shapes */}
+        <div className="absolute top-1/3 right-1/6 w-36 h-36 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,8 92,50 50,92 8,50" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 left-1/6 w-32 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1.5"
+              opacity="0.1"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/2 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/1.5 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-56 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-56 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#8B2332]/8 to-transparent hidden lg:block"></div>
+        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/8 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-16 left-10 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-24 right-12 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-20 left-12 w-2 h-2 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 right-10 w-2.5 h-2.5 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-8 -translate-y-1/2 w-1.5 h-1.5 bg-[#8B2332]/15 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 right-8 -translate-y-1/2 w-2 h-2 bg-[#7A7A3F]/15 rounded-full hidden lg:block"></div>
+        
+        {/* Organic shapes */}
+        <div className="absolute top-0 left-1/3 -translate-x-1/2 w-72 h-72 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,25 Q 140,45 155,100 Q 140,155 100,135 Q 60,155 45,100 Q 60,45 100,25 Z"
+              fill="#8B2332"
+              opacity="0.05"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/3 translate-x-1/2 w-68 h-68 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 55,55 Q 95,20 135,55 Q 180,95 135,135 Q 95,180 55,135 Q 20,95 55,55 Z"
+              fill="#7A7A3F"
+              opacity="0.06"
+            />
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-28 h-28 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 100,0 50,50" fill="#8B2332" opacity="0.07"/>
+            <polygon points="0,0 50,50 0,100" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 0,100 50,50" fill="#8B2332" opacity="0.07"/>
+            <polygon points="100,100 50,50 100,0" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        {/* Circle patterns */}
+        <div className="absolute top-1/4 left-0 w-56 h-56 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.18"/>
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#8B2332" strokeWidth="0.6" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-0 w-52 h-52 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="75" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.22"/>
+            <circle cx="100" cy="100" r="55" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.18"/>
+          </svg>
+        </div>
+        
+        {/* Additional scattered shapes */}
+        <div className="absolute top-1/6 right-1/4 w-32 h-32 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 75,100 25,100 0,50" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/6 left-1/4 w-34 h-34 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,12 88,50 50,88 12,50" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Diagonal accent lines */}
+        <div className="absolute top-1/2 right-1/4 w-28 h-px bg-gradient-to-r from-transparent via-[#8B2332]/12 to-transparent transform rotate-45 hidden xl:block"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-28 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/12 to-transparent transform -rotate-45 hidden xl:block"></div>
+        
+        {/* Star-like decorative shapes */}
+        <div className="absolute top-28 right-1/6 w-18 h-18 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,12 L52,35 L75,35 L58,48 L68,71 L50,58 L32,71 L42,48 L25,35 L48,35 Z" fill="#8B2332" opacity="0.07"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-28 left-1/6 w-16 h-16 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,15 L51.5,32 L68,32 L56,42 L63,59 L50,52 L37,59 L44,42 L32,32 L48.5,32 Z" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Hexagonal patterns */}
+        <div className="absolute top-1/5 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25" fill="none" stroke="#8B2332" strokeWidth="1.2" opacity="0.1"/>
+            <polygon points="50,16 76.3,32 76.3,68 50,84 23.7,68 23.7,32" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        {/* Wave patterns */}
+        <div className="absolute top-0 left-1/4 w-56 h-28 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,35 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.07"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/4 w-56 h-28 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,65 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.07"/>
+          </svg>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
@@ -782,8 +1011,8 @@ export function ProgramDetail() {
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-6">
                 {/* Enroll Button */}
-                <Link
-                  to="/membership"
+                <button
+                  onClick={() => setIsEnrollFormOpen(true)}
                   className={`block w-full py-4 px-6 rounded-full font-semibold text-white text-center text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105 ${
                     isVisible['enroll-btn'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                   }`}
@@ -800,7 +1029,7 @@ export function ProgramDetail() {
                     <span>Enroll Now</span>
                     <ArrowRightIcon size={20} className="transform group-hover:translate-x-1 transition-transform" />
                   </span>
-                </Link>
+                </button>
 
                 {/* Pricing Card */}
                 <div 
@@ -905,6 +1134,14 @@ export function ProgramDetail() {
           </div>
         </div>
       </section>
+
+      {/* Enrollment Form Modal */}
+      <EnrollForm 
+        isOpen={isEnrollFormOpen}
+        onClose={() => setIsEnrollFormOpen(false)}
+        programName={program?.title}
+        programId={programId}
+      />
     </div>
   );
 }
