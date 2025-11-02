@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { XIcon, UserIcon, MailIcon, PhoneIcon, MessageSquareIcon, BookOpenIcon } from 'lucide-react';
 
 interface EnrollFormProps {
@@ -19,6 +19,13 @@ export function EnrollForm({ isOpen, onClose, programName, programId }: EnrollFo
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Update program field when programName prop changes
+  useEffect(() => {
+    if (programName) {
+      setFormData(prev => ({ ...prev, program: programName }));
+    }
+  }, [programName]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
