@@ -547,20 +547,30 @@ export function About() {
 
       {/* Core Values */}
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
-        {/* Enhanced background graphics */}
+        {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
-        <DottedPattern opacity={0.02} size="48px" />
-        <GeometricPattern opacity={0.03} />
-        <CirclePattern position="top-right" size={320} />
-        <CirclePattern position="bottom-left" size={300} />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.025} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
+        
+        {/* Circle patterns in all corners */}
+        <CirclePattern position="top-left" size={380} />
+        <CirclePattern position="top-right" size={350} />
+        <CirclePattern position="bottom-left" size={360} />
+        <CirclePattern position="bottom-right" size={340} />
+        
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
         
         {/* Additional decorative elements */}
-        <div className="absolute top-1/4 right-1/4 w-48 h-48 opacity-3 hidden lg:block animate-float">
+        <div className="absolute top-1/4 right-1/4 w-48 h-48 opacity-4 hidden lg:block animate-float">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.15"/>
+            <polygon points="50,15 85,50 50,85 15,50" fill="#7A7A3F" opacity="0.12"/>
           </svg>
         </div>
-        <div className="absolute bottom-1/4 left-1/4 w-44 h-44 opacity-3 hidden lg:block animate-pulse-slow">
+        <div className="absolute bottom-1/4 left-1/4 w-44 h-44 opacity-4 hidden lg:block animate-pulse-slow">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <path
               d="M 50,0 Q 80,25 80,60 Q 80,95 50,85 Q 20,95 20,60 Q 20,25 50,0 Z"
@@ -570,9 +580,75 @@ export function About() {
           </svg>
         </div>
         
-        {/* Blur effects */}
+        <div className="absolute top-1/3 left-1/5 w-40 h-40 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-1/3 right-1/5 w-36 h-36 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/3 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/3 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8B2332]/2 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-56 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-56 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-16 left-12 w-3 h-3 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-24 right-20 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-20 left-16 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 right-14 w-3 h-3 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-10 -translate-y-1/2 w-2 h-2 bg-[#8B2332]/15 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 right-10 -translate-y-1/2 w-2.5 h-2.5 bg-[#7A7A3F]/15 rounded-full hidden lg:block"></div>
+        
+        {/* Organic shapes */}
+        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-72 h-72 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,20 Q 160,40 180,100 Q 160,160 100,140 Q 40,160 20,100 Q 40,40 100,20 Z"
+              fill="#8B2332"
+              opacity="0.06"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/4 translate-x-1/2 w-68 h-68 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 60,60 Q 100,20 140,60 Q 180,100 140,140 Q 100,180 60,140 Q 20,100 60,60 Z"
+              fill="#7A7A3F"
+              opacity="0.07"
+            />
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-28 h-28 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 100,0 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="0,0 50,50 0,100" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 0,100 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="100,100 50,50 100,0" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
@@ -610,65 +686,97 @@ export function About() {
                   data-animate-id={`value-${index}`}
                   style={{ transitionDelay: isVisible[`value-${index}`] ? `${delay}ms` : '0ms' }}
                 >
-                  <div className={`bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full ${
+                  <div className={`bg-white p-8 md:p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 group h-full overflow-hidden ${
                     isVisible[`value-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                   }`}>
-                    {/* Dotted pattern overlay */}
-                    <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
+                    {/* Enhanced dotted pattern overlay */}
+                    <div className="absolute inset-0 rounded-3xl opacity-[0.03]" style={{
                       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
                       backgroundSize: '24px 24px',
                     }}></div>
                     
                     {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: `linear-gradient(to bottom right, transparent, ${value.color === '#8B2332' ? 'rgba(139, 34, 50, 0.08)' : 'rgba(122, 122, 63, 0.08)'})`
+                      }}
+                    ></div>
                     
-                    {/* Icon container */}
+                    {/* Shine effect on hover */}
+                    <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{
+                      background: 'linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'shimmer 2s infinite',
+                    }}></div>
+                    
+                    {/* Icon container with enhanced styling */}
                     <div className="relative mb-6 flex justify-center">
                       <div className="relative">
+                        {/* Animated glow effect */}
                         <div 
-                          className="absolute inset-0 rounded-full blur-xl transition-all"
+                          className="absolute inset-0 rounded-full blur-xl animate-pulse-slow transition-all group-hover:scale-125"
                           style={{ 
-                            backgroundColor: value.color === '#8B2332' ? 'rgba(139, 34, 50, 0.2)' : 'rgba(122, 122, 63, 0.2)'
+                            backgroundColor: value.color === '#8B2332' ? 'rgba(139, 34, 50, 0.25)' : 'rgba(122, 122, 63, 0.25)'
                           }}
                         ></div>
                         <div 
-                          className={`relative w-20 h-20 rounded-full flex items-center justify-center border-2 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${
-                            value.color === '#8B2332' ? 'bg-gradient-to-br from-[#8B2332]/15 to-[#8B2332]/8 border-[#8B2332]/20 group-hover:border-[#8B2332]/40' : 'bg-gradient-to-br from-[#7A7A3F]/15 to-[#7A7A3F]/8 border-[#7A7A3F]/20 group-hover:border-[#7A7A3F]/40'
+                          className={`relative w-24 h-24 rounded-full flex items-center justify-center border-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl ${
+                            value.color === '#8B2332' 
+                              ? 'bg-gradient-to-br from-[#8B2332]/20 via-[#8B2332]/15 to-[#8B2332]/10 border-[#8B2332]/30 group-hover:border-[#8B2332]/50 group-hover:bg-gradient-to-br group-hover:from-[#8B2332]/25 group-hover:via-[#8B2332]/20 group-hover:to-[#8B2332]/15' 
+                              : 'bg-gradient-to-br from-[#7A7A3F]/20 via-[#7A7A3F]/15 to-[#7A7A3F]/10 border-[#7A7A3F]/30 group-hover:border-[#7A7A3F]/50 group-hover:bg-gradient-to-br group-hover:from-[#7A7A3F]/25 group-hover:via-[#7A7A3F]/20 group-hover:to-[#7A7A3F]/15'
                           }`}
                         >
                           <Icon 
-                            size={36} 
-                            className="group-hover:scale-110 transition-transform"
+                            size={40} 
+                            className="group-hover:scale-110 transition-transform duration-300"
                             style={{ color: value.color }}
+                            strokeWidth={2.5}
                           />
                         </div>
-                        {/* Decorative dots */}
+                        {/* Enhanced decorative dots */}
                         <div 
-                          className="absolute -top-2 -right-2 w-3 h-3 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all"
+                          className="absolute -top-3 -right-3 w-4 h-4 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 shadow-lg"
                           style={{ backgroundColor: value.color }}
                         ></div>
                         <div 
-                          className="absolute -bottom-2 -left-2 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all"
+                          className="absolute -bottom-3 -left-3 w-3 h-3 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 shadow-lg"
+                          style={{ backgroundColor: value.color }}
+                        ></div>
+                        <div 
+                          className="absolute top-0 -right-6 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500"
+                          style={{ backgroundColor: value.color }}
+                        ></div>
+                        <div 
+                          className="absolute bottom-0 -left-6 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500"
                           style={{ backgroundColor: value.color }}
                         ></div>
                       </div>
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 text-center group-hover:text-[#6B1A28] transition-colors relative z-10">
+                    <h3 className={`text-xl md:text-2xl font-bold mb-4 text-center transition-colors duration-300 relative z-10 ${
+                      value.color === '#8B2332' ? 'text-[#8B2332] group-hover:text-[#6B1A28]' : 'text-[#7A7A3F] group-hover:text-[#6A6A35]'
+                    }`}>
                       {value.title}
                     </h3>
-                    <p className="text-gray-600 text-center leading-relaxed relative z-10">
+                    <p className="text-gray-600 text-center leading-relaxed relative z-10 text-sm md:text-base">
                       {value.description}
                     </p>
                     
-                    {/* Decorative corners */}
+                    {/* Enhanced decorative corners */}
                     <div 
-                      className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ borderColor: `${value.color}33` }}
+                      className="absolute top-0 right-0 w-24 h-24 border-t-3 border-r-3 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ borderColor: `${value.color}40` }}
                     ></div>
                     <div 
-                      className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ borderColor: `${value.color}33` }}
+                      className="absolute bottom-0 left-0 w-20 h-20 border-b-3 border-l-3 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ borderColor: `${value.color}40` }}
+                    ></div>
+                    
+                    {/* Bottom accent line */}
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-500 rounded-b-3xl"
+                      style={{ color: value.color }}
                     ></div>
                   </div>
                 </div>
@@ -689,15 +797,110 @@ export function About() {
 
       {/* Leadership */}
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
-        {/* Enhanced background graphics */}
+        {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
-        <GeometricPattern opacity={0.03} />
-        <CirclePattern position="top-left" size={350} />
-        <CirclePattern position="bottom-right" size={380} />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.025} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
         
-        {/* Blur effects */}
+        {/* Circle patterns in all corners */}
+        <CirclePattern position="top-left" size={400} />
+        <CirclePattern position="top-right" size={360} />
+        <CirclePattern position="bottom-left" size={380} />
+        <CirclePattern position="bottom-right" size={350} />
+        
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        <AbstractShape position="left" color="#8B2332" />
+        <AbstractShape position="right" color="#7A7A3F" />
+        
+        {/* Additional decorative geometric shapes */}
+        <div className="absolute top-1/4 right-1/4 w-52 h-52 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.15"/>
+            <polygon points="50,15 85,50 50,85 15,50" fill="#7A7A3F" opacity="0.12"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 80,25 80,60 Q 80,95 50,85 Q 20,95 20,60 Q 20,25 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.15"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute top-1/3 left-1/5 w-44 h-44 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.1"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-1/3 right-1/5 w-40 h-40 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
         <div className="absolute top-20 right-20 w-96 h-96 bg-[#8B2332]/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-[#7A7A3F]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/3 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-64 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-64 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-24 left-16 w-3 h-3 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-32 right-24 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 left-20 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-36 right-18 w-3 h-3 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-12 -translate-y-1/2 w-2 h-2 bg-[#8B2332]/15 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 right-12 -translate-y-1/2 w-2.5 h-2.5 bg-[#7A7A3F]/15 rounded-full hidden lg:block"></div>
+        
+        {/* Organic shapes */}
+        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-80 h-80 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,20 Q 160,40 180,100 Q 160,160 100,140 Q 40,160 20,100 Q 40,40 100,20 Z"
+              fill="#8B2332"
+              opacity="0.06"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/4 translate-x-1/2 w-76 h-76 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 60,60 Q 100,20 140,60 Q 180,100 140,140 Q 100,180 60,140 Q 20,100 60,60 Z"
+              fill="#7A7A3F"
+              opacity="0.07"
+            />
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-32 h-32 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 100,0 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="0,0 50,50 0,100" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-36 h-36 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 0,100 50,50" fill="#8B2332" opacity="0.08"/>
+            <polygon points="100,100 50,50 100,0" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
@@ -739,46 +942,80 @@ export function About() {
                   data-animate-id={`leader-${index}`}
                   style={{ transitionDelay: isVisible[`leader-${index}`] ? `${delay}ms` : '0ms' }}
                 >
-                  <div className={`bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group ${
+                  <div className={`bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 group ${
                     isVisible[`leader-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                   }`}>
-                    {/* Dotted pattern overlay */}
-                    <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
+                    {/* Enhanced dotted pattern overlay */}
+                    <div className="absolute inset-0 rounded-3xl opacity-[0.03]" style={{
                       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
                       backgroundSize: '24px 24px',
                     }}></div>
                     
-                    {/* Image container */}
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                    
+                    {/* Image container with enhanced styling */}
                     <div className="relative overflow-hidden">
                       <img 
-                        src={leader.image} 
-                        alt={leader.name} 
+                        src={`${leader.image}&q=75`}
+                        alt={leader.name}
+                        loading="lazy"
                         className="w-full h-64 md:h-72 object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                        style={{ willChange: 'transform' }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      {/* Decorative corner */}
-                      <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-white/30 rounded-tl-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      {/* Decorative corner with enhanced styling */}
+                      <div className="absolute top-0 left-0 w-20 h-20 border-t-3 border-l-3 border-white/40 rounded-tl-3xl opacity-0 group-hover:opacity-100 transition-opacity shadow-lg backdrop-blur-sm"></div>
+                      <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-white/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      
+                      {/* Floating badge effect */}
+                      <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-[#8B2332]/90 backdrop-blur-sm rounded-full text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-lg">
+                        Leader
+                      </div>
                     </div>
                     
-                    {/* Content */}
+                    {/* Content with enhanced styling */}
                     <div className="p-6 md:p-8 text-center relative z-10">
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-2 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-2 group-hover:text-[#6B1A28] transition-colors duration-300">
                         {leader.name}
                       </h3>
-                      <p className="text-[#7A7A3F] font-semibold mb-3 md:mb-4 text-sm md:text-base">
+                      <p className="text-[#7A7A3F] font-semibold mb-3 md:mb-4 text-sm md:text-base group-hover:text-[#6A6A35] transition-colors duration-300">
                         {leader.role}
                       </p>
                       <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                         {leader.description}
                       </p>
                       
-                      {/* Decorative accent line */}
-                      <div className="mt-4 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      {/* Enhanced decorative accent line */}
+                      <div className="mt-6 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                      
+                      {/* Social/contact icons placeholder area */}
+                      <div className="flex justify-center gap-3 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                          </svg>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                          </svg>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     
-                    {/* Decorative corners */}
-                    <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-[#8B2332]/10 rounded-br-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    {/* Enhanced decorative corners */}
+                    <div className="absolute bottom-0 right-0 w-24 h-24 border-b-3 border-r-3 border-[#8B2332]/20 rounded-br-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-0 left-0 w-20 h-20 border-b-3 border-l-3 border-[#7A7A3F]/15 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-3xl"></div>
                   </div>
                 </div>
               );
