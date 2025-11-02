@@ -89,7 +89,7 @@ export function Programs() {
     };
   }, [isVisible]);
 
-  return <div className="w-full bg-white pt-20">
+  return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -138,16 +138,16 @@ export function Programs() {
         </div>
       </section>
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Main Programs */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -402,11 +402,11 @@ export function Programs() {
           >
             <div className={`${isVisible['programs-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   FEATURED PROGRAMS
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Featured Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -420,7 +420,7 @@ export function Programs() {
               className="transform transition-all duration-700"
               data-animate-id="program-1"
             >
-              <div className={`bg-white rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
                 isVisible['program-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 <div className="grid md:grid-cols-2 h-full">
@@ -432,33 +432,33 @@ export function Programs() {
                     }}></div>
                     
                     <div className="relative z-10 flex flex-col flex-grow h-full">
-                      <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
-                        <BookOpenIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
+                      <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
+                        <BookOpenIcon size={36} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                         Theological Training
                       </h3>
-                      <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
+                      <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base md:text-lg">
                         Comprehensive theological education programs covering
                         biblical studies, systematic theology, church history, and
                         practical ministry skills.
                       </p>
                       <ul className="space-y-3 mb-8">
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Certificate in Theology (6 months)
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Diploma in Ministry (1 year)
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Advanced Theological Studies (2 years)
                           </span>
                         </li>
@@ -493,7 +493,7 @@ export function Programs() {
               className="transform transition-all duration-700"
               data-animate-id="program-2"
             >
-              <div className={`bg-white rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
                 isVisible['program-2'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 <div className="grid md:grid-cols-2 h-full">
@@ -514,33 +514,33 @@ export function Programs() {
                       backgroundSize: '24px 24px',
                     }}></div>
                     <div className="relative z-10 flex flex-col flex-grow h-full">
-                      <div className="w-20 h-20 bg-gradient-to-br from-[#7A7A3F]/20 to-[#7A7A3F]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#7A7A3F]/20">
-                        <TrendingUpIcon size={36} className="text-[#7A7A3F]" strokeWidth={2.5} />
+                      <div className="w-20 h-20 bg-gradient-to-br from-[#7A7A3F]/20 to-[#7A7A3F]/10 dark:from-[#9B9B5F]/20 dark:to-[#9B9B5F]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#7A7A3F]/20 dark:border-[#9B9B5F]/20">
+                        <TrendingUpIcon size={36} className="text-[#7A7A3F] dark:text-[#9B9B5F]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                         Leadership Development
                       </h3>
-                      <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
+                      <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base md:text-lg">
                         Intensive leadership training programs designed to develop
                         visionary leaders who can effectively lead churches and
                         ministries.
                       </p>
                       <ul className="space-y-3 mb-8">
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Strategic Leadership Training
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Church Growth & Development
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Mentorship & Coaching
                           </span>
                         </li>
@@ -562,7 +562,7 @@ export function Programs() {
               className="transform transition-all duration-700"
               data-animate-id="program-3"
             >
-              <div className={`bg-white rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-[500px] md:h-[600px] ${
                 isVisible['program-3'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 <div className="grid md:grid-cols-2 h-full">
@@ -575,30 +575,30 @@ export function Programs() {
                       <div className="w-20 h-20 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
                         <HeartIcon size={36} className="text-[#8B2332]" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-4 group-hover:text-[#6B1A28] transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                         Pastoral Care & Counseling
                       </h3>
-                      <p className="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
+                      <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base md:text-lg">
                         Professional training in pastoral care, counseling
                         techniques, and spiritual guidance to help clergy
                         effectively minister to their congregations.
                       </p>
                       <ul className="space-y-3 mb-8">
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Biblical Counseling Certification
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Crisis Intervention Training
                           </span>
                         </li>
                         <li className="flex items-start space-x-3">
-                          <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700">
+                          <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300">
                             Marriage & Family Counseling
                           </span>
                         </li>
@@ -630,16 +630,16 @@ export function Programs() {
         </div>
       </section>
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50">
+      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="white"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Additional Programs */}
-      <section className="relative py-20 md:py-32 bg-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -818,11 +818,11 @@ export function Programs() {
           >
             <div className={`${isVisible['additional-programs-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   ADDITIONAL PROGRAMS
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Additional Programs
               </h2>
               <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -837,7 +837,7 @@ export function Programs() {
             >
               <Link 
                 to="/programs/youth-ministry"
-                className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full block ${
+                className={`bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 dark:border-gray-700 group h-full block ${
                   isVisible['additional-program-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                 }`}
               >
@@ -851,17 +851,17 @@ export function Programs() {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
-                    <UsersIcon size={28} className="text-[#8B2332]" strokeWidth={2.5} />
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
+                    <UsersIcon size={28} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-3 group-hover:text-[#6B1A28] transition-colors">
+                  <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                     Youth Ministry
                   </h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                     Specialized training for effective youth and young adult
                     ministry
                   </p>
-                  <p className="text-sm text-[#7A7A3F] font-semibold inline-block px-4 py-2 bg-[#7A7A3F]/10 rounded-full">
+                  <p className="text-sm text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold inline-block px-4 py-2 bg-[#7A7A3F]/10 dark:bg-[#9B9B5F]/10 rounded-full">
                     3-month program
                   </p>
                 </div>
@@ -888,7 +888,7 @@ export function Programs() {
                 >
                   <Link 
                     to={`/programs/${program.link}`}
-                    className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full block ${
+                    className={`bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 dark:border-gray-700 group h-full block ${
                       isVisible[`additional-program-${program.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                     }`}
                   >
@@ -904,16 +904,16 @@ export function Programs() {
                     }}></div>
                     
                     <Link to={`/programs/${program.link}`} className="relative z-10 block">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 border-[#8B2332]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 border-[#7A7A3F]/20'} rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
-                        <Icon size={28} className={isMaroon ? "text-[#8B2332]" : "text-[#7A7A3F]"} strokeWidth={2.5} />
+                      <div className={`w-16 h-16 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 border-[#8B2332]/20 dark:border-[#B85C6D]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 dark:from-[#9B9B5F]/20 dark:to-[#9B9B5F]/10 border-[#7A7A3F]/20 dark:border-[#9B9B5F]/20'} rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
+                        <Icon size={28} className={isMaroon ? "text-[#8B2332] dark:text-[#B85C6D]" : "text-[#7A7A3F] dark:text-[#9B9B5F]"} strokeWidth={2.5} />
                       </div>
-                      <h3 className={`text-xl md:text-2xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] group-hover:text-[#6B1A28]' : 'text-[#8B2332]'}`}>
+                      <h3 className={`text-xl md:text-2xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] dark:text-[#B85C6D] group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E]' : 'text-[#8B2332] dark:text-[#B85C6D]'}`}>
                         {program.title}
                       </h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                         {program.description}
                       </p>
-                      <p className={`text-sm font-semibold inline-block px-4 py-2 rounded-full ${isMaroon ? 'text-[#7A7A3F] bg-[#7A7A3F]/10' : 'text-[#7A7A3F] bg-[#7A7A3F]/10'}`}>
+                      <p className={`text-sm font-semibold inline-block px-4 py-2 rounded-full ${isMaroon ? 'text-[#7A7A3F] dark:text-[#9B9B5F] bg-[#7A7A3F]/10 dark:bg-[#9B9B5F]/10' : 'text-[#7A7A3F] dark:text-[#9B9B5F] bg-[#7A7A3F]/10 dark:bg-[#9B9B5F]/10'}`}>
                         {program.duration}
                       </p>
                     </Link>
@@ -942,7 +942,7 @@ export function Programs() {
       </div>
 
       {/* Program Features */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1166,11 +1166,11 @@ export function Programs() {
           >
             <div className={`${isVisible['features-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   PROGRAM FEATURES
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Program Features
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
@@ -1193,7 +1193,7 @@ export function Programs() {
                   className="transform transition-all duration-700"
                   data-animate-id={`feature-${feature.index}`}
                 >
-                  <div className={`text-center bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 group h-full ${
+                  <div className={`text-center bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group h-full ${
                     isVisible[`feature-${feature.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                   }`}>
                     {/* Dotted pattern overlay */}
@@ -1203,13 +1203,13 @@ export function Programs() {
                     }}></div>
                     
                     <div className="relative z-10">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 border-[#8B2332]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 border-[#7A7A3F]/20'} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
-                        <Icon size={36} className={isMaroon ? "text-[#8B2332]" : "text-[#7A7A3F]"} strokeWidth={2.5} />
+                      <div className={`w-20 h-20 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 border-[#8B2332]/20 dark:border-[#B85C6D]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 dark:from-[#9B9B5F]/20 dark:to-[#9B9B5F]/10 border-[#7A7A3F]/20 dark:border-[#9B9B5F]/20'} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
+                        <Icon size={36} className={isMaroon ? "text-[#8B2332] dark:text-[#B85C6D]" : "text-[#7A7A3F] dark:text-[#9B9B5F]"} strokeWidth={2.5} />
                       </div>
-                      <h3 className={`text-lg md:text-xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] group-hover:text-[#6B1A28]' : 'text-[#8B2332]'}`}>
+                      <h3 className={`text-lg md:text-xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] dark:text-[#B85C6D] group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E]' : 'text-[#8B2332] dark:text-[#B85C6D]'}`}>
                         {feature.title}
                       </h3>
-                      <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
                         {feature.description}
                       </p>
                     </div>
@@ -1227,16 +1227,16 @@ export function Programs() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] dark:from-gray-800 dark:via-gray-900/50 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1306,14 +1306,14 @@ export function Programs() {
           >
             <div className={`${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   GET STARTED
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight text-[#8B2332]">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
                 Ready to Grow in Your Ministry?
               </h2>
-              <p className="text-sm md:text-base text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 Enroll in one of our programs and take your ministry to the next
                 level
               </p>
@@ -1327,7 +1327,7 @@ export function Programs() {
                 </Link>
                 <Link 
                   to="/contact"
-                  className="px-6 py-3 border-2 border-[#8B2332] text-[#8B2332] rounded-full font-semibold hover:bg-[#8B2332] hover:text-white transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl text-xs md:text-sm"
+                  className="px-6 py-3 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl text-xs md:text-sm"
                 >
                   <span>Contact Us</span>
                 </Link>
