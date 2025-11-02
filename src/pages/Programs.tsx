@@ -463,10 +463,13 @@ export function Programs() {
                           </span>
                         </li>
                       </ul>
-                      <button className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto">
+                      <Link 
+                        to="/programs/theological-training"
+                        className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto"
+                      >
                         <span>Learn More</span>
                         <ArrowRightIcon size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
-                      </button>
+                      </Link>
                     </div>
                   </div>
                   <div className="relative h-full overflow-hidden group">
@@ -542,10 +545,13 @@ export function Programs() {
                           </span>
                         </li>
                       </ul>
-                      <button className="group/btn px-6 py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto">
+                      <Link 
+                        to="/programs/leadership-development"
+                        className="group/btn px-6 py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto"
+                      >
                         <span>Learn More</span>
                         <ArrowRightIcon size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -597,10 +603,13 @@ export function Programs() {
                           </span>
                         </li>
                       </ul>
-                      <button className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto">
+                      <Link 
+                        to="/programs/pastoral-care"
+                        className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl mt-auto"
+                      >
                         <span>Learn More</span>
                         <ArrowRightIcon size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
-                      </button>
+                      </Link>
                     </div>
                   </div>
                   <div className="relative h-full overflow-hidden group">
@@ -631,13 +640,176 @@ export function Programs() {
 
       {/* Additional Programs */}
       <section className="relative py-20 md:py-32 bg-gray-50 overflow-hidden">
-        {/* Enhanced background graphics */}
+        {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
+        <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
         <GeometricPattern opacity={0.02} />
+        <GeometricPattern opacity={0.015} className="rotate-45" />
         
-        {/* Blur effects */}
+        {/* Abstract shapes */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        <AbstractShape position="left" color="#8B2332" />
+        <AbstractShape position="right" color="#7A7A3F" />
+        
+        {/* Additional decorative geometric shapes */}
+        <div className="absolute top-1/4 left-1/4 w-48 h-48 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 50,100 0,50" fill="#8B2332" opacity="0.12"/>
+            <polygon points="50,18 82,50 50,82 18,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-1/4 w-44 h-44 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 Q 75,20 75,50 Q 75,80 50,75 Q 25,80 25,50 Q 25,20 50,0 Z"
+              fill="#7A7A3F"
+              opacity="0.12"
+            />
+          </svg>
+        </div>
+        
+        {/* More floating shapes */}
+        <div className="absolute top-1/3 right-1/5 w-36 h-36 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,8 92,50 50,92 8,50" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 left-1/5 w-32 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path
+              d="M 50,0 L 100,86.6 L 50,100 L 0,86.6 Z"
+              fill="none"
+              stroke="#7A7A3F"
+              strokeWidth="1.5"
+              opacity="0.1"
+            />
+          </svg>
+        </div>
+        
+        {/* Blur effects for depth */}
         <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#8B2332]/2 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#7A7A3F]/2 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#8B2332]/1.5 rounded-full blur-3xl"></div>
+        
+        {/* Decorative lines */}
+        <div className="absolute top-1/2 left-0 w-px h-56 bg-gradient-to-b from-transparent via-[#8B2332]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/2 right-0 w-px h-56 bg-gradient-to-b from-transparent via-[#7A7A3F]/10 to-transparent hidden lg:block"></div>
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#8B2332]/8 to-transparent hidden lg:block"></div>
+        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 translate-y-1/2 w-36 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/8 to-transparent hidden lg:block"></div>
+        
+        {/* Floating decorative dots */}
+        <div className="absolute top-16 left-10 w-2.5 h-2.5 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-24 right-12 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-20 left-12 w-2 h-2 bg-[#8B2332]/20 rounded-full hidden md:block"></div>
+        <div className="absolute bottom-28 right-10 w-2.5 h-2.5 bg-[#7A7A3F]/20 rounded-full hidden md:block"></div>
+        <div className="absolute top-1/2 left-8 -translate-y-1/2 w-1.5 h-1.5 bg-[#8B2332]/15 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 right-8 -translate-y-1/2 w-2 h-2 bg-[#7A7A3F]/15 rounded-full hidden lg:block"></div>
+        
+        {/* Organic shapes */}
+        <div className="absolute top-0 left-1/3 -translate-x-1/2 w-72 h-72 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 100,25 Q 140,45 155,100 Q 140,155 100,135 Q 60,155 45,100 Q 60,45 100,25 Z"
+              fill="#8B2332"
+              opacity="0.05"
+            />
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/3 translate-x-1/2 w-68 h-68 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path
+              d="M 55,55 Q 95,20 135,55 Q 180,95 135,135 Q 95,180 55,135 Q 20,95 55,55 Z"
+              fill="#7A7A3F"
+              opacity="0.06"
+            />
+          </svg>
+        </div>
+        
+        {/* Corner decorative elements */}
+        <div className="absolute top-0 left-0 w-28 h-28 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="0,0 100,0 50,50" fill="#8B2332" opacity="0.07"/>
+            <polygon points="0,0 50,50 0,100" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-0 w-32 h-32 opacity-3 hidden md:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="100,100 0,100 50,50" fill="#8B2332" opacity="0.07"/>
+            <polygon points="100,100 50,50 100,0" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        {/* Circle patterns */}
+        <div className="absolute top-1/4 left-0 w-56 h-56 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.25"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.18"/>
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#8B2332" strokeWidth="0.6" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-0 w-52 h-52 opacity-5">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="75" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.22"/>
+            <circle cx="100" cy="100" r="55" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.18"/>
+          </svg>
+        </div>
+        
+        {/* Additional scattered shapes */}
+        <div className="absolute top-1/6 right-1/3 w-32 h-32 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 100,50 75,100 25,100 0,50" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/6 left-1/3 w-34 h-34 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,12 88,50 50,88 12,50" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Diagonal accent lines */}
+        <div className="absolute top-1/2 right-1/3 w-28 h-px bg-gradient-to-r from-transparent via-[#8B2332]/12 to-transparent transform rotate-45 hidden xl:block"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-28 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/12 to-transparent transform -rotate-45 hidden xl:block"></div>
+        
+        {/* Star-like decorative shapes */}
+        <div className="absolute top-28 right-1/5 w-18 h-18 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,12 L52,35 L75,35 L58,48 L68,71 L50,58 L32,71 L42,48 L25,35 L48,35 Z" fill="#8B2332" opacity="0.07"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-28 left-1/5 w-16 h-16 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,15 L51.5,32 L68,32 L56,42 L63,59 L50,52 L37,59 L44,42 L32,32 L48.5,32 Z" fill="#7A7A3F" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Hexagonal patterns */}
+        <div className="absolute top-1/5 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25" fill="none" stroke="#8B2332" strokeWidth="1.2" opacity="0.1"/>
+            <polygon points="50,16 76.3,32 76.3,68 50,84 23.7,68 23.7,32" fill="#7A7A3F" opacity="0.05"/>
+          </svg>
+        </div>
+        
+        {/* Wave patterns */}
+        <div className="absolute top-0 left-1/4 w-56 h-28 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,35 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.07"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/4 w-56 h-28 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,65 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.07"/>
+          </svg>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
@@ -663,9 +835,12 @@ export function Programs() {
               className="transform transition-all duration-700"
               data-animate-id="additional-program-1"
             >
-              <div className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full ${
-                isVisible['additional-program-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-              }`}>
+              <Link 
+                to="/programs/youth-ministry"
+                className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full block ${
+                  isVisible['additional-program-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                }`}
+              >
                 {/* Dotted pattern overlay */}
                 <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
                   backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
@@ -694,14 +869,14 @@ export function Programs() {
                 {/* Decorative corners */}
                 <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#8B2332]/10 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[#7A7A3F]/10 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
+              </Link>
             </div>
             {[
-              { icon: GraduationCapIcon, title: "Children's Ministry", description: "Training for impactful children's ministry and Sunday school programs", duration: "2-month program", color: '#7A7A3F', index: 2 },
-              { icon: BookOpenIcon, title: "Worship & Music", description: "Comprehensive worship leading and church music ministry training", duration: "4-month program", color: '#8B2332', index: 3 },
-              { icon: HeartIcon, title: "Missions & Evangelism", description: "Equipping clergy for effective evangelism and missions work", duration: "3-month program", color: '#7A7A3F', index: 4 },
-              { icon: AwardIcon, title: "Church Administration", description: "Practical training in church management and administration", duration: "2-month program", color: '#8B2332', index: 5 },
-              { icon: TrendingUpIcon, title: "Media & Communications", description: "Modern ministry tools for digital age evangelism and communication", duration: "3-month program", color: '#7A7A3F', index: 6 }
+              { icon: GraduationCapIcon, title: "Children's Ministry", description: "Training for impactful children's ministry and Sunday school programs", duration: "2-month program", color: '#7A7A3F', index: 2, link: 'childrens-ministry' },
+              { icon: BookOpenIcon, title: "Worship & Music", description: "Comprehensive worship leading and church music ministry training", duration: "4-month program", color: '#8B2332', index: 3, link: 'worship-music' },
+              { icon: HeartIcon, title: "Missions & Evangelism", description: "Equipping clergy for effective evangelism and missions work", duration: "3-month program", color: '#7A7A3F', index: 4, link: 'missions-evangelism' },
+              { icon: AwardIcon, title: "Church Administration", description: "Practical training in church management and administration", duration: "2-month program", color: '#8B2332', index: 5, link: 'church-administration' },
+              { icon: TrendingUpIcon, title: "Media & Communications", description: "Modern ministry tools for digital age evangelism and communication", duration: "3-month program", color: '#7A7A3F', index: 6, link: 'media-communications' }
             ].map((program) => {
               const Icon = program.icon;
               const isMaroon = program.color === '#8B2332';
@@ -711,9 +886,12 @@ export function Programs() {
                   className="transform transition-all duration-700"
                   data-animate-id={`additional-program-${program.index}`}
                 >
-                  <div className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full ${
-                    isVisible[`additional-program-${program.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-                  }`}>
+                  <Link 
+                    to={`/programs/${program.link}`}
+                    className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] relative border border-gray-100 group h-full block ${
+                      isVisible[`additional-program-${program.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                    }`}
+                  >
                     {/* Dotted pattern overlay */}
                     <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
                       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
@@ -725,7 +903,7 @@ export function Programs() {
                       background: `linear-gradient(to bottom right, transparent, ${program.color === '#8B2332' ? 'rgba(139, 34, 50, 0.05)' : 'rgba(122, 122, 63, 0.05)'})`
                     }}></div>
                     
-                    <div className="relative z-10">
+                    <Link to={`/programs/${program.link}`} className="relative z-10 block">
                       <div className={`w-16 h-16 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 border-[#8B2332]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 border-[#7A7A3F]/20'} rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
                         <Icon size={28} className={isMaroon ? "text-[#8B2332]" : "text-[#7A7A3F]"} strokeWidth={2.5} />
                       </div>
@@ -738,7 +916,7 @@ export function Programs() {
                       <p className={`text-sm font-semibold inline-block px-4 py-2 rounded-full ${isMaroon ? 'text-[#7A7A3F] bg-[#7A7A3F]/10' : 'text-[#7A7A3F] bg-[#7A7A3F]/10'}`}>
                         {program.duration}
                       </p>
-                    </div>
+                    </Link>
                     
                     {/* Decorative corners */}
                     <div className={`absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} style={{
@@ -747,7 +925,7 @@ export function Programs() {
                     <div className={`absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} style={{
                       borderColor: `${program.color === '#8B2332' ? '#7A7A3F' : '#8B2332'}33`
                     }}></div>
-                  </div>
+                  </Link>
                 </div>
               );
             })}

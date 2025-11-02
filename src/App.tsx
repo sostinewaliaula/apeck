@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
 const About = lazy(() => import('./pages/About').then(module => ({ default: module.About })));
 const Programs = lazy(() => import('./pages/Programs').then(module => ({ default: module.Programs })));
+const ProgramDetail = lazy(() => import('./pages/ProgramDetail').then(module => ({ default: module.ProgramDetail })));
 const Membership = lazy(() => import('./pages/Membership').then(module => ({ default: module.Membership })));
 const News = lazy(() => import('./pages/News').then(module => ({ default: module.News })));
 const Gallery = lazy(() => import('./pages/Gallery').then(module => ({ default: module.Gallery })));
@@ -31,6 +32,7 @@ export function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/programs" element={<Programs />} />
+            <Route path="/programs/:programId" element={<ProgramDetail />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/news" element={<News />} />
             <Route path="/gallery" element={<Gallery />} />
