@@ -115,7 +115,7 @@ export function About() {
     };
   }, [isVisible]);
 
-  return <div className="w-full bg-white pt-20">
+  return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -169,14 +169,14 @@ export function About() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#8B2332] to-white">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#8B2332] to-white dark:to-gray-900 transition-colors duration-300">
         <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-          <path d="M0,0 Q400,50 600,40 T1200,50 L1200,100 L0,100 Z" fill="white"/>
+          <path d="M0,0 Q400,50 600,40 T1200,50 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-900"/>
         </svg>
       </div>
 
       {/* History - Moved to second section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" />
@@ -199,18 +199,18 @@ export function About() {
             <div className={`${isVisible['history-text'] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
               {/* Badge and Title */}
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   OUR STORY
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-6 md:mb-8 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-6 md:mb-8 leading-tight">
                 Our Story
               </h2>
               
               {/* Text content with image floating inside */}
-              <div className="space-y-6 text-gray-700 leading-relaxed text-sm md:text-base">
+              <div className="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
                 <p className="transform transition-all duration-500 hover:translate-x-2">
-                  APECK was founded in <span className="font-semibold text-[#8B2332]">2009</span> by a group of visionary clergy
+                  APECK was founded in <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">2009</span> by a group of visionary clergy
                   leaders who recognized the urgent need for a unified platform to
                   support, empower, and connect Pentecostal and Evangelical
                   ministers across Kenya. These founding members, representing diverse
@@ -219,7 +219,7 @@ export function About() {
                   elevate the standards of clergy practice nationwide.
                 </p>
                 <p className="transform transition-all duration-500 hover:translate-x-2">
-                  The initial meetings took place in Nairobi, where <span className="font-semibold text-[#7A7A3F]">15 founding
+                  The initial meetings took place in Nairobi, where <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">15 founding
                   pastors</span> gathered to discuss the challenges facing clergy in
                   Kenya. They identified critical gaps in training, support systems,
                   and networking opportunities. From these humble beginnings, APECK
@@ -256,8 +256,8 @@ export function About() {
                 
                 <p className="transform transition-all duration-500 hover:translate-x-2">
                   What began as a small gathering of passionate pastors has
-                  grown into a national movement representing over <span className="font-semibold text-[#7A7A3F]">1,500 clergy
-                  members</span> from all <span className="font-semibold text-[#8B2332]">47 counties</span> of Kenya. Our growth
+                  grown into a national movement representing over <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">1,500 clergy
+                  members</span> from all <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">47 counties</span> of Kenya. Our growth
                   has been marked by strategic expansion into regional chapters,
                   each led by dedicated coordinators who understand the unique
                   ministry contexts of their areas. From the coastal regions of
@@ -266,14 +266,14 @@ export function About() {
                   Pentecostal and Evangelical community.
                 </p>
                 <p className="transform transition-all duration-500 hover:translate-x-2">
-                  Over the past <span className="font-semibold text-[#8B2332]">15 years</span>, we have facilitated hundreds of
+                  Over the past <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">15 years</span>, we have facilitated hundreds of
                   training programs, provided mentorship to emerging leaders,
                   and created a supportive community where clergy can grow,
                   learn, and thrive in their calling. Our training initiatives
                   have covered topics ranging from biblical exegesis and theological
                   studies to practical ministry skills including counseling,
                   leadership development, financial management, and community
-                  engagement. We've organized <span className="font-semibold text-[#7A7A3F]">250+ workshops</span>, <span className="font-semibold text-[#8B2332]">47 annual
+                  engagement. We've organized <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">250+ workshops</span>, <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">47 annual
                   conferences</span>, and numerous online learning opportunities.
                 </p>
                 <p className="transform transition-all duration-500 hover:translate-x-2">
@@ -289,7 +289,7 @@ export function About() {
                 <p className="transform transition-all duration-500 hover:translate-x-2">
                   The association has been instrumental in establishing
                   mentorship programs that pair experienced clergy with emerging
-                  leaders. These relationships have resulted in <span className="font-semibold text-[#7A7A3F]">300+ mentorship
+                  leaders. These relationships have resulted in <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">300+ mentorship
                   pairings</span>, creating pathways for knowledge transfer and
                   spiritual growth. Through our networking events, regional
                   conferences, and digital platforms, clergy members have found
@@ -318,16 +318,16 @@ export function About() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Mission & Vision */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -537,16 +537,16 @@ export function About() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Core Values */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -657,14 +657,14 @@ export function About() {
           >
             <div className={`${isVisible['values-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   OUR VALUES
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Core Values
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
                 The principles that guide everything we do
               </p>
             </div>
@@ -686,7 +686,7 @@ export function About() {
                   data-animate-id={`value-${index}`}
                   style={{ transitionDelay: isVisible[`value-${index}`] ? `${delay}ms` : '0ms' }}
                 >
-                  <div className={`bg-white p-8 md:p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 group h-full overflow-hidden ${
+                  <div className={`bg-white dark:bg-gray-800 p-8 md:p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 dark:border-gray-700 group h-full overflow-hidden ${
                     isVisible[`value-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                   }`}>
                     {/* Enhanced dotted pattern overlay */}
@@ -755,11 +755,11 @@ export function About() {
                     </div>
                     
                     <h3 className={`text-xl md:text-2xl font-bold mb-4 text-center transition-colors duration-300 relative z-10 ${
-                      value.color === '#8B2332' ? 'text-[#8B2332] group-hover:text-[#6B1A28]' : 'text-[#7A7A3F] group-hover:text-[#6A6A35]'
+                      value.color === '#8B2332' ? 'text-[#8B2332] dark:text-[#B85C6D] group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E]' : 'text-[#7A7A3F] dark:text-[#9B9B5F] group-hover:text-[#6A6A35] dark:group-hover:text-[#8B8B4F]'
                     }`}>
                       {value.title}
                     </h3>
-                    <p className="text-gray-600 text-center leading-relaxed relative z-10 text-sm md:text-base">
+                    <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed relative z-10 text-sm md:text-base">
                       {value.description}
                     </p>
                     
@@ -787,16 +787,16 @@ export function About() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50">
+      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="white"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Leadership */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -909,14 +909,14 @@ export function About() {
           >
             <div className={`${isVisible['leadership-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   LEADERSHIP
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
                 Our Leadership
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
                 Experienced leaders committed to serving the clergy community
               </p>
             </div>
@@ -942,7 +942,7 @@ export function About() {
                   data-animate-id={`leader-${index}`}
                   style={{ transitionDelay: isVisible[`leader-${index}`] ? `${delay}ms` : '0ms' }}
                 >
-                  <div className={`bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 group ${
+                  <div className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 dark:border-gray-700 group ${
                     isVisible[`leader-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
                   }`}>
                     {/* Enhanced dotted pattern overlay */}
@@ -977,33 +977,33 @@ export function About() {
                     
                     {/* Content with enhanced styling */}
                     <div className="p-6 md:p-8 text-center relative z-10">
-                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-2 group-hover:text-[#6B1A28] transition-colors duration-300">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-2 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors duration-300">
                         {leader.name}
                       </h3>
-                      <p className="text-[#7A7A3F] font-semibold mb-3 md:mb-4 text-sm md:text-base group-hover:text-[#6A6A35] transition-colors duration-300">
+                      <p className="text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold mb-3 md:mb-4 text-sm md:text-base group-hover:text-[#6A6A35] dark:group-hover:text-[#8B8B4F] transition-colors duration-300">
                         {leader.role}
                       </p>
-                      <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
                         {leader.description}
                       </p>
                       
-                      {/* Enhanced decorative accent line */}
-                      <div className="mt-6 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                    {/* Enhanced decorative accent line */}
+                    <div className="mt-6 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/30 dark:via-[#B85C6D]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
                       
                       {/* Social/contact icons placeholder area */}
                       <div className="flex justify-center gap-3 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
-                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 hover:bg-[#8B2332]/20 dark:hover:bg-[#B85C6D]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332] dark:text-[#B85C6D]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                           </svg>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
-                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 hover:bg-[#8B2332]/20 dark:hover:bg-[#B85C6D]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332] dark:text-[#B85C6D]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
                           </svg>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 hover:bg-[#8B2332]/20 flex items-center justify-center transition-colors cursor-pointer">
-                          <svg className="w-4 h-4 text-[#8B2332]" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 hover:bg-[#8B2332]/20 dark:hover:bg-[#B85C6D]/20 flex items-center justify-center transition-colors cursor-pointer">
+                          <svg className="w-4 h-4 text-[#8B2332] dark:text-[#B85C6D]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                           </svg>
                         </div>
@@ -1011,11 +1011,11 @@ export function About() {
                     </div>
                     
                     {/* Enhanced decorative corners */}
-                    <div className="absolute bottom-0 right-0 w-24 h-24 border-b-3 border-r-3 border-[#8B2332]/20 rounded-br-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute bottom-0 left-0 w-20 h-20 border-b-3 border-l-3 border-[#7A7A3F]/15 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-0 right-0 w-24 h-24 border-b-3 border-r-3 border-[#8B2332]/20 dark:border-[#B85C6D]/20 rounded-br-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-0 left-0 w-20 h-20 border-b-3 border-l-3 border-[#7A7A3F]/15 dark:border-[#9B9B5F]/15 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     {/* Top accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-3xl"></div>
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#8B2332]/20 dark:via-[#B85C6D]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-3xl"></div>
                   </div>
                 </div>
               );
