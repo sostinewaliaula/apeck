@@ -91,7 +91,7 @@ export function Membership() {
     };
   }, []);
 
-  return <div className="w-full bg-white pt-20">
+  return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -166,16 +166,16 @@ export function Membership() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Benefits Section */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -354,14 +354,14 @@ export function Membership() {
           >
             <div className={`${isVisible['benefits-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   MEMBERSHIP BENEFITS
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Membership Benefits
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
                 Why join APECK?
               </p>
             </div>
@@ -383,7 +383,7 @@ export function Membership() {
                   className="transform transition-all duration-700"
                   data-animate-id={`benefit-${benefit.index}`}
                 >
-                  <div className={`bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 group h-full ${
+                  <div className={`bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group h-full ${
                     isVisible[`benefit-${benefit.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                   }`}>
                     {/* Dotted pattern overlay */}
@@ -398,13 +398,13 @@ export function Membership() {
                     }}></div>
                     
                     <div className="relative z-10">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 border-[#8B2332]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 border-[#7A7A3F]/20'} rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
-                        <Icon size={36} className={isMaroon ? "text-[#8B2332]" : "text-[#7A7A3F]"} strokeWidth={2.5} />
+                      <div className={`w-20 h-20 bg-gradient-to-br ${isMaroon ? 'from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 border-[#8B2332]/20 dark:border-[#B85C6D]/20' : 'from-[#7A7A3F]/20 to-[#7A7A3F]/10 dark:from-[#9B9B5F]/20 dark:to-[#9B9B5F]/10 border-[#7A7A3F]/20 dark:border-[#9B9B5F]/20'} rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 border`}>
+                        <Icon size={36} className={isMaroon ? "text-[#8B2332] dark:text-[#B85C6D]" : "text-[#7A7A3F] dark:text-[#9B9B5F]"} strokeWidth={2.5} />
                       </div>
-                      <h3 className={`text-xl md:text-2xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] group-hover:text-[#6B1A28]' : 'text-[#8B2332]'}`}>
+                      <h3 className={`text-xl md:text-2xl font-bold mb-3 transition-colors ${isMaroon ? 'text-[#8B2332] dark:text-[#B85C6D] group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E]' : 'text-[#8B2332] dark:text-[#B85C6D]'}`}>
                         {benefit.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed">
+                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                         {benefit.description}
                       </p>
                     </div>
@@ -425,16 +425,16 @@ export function Membership() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Membership Tiers */}
-      <section className="relative py-20 md:py-32 bg-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -613,14 +613,14 @@ export function Membership() {
           >
             <div className={`${isVisible['tiers-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   MEMBERSHIP CATEGORIES
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Membership Categories
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
                 Choose the membership level that fits your ministry
               </p>
             </div>
@@ -631,7 +631,7 @@ export function Membership() {
               className="transform transition-all duration-700"
               data-animate-id="tier-1"
             >
-              <div className={`bg-white rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
                 isVisible['tier-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 <div className="bg-gradient-to-br from-gray-600 to-gray-700 text-white p-8 text-center relative overflow-hidden">
@@ -650,20 +650,20 @@ export function Membership() {
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Access to basic training programs</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Access to basic training programs</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Quarterly newsletters</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Quarterly newsletters</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Online resource access</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Online resource access</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Networking opportunities</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Networking opportunities</span>
                     </li>
                   </ul>
                   <button 
@@ -684,7 +684,7 @@ export function Membership() {
               className="transform transition-all duration-700"
               data-animate-id="tier-2"
             >
-              <div className={`bg-white rounded-3xl shadow-2xl hover:shadow-3xl overflow-hidden border-4 border-[#8B2332] group transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.03] h-full relative ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-2xl hover:shadow-3xl overflow-hidden border-4 border-[#8B2332] dark:border-[#B85C6D] group transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.03] h-full relative ${
                 isVisible['tier-2'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 {/* Popular Badge */}
@@ -708,24 +708,24 @@ export function Membership() {
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">All Associate benefits</span>
+                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">All Associate benefits</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Full training program access</span>
+                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Full training program access</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Mentorship opportunities</span>
+                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Mentorship opportunities</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Conference discounts</span>
+                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Conference discounts</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Voting rights</span>
+                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Voting rights</span>
                     </li>
                   </ul>
                   <button 
@@ -746,7 +746,7 @@ export function Membership() {
               className="transform transition-all duration-700"
               data-animate-id="tier-3"
             >
-              <div className={`bg-white rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
+              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
                 isVisible['tier-3'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
               }`}>
                 <div className="bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] text-white p-8 text-center relative overflow-hidden">
@@ -765,24 +765,24 @@ export function Membership() {
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">All Full Member benefits</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">All Full Member benefits</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Lifetime membership</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Lifetime membership</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Priority event access</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Priority event access</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Leadership opportunities</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Leadership opportunities</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700">Legacy recognition</span>
+                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="text-gray-700 dark:text-gray-300">Legacy recognition</span>
                     </li>
                   </ul>
                   <button 
@@ -802,16 +802,16 @@ export function Membership() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50">
+      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="white"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Requirements */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -876,14 +876,14 @@ export function Membership() {
           >
             <div className={`${isVisible['requirements-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   MEMBERSHIP REQUIREMENTS
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Membership Requirements
               </h2>
-              <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
                 What you need to become a member
               </p>
             </div>
@@ -892,7 +892,7 @@ export function Membership() {
             className="transform transition-all duration-700"
             data-animate-id="requirements-content"
           >
-            <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 ${
+            <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 ${
               isVisible['requirements-content'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
             }`}>
               {/* Dotted pattern overlay */}
@@ -912,14 +912,14 @@ export function Membership() {
                   const Icon = req.icon;
                   return (
                     <li key={index} className="flex items-start space-x-4 group">
-                      <div className="w-14 h-14 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20">
-                        <Icon size={24} className="text-[#8B2332]" strokeWidth={2.5} />
+                      <div className="w-14 h-14 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
+                        <Icon size={24} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <h3 className="font-bold text-xl text-[#8B2332] mb-2 group-hover:text-[#6B1A28] transition-colors">
+                        <h3 className="font-bold text-xl text-[#8B2332] dark:text-[#B85C6D] mb-2 group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E] transition-colors">
                           {req.title}
                         </h3>
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                           {req.description}
                         </p>
                       </div>
@@ -933,16 +933,16 @@ export function Membership() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#FAF9F7"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-[#FAF9F7] dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-br from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] dark:from-gray-800 dark:via-gray-900/50 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1003,14 +1003,14 @@ export function Membership() {
           >
             <div className={`${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   GET STARTED
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-[#8B2332]">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
                 Ready to Join APECK?
               </h2>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 Take the next step in your ministry journey and become part of our
                 community
               </p>
