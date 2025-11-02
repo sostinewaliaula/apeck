@@ -278,6 +278,123 @@ export function Programs() {
           </svg>
         </div>
         
+        {/* More floating geometric shapes */}
+        <div className="absolute top-10 right-1/5 w-28 h-28 opacity-4 hidden lg:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.12"/>
+            <polygon points="50,20 80,50 50,80 20,50" fill="#7A7A3F" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-10 left-1/5 w-32 h-32 opacity-4 hidden lg:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#8B2332" strokeWidth="2" opacity="0.15"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.12"/>
+          </svg>
+        </div>
+        
+        {/* Diagonal accent lines */}
+        <div className="absolute top-1/2 right-1/4 w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/15 to-transparent transform rotate-45 hidden xl:block"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-32 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/15 to-transparent transform -rotate-45 hidden xl:block"></div>
+        <div className="absolute top-1/3 left-1/3 w-24 h-px bg-gradient-to-r from-transparent via-[#8B2332]/12 to-transparent transform rotate-12 hidden xl:block"></div>
+        <div className="absolute bottom-1/2 right-1/3 w-24 h-px bg-gradient-to-r from-transparent via-[#7A7A3F]/12 to-transparent transform -rotate-12 hidden xl:block"></div>
+        
+        {/* More decorative dots with varying sizes */}
+        <div className="absolute top-16 left-1/4 w-1.5 h-1.5 bg-[#8B2332]/25 rounded-full hidden lg:block"></div>
+        <div className="absolute top-24 right-1/3 w-2 h-2 bg-[#7A7A3F]/25 rounded-full hidden lg:block"></div>
+        <div className="absolute bottom-20 left-1/3 w-1.5 h-1.5 bg-[#8B2332]/25 rounded-full hidden lg:block"></div>
+        <div className="absolute bottom-28 right-1/4 w-2 h-2 bg-[#7A7A3F]/25 rounded-full hidden lg:block"></div>
+        <div className="absolute top-1/2 left-1/6 -translate-y-1/2 w-1.5 h-1.5 bg-[#8B2332]/20 rounded-full hidden xl:block"></div>
+        <div className="absolute top-1/2 right-1/6 -translate-y-1/2 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden xl:block"></div>
+        
+        {/* Star-like decorative shapes */}
+        <div className="absolute top-32 right-1/6 w-20 h-20 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,10 L55,40 L85,40 L60,60 L70,90 L50,70 L30,90 L40,60 L15,40 L45,40 Z" fill="#8B2332" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-32 left-1/6 w-18 h-18 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,15 L53,35 L73,35 L58,50 L68,70 L50,60 L32,70 L42,50 L27,35 L47,35 Z" fill="#7A7A3F" opacity="0.09"/>
+          </svg>
+        </div>
+        
+        {/* Curved decorative elements */}
+        <div className="absolute top-1/4 left-0 w-40 h-40 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path d="M 0,100 Q 50,50 100,100 T 200,100" fill="none" stroke="#8B2332" strokeWidth="2" opacity="0.1"/>
+            <path d="M 0,120 Q 50,80 100,120 T 200,120" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/4 right-0 w-44 h-44 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path d="M 200,100 Q 150,150 100,100 T 0,100" fill="none" stroke="#7A7A3F" strokeWidth="2" opacity="0.1"/>
+            <path d="M 200,80 Q 150,130 100,80 T 0,80" fill="none" stroke="#8B2332" strokeWidth="1.5" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        {/* Hexagonal patterns */}
+        <div className="absolute top-1/5 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25" fill="none" stroke="#8B2332" strokeWidth="1.5" opacity="0.12"/>
+            <polygon points="50,15 78.3,32.5 78.3,67.5 50,85 21.7,67.5 21.7,32.5" fill="#7A7A3F" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/5 left-1/2 -translate-x-1/2 translate-y-1/2 w-28 h-28 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 93.3,25 93.3,75 50,100 6.7,75 6.7,25" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.12"/>
+            <polygon points="50,18 76.3,34 76.3,66 50,82 23.7,66 23.7,34" fill="#8B2332" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        {/* Wave patterns */}
+        <div className="absolute top-0 left-1/3 w-64 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,30 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.08"/>
+            <path d="M0,60 Q25,40 50,60 T100,60 T150,60 T200,60" fill="none" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-0 right-1/3 w-64 h-32 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
+            <path d="M0,50 Q25,70 50,50 T100,50 T150,50 T200,50" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.08"/>
+            <path d="M0,40 Q25,60 50,40 T100,40 T150,40 T200,40" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.06"/>
+          </svg>
+        </div>
+        
+        {/* Grid pattern accents */}
+        <div className="absolute top-1/3 right-1/5 w-24 h-24 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <line x1="0" y1="0" x2="100" y2="100" stroke="#8B2332" strokeWidth="1" opacity="0.1"/>
+            <line x1="100" y1="0" x2="0" y2="100" stroke="#7A7A3F" strokeWidth="1" opacity="0.1"/>
+            <line x1="50" y1="0" x2="50" y2="100" stroke="#8B2332" strokeWidth="0.8" opacity="0.08"/>
+            <line x1="0" y1="50" x2="100" y2="50" stroke="#7A7A3F" strokeWidth="0.8" opacity="0.08"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-1/3 left-1/5 w-22 h-22 opacity-3 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <line x1="0" y1="0" x2="100" y2="100" stroke="#7A7A3F" strokeWidth="1" opacity="0.1"/>
+            <line x1="100" y1="0" x2="0" y2="100" stroke="#8B2332" strokeWidth="1" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        {/* Spiral-like decorative elements */}
+        <div className="absolute top-2/3 right-1/4 w-20 h-20 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,50 Q55,30 65,30 Q75,30 80,50 Q80,70 70,80 Q60,85 50,75" fill="none" stroke="#8B2332" strokeWidth="1.5" opacity="0.1"/>
+          </svg>
+        </div>
+        
+        <div className="absolute bottom-2/3 left-1/4 w-18 h-18 opacity-4 hidden xl:block">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <path d="M50,50 Q45,70 35,70 Q25,70 20,50 Q20,30 30,20 Q40,15 50,25" fill="none" stroke="#7A7A3F" strokeWidth="1.5" opacity="0.1"/>
+          </svg>
+        </div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div 
             className="text-center mb-16 md:mb-20 transform transition-all duration-700"
