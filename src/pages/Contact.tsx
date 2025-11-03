@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon, FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, SendIcon } from 'lucide-react';
+import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon, FacebookIcon, InstagramIcon, YoutubeIcon, SendIcon } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -666,9 +666,9 @@ export function Contact() {
                       <a
                         href="#"
                         className="w-14 h-14 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full flex items-center justify-center text-white hover:from-[#6A6A35] hover:to-[#7A7A3F] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
-                        aria-label="Twitter"
+                        aria-label="X"
                       >
-                        <TwitterIcon size={22} strokeWidth={2.5} />
+                        <img src="https://img.icons8.com/?size=100&id=fJp7hepMryiw&format=png&color=000000" alt="X" className="w-5 h-5" />
                       </a>
                       <a
                         href="#"

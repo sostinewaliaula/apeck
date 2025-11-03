@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, MailIcon, PhoneIcon, MapPinIcon } from 'lucide-react';
+import { FacebookIcon, InstagramIcon, YoutubeIcon, MailIcon, PhoneIcon, MapPinIcon } from 'lucide-react';
 export function Footer() {
   return <footer className="relative bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 overflow-hidden transition-colors duration-300">
       {/* Enhanced background patterns */}
@@ -107,8 +107,9 @@ export function Footer() {
               <a 
                 href="#" 
                 className="group w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-[#8B2332] dark:hover:border-[#B85C6D]"
+                aria-label="X"
               >
-                <TwitterIcon size={20} className="group-hover:scale-110 transition-transform" />
+                <img src="https://img.icons8.com/?size=100&id=fJp7hepMryiw&format=png&color=000000" alt="X" className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="#" 
