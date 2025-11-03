@@ -242,10 +242,10 @@ export function NewsDetail() {
 
   if (!currentNews) {
     return (
-      <div className="w-full bg-white pt-20 min-h-screen flex items-center justify-center">
+      <div className="w-full bg-white dark:bg-gray-900 pt-20 min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-[#8B2332] mb-4">News Article Not Found</h1>
-          <p className="text-gray-600 mb-8">The article you're looking for doesn't exist.</p>
+          <h1 className="text-4xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4">News Article Not Found</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">The article you're looking for doesn't exist.</p>
           <Link to="/news" className="px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2">
             <ArrowLeftIcon size={20} />
             <span>Back to News</span>
@@ -259,7 +259,7 @@ export function NewsDetail() {
   const cardsPerView = 3; // Desktop shows 3 cards
 
   return (
-    <div className="w-full bg-white pt-20">
+    <div className="w-full bg-white dark:bg-gray-900 pt-20">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 text-white overflow-hidden">
         {/* Background Image */}
@@ -378,7 +378,7 @@ export function NewsDetail() {
       </section>
 
       {/* Content Section */}
-      <section className="relative py-16 md:py-24 bg-white overflow-hidden">
+      <section className="relative py-16 md:py-24 bg-white dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -551,11 +551,11 @@ export function NewsDetail() {
         </div>
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="prose prose-lg max-w-none">
+          <div className="prose prose-lg max-w-none prose-headings:text-[#8B2332] dark:prose-headings:text-[#B85C6D] prose-p:text-gray-700 dark:prose-p:text-gray-300">
             {currentNews.content.map((paragraph, index) => (
               <p 
                 key={index}
-                className="text-gray-700 leading-relaxed mb-6 text-lg"
+                className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg"
                 data-animate-id={`content-${index}`}
               >
                 {paragraph}
@@ -564,11 +564,11 @@ export function NewsDetail() {
           </div>
 
           {/* Share Section */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
             <div className="flex flex-wrap items-center gap-4">
-              <span className="text-gray-600 font-semibold">Share this article:</span>
-              <button className="flex items-center space-x-2 px-4 py-2 bg-[#8B2332]/10 text-[#8B2332] rounded-full hover:bg-[#8B2332]/20 transition-colors">
-                <Share2Icon size={18} />
+              <span className="text-gray-600 dark:text-gray-400 font-semibold">Share this article:</span>
+              <button className="flex items-center space-x-2 px-4 py-2 bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 text-[#8B2332] dark:text-[#B85C6D] rounded-full hover:bg-[#8B2332]/20 dark:hover:bg-[#B85C6D]/20 transition-colors">
+                <Share2Icon size={18} className="text-[#8B2332] dark:text-[#B85C6D]" />
                 <span>Share</span>
               </button>
             </div>
@@ -578,7 +578,7 @@ export function NewsDetail() {
 
       {/* Related News Section */}
       {relatedNews.length > 0 && (
-        <section className="relative py-16 md:py-24 bg-gray-50 overflow-hidden">
+        <section className="relative py-16 md:py-24 bg-gray-50 dark:bg-gray-900 overflow-hidden">
           {/* Enhanced background graphics - multiple layers */}
           <DottedPattern opacity={0.03} size="32px" />
           <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -744,7 +744,7 @@ export function NewsDetail() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-12 text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-12 text-center">
               Related Articles
             </h2>
             
@@ -769,7 +769,7 @@ export function NewsDetail() {
                       <Link
                         key={news.id}
                         to={`/news/${news.slug}`}
-                        className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 group min-w-full sm:min-w-[calc(50%-1rem)] md:min-w-[calc(33.333%-1.5rem)] flex-shrink-0"
+                        className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 group min-w-full sm:min-w-[calc(50%-1rem)] md:min-w-[calc(33.333%-1.5rem)] flex-shrink-0 border border-gray-100 dark:border-gray-700"
                       >
                         <div className="relative h-48 overflow-hidden">
                           <img 
@@ -778,19 +778,19 @@ export function NewsDetail() {
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                             loading="lazy"
                           />
-                          <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-[#8B2332] rounded-full text-xs font-bold uppercase">
+                          <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 dark:bg-gray-900/80 backdrop-blur-sm text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs font-bold uppercase">
                             {news.category}
                           </div>
                         </div>
                         <div className="p-6">
-                          <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] font-semibold mb-3">
+                          <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold mb-3">
                             <CalendarIcon size={14} />
                             <span>{news.date}</span>
                           </div>
-                          <h3 className="text-xl font-bold text-[#8B2332] mb-3 group-hover:text-[#6B1A28] transition-colors line-clamp-2">
+                          <h3 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 group-hover:text-[#6B1A28] transition-colors line-clamp-2">
                             {news.title}
                           </h3>
-                          <div className="flex items-center space-x-2 text-[#8B2332] font-semibold group-hover:text-[#7A7A3F] transition-colors">
+                          <div className="flex items-center space-x-2 text-[#8B2332] dark:text-[#B85C6D] font-semibold group-hover:text-[#7A7A3F] dark:group-hover:text-[#9B9B5F] transition-colors">
                             <span>Read More</span>
                             <ArrowRightIcon size={16} className="transform group-hover:translate-x-1 transition-transform" />
                           </div>
@@ -804,7 +804,7 @@ export function NewsDetail() {
                       <Link
                         key={news.id}
                         to={`/news/${news.slug}`}
-                        className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 group"
+                        className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 group border border-gray-100 dark:border-gray-700"
                       >
                         <div className="relative h-48 overflow-hidden">
                           <img 
@@ -813,19 +813,19 @@ export function NewsDetail() {
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                             loading="lazy"
                           />
-                          <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-[#8B2332] rounded-full text-xs font-bold uppercase">
+                          <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 dark:bg-gray-900/80 backdrop-blur-sm text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs font-bold uppercase">
                             {news.category}
                           </div>
                         </div>
                         <div className="p-6">
-                          <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] font-semibold mb-3">
+                          <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold mb-3">
                             <CalendarIcon size={14} />
                             <span>{news.date}</span>
                           </div>
-                          <h3 className="text-xl font-bold text-[#8B2332] mb-3 group-hover:text-[#6B1A28] transition-colors line-clamp-2">
+                          <h3 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 group-hover:text-[#6B1A28] transition-colors line-clamp-2">
                             {news.title}
                           </h3>
-                          <div className="flex items-center space-x-2 text-[#8B2332] font-semibold group-hover:text-[#7A7A3F] transition-colors">
+                          <div className="flex items-center space-x-2 text-[#8B2332] dark:text-[#B85C6D] font-semibold group-hover:text-[#7A7A3F] dark:group-hover:text-[#9B9B5F] transition-colors">
                             <span>Read More</span>
                             <ArrowRightIcon size={16} className="transform group-hover:translate-x-1 transition-transform" />
                           </div>
@@ -843,19 +843,19 @@ export function NewsDetail() {
                     onClick={() => setCurrentRelatedSlide(prev => 
                       prev === 0 ? relatedNews.length - 1 : prev - 1
                     )}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
                     aria-label="Previous article"
                   >
-                    <ArrowLeftIcon size={24} className="text-[#8B2332]" />
+                    <ArrowLeftIcon size={24} className="text-[#8B2332] dark:text-[#B85C6D]" />
                   </button>
                   <button
                     onClick={() => setCurrentRelatedSlide(prev => 
                       (prev + 1) % relatedNews.length
                     )}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
                     aria-label="Next article"
                   >
-                    <ArrowRightIcon size={24} className="text-[#8B2332]" />
+                    <ArrowRightIcon size={24} className="text-[#8B2332] dark:text-[#B85C6D]" />
                   </button>
                 </>
               )}
@@ -867,10 +867,10 @@ export function NewsDetail() {
                     <button
                       key={index}
                       onClick={() => setCurrentRelatedSlide(index)}
-                      className={`transition-all duration-300 rounded-full ${
+                    className={`transition-all duration-300 rounded-full ${
                         index === currentRelatedSlide
-                          ? 'w-3 h-3 bg-[#8B2332]'
-                          : 'w-2 h-2 bg-[#8B2332]/30 hover:bg-[#8B2332]/50'
+                          ? 'w-3 h-3 bg-[#8B2332] dark:bg-[#B85C6D]'
+                          : 'w-2 h-2 bg-[#8B2332]/30 dark:bg-[#B85C6D]/30 hover:bg-[#8B2332]/50 dark:hover:bg-[#B85C6D]/50'
                       }`}
                       aria-label={`Go to slide ${index + 1}`}
                     />
