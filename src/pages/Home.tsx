@@ -12,26 +12,26 @@ export function Home() {
 
   // Optimized image sizes - use smaller widths and add quality parameter
   const slides = [{
-    image: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1200&q=75',
-    imageMobile: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&q=75',
+    image: '/assets/image9.jpg',
+    imageMobile: '/assets/image9.jpg',
     title: 'Empowering the Clergy',
     subtitle: 'for Kingdom Impact',
     description: 'Uniting Pentecostal and Evangelical clergy across Kenya through training, leadership development, and spiritual empowerment'
   }, {
-    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&q=75',
-    imageMobile: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=75',
+    image: '/assets/image4.jpg',
+    imageMobile: '/assets/image4.jpg',
     title: 'Comprehensive Training',
     subtitle: 'Programs',
     description: 'Over 250+ training programs designed to equip clergy for effective ministry and leadership excellence'
   }, {
-    image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1200&q=75',
-    imageMobile: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=75',
+    image: '/assets/image5.jpg',
+    imageMobile: '/assets/image5.jpg',
     title: 'Community Impact',
     subtitle: 'Across Kenya',
     description: 'Reaching all 47 counties with transformative ministry initiatives and humanitarian outreach programs'
   }, {
-    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=75',
-    imageMobile: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=75',
+    image: '/assets/image7.jpg',
+    imageMobile: '/assets/image7.jpg',
     title: 'Join 1,500+ Clergy',
     subtitle: 'Members',
     description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth'
@@ -652,7 +652,7 @@ export function Home() {
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-gray-800 p-1 transition-colors duration-300">
                     <div className="relative overflow-hidden rounded-3xl">
                       <img 
-                        src="https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=75" 
+                        src="/assets/image1.jpg" 
                         alt="Clergy gathering" 
                         loading="lazy"
                         className="w-full h-auto transform group-hover:scale-110 transition-transform duration-700" 

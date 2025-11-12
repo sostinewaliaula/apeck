@@ -99,18 +99,12 @@ export function Gallery() {
   ];
 
   const photos = [
-    { id: 1, url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=75', category: 'conferences', title: 'Annual Leadership Conference 2024' },
-    { id: 2, url: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=75', category: 'training', title: 'Pastoral Training Session' },
-    { id: 3, url: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=75', category: 'outreach', title: 'Community Outreach Program' },
-    { id: 4, url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=75', category: 'leadership', title: 'Leadership Development Workshop' },
-    { id: 5, url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=75', category: 'training', title: 'Theological Studies Program' },
-    { id: 6, url: 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?w=800&q=75', category: 'conferences', title: 'Youth Ministry Conference' },
-    { id: 7, url: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&q=75', category: 'leadership', title: 'Regional Leaders Meeting' },
-    { id: 8, url: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=75', category: 'conferences', title: 'National Clergy Gathering' },
-    { id: 9, url: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=75', category: 'outreach', title: 'Humanitarian Initiative' },
-    { id: 10, url: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=75', category: 'training', title: 'Counseling Certification Program' },
-    { id: 11, url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&q=75', category: 'training', title: 'Biblical Studies Workshop' },
-    { id: 12, url: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&q=75', category: 'leadership', title: 'Strategic Planning Session' }
+    { id: 4, url: '/assets/image4.jpg', category: 'leadership', title: 'Leadership Development Workshop' },
+    { id: 5, url: '/assets/image5.jpg', category: 'training', title: 'Theological Studies Program' },
+    { id: 6, url: '/assets/image6.jpg', category: 'conferences', title: 'Youth Ministry Conference' },
+    { id: 7, url: '/assets/image7.jpg', category: 'leadership', title: 'Regional Leaders Meeting' },
+    { id: 8, url: '/assets/image8.jpg', category: 'conferences', title: 'National Clergy Gathering' },
+    { id: 9, url: '/assets/image9.jpg', category: 'outreach', title: 'Humanitarian Initiative' }
   ];
 
   const filteredPhotos = selectedCategory === 'all' ? photos : photos.filter(photo => photo.category === selectedCategory);
@@ -151,7 +145,7 @@ export function Gallery() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&q=75)',
+            backgroundImage: 'url(/assets/image9.jpg)',
             willChange: 'background-image'
           }}
         ></div>
@@ -796,7 +790,7 @@ export function Gallery() {
             <div className="relative max-h-[90vh] w-full flex flex-col items-center">
               {/* Image */}
               <img
-                src={currentPhoto.url.replace('w=800', 'w=1200')}
+                src={currentPhoto.url.startsWith('/') ? currentPhoto.url : currentPhoto.url.replace('w=800', 'w=1200')}
                 alt={currentPhoto.title}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 style={{ animation: 'scaleIn 0.3s ease-out' }}

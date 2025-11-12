@@ -235,7 +235,7 @@ export function About() {
                   <div className={`md:float-right md:ml-8 mb-6 md:mb-8 w-full md:w-96 lg:w-[420px] mx-auto md:mx-0 ${isVisible['history-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
                     <div className="relative group">
                       <img 
-                        src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=75"
+                        src="/assets/image1.jpg"
                         loading="lazy" 
                         alt="Church gathering" 
                         className="rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700 w-full" 
@@ -924,15 +924,9 @@ export function About() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {[
-              { name: 'Bishop David Kimani', role: 'National Chairman', description: 'Leading APECK with vision and passion for clergy empowerment', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400' },
-              { name: 'Rev. Peter Omondi', role: 'General Secretary', description: 'Coordinating programs and member services across Kenya', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400' },
-              { name: 'Pastor James Mwangi', role: 'Training Director', description: 'Overseeing all training and development initiatives', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
-              { name: 'Rev. Dr. Sarah Kariuki', role: 'Deputy Chairperson', description: 'Supporting organizational leadership and strategic planning', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400' },
-              { name: 'Pastor Grace Wanjiku', role: 'Finance Director', description: 'Managing financial resources and budget planning', image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400' },
-              { name: 'Bishop Samuel Otieno', role: 'Programs Coordinator', description: 'Coordinating outreach and community development programs', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400' },
-              { name: 'Rev. Michael Njoroge', role: 'Membership Director', description: 'Overseeing member recruitment and retention strategies', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400' },
-              { name: 'Pastor Jane Akinyi', role: 'Communications Director', description: 'Managing media relations and public communications', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400' },
-              { name: 'Rev. Dr. Daniel Mwaura', role: 'Research & Development', description: 'Leading theological research and policy development', image: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=400' }
+              { name: 'Bishop David Kimani', role: 'National Chairman', description: 'Leading APECK with vision and passion for clergy empowerment', image: '/assets/image1.jpg' },
+              { name: 'Rev. Peter Omondi', role: 'General Secretary', description: 'Coordinating programs and member services across Kenya', image: '/assets/image2.jpg' },
+              { name: 'Pastor James Mwangi', role: 'Training Director', description: 'Overseeing all training and development initiatives', image: '/assets/image3.jpg' }
             ].map((leader, index) => {
               const delay = index * 150;
               return (
@@ -955,12 +949,12 @@ export function About() {
                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
                     
                     {/* Image container with enhanced styling */}
-                    <div className="relative overflow-hidden">
+                    <div className="relative overflow-hidden bg-gray-100 dark:bg-gray-700">
                       <img 
-                        src={`${leader.image}&q=75`}
+                        src={leader.image.startsWith('/') ? leader.image : `${leader.image}&q=75`}
                         alt={leader.name}
                         loading="lazy"
-                        className="w-full h-64 md:h-72 object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                        className="w-full h-64 md:h-72 object-cover object-top transform group-hover:scale-105 transition-transform duration-700" 
                         style={{ willChange: 'transform' }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
