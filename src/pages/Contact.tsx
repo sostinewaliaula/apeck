@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon, FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, SendIcon } from 'lucide-react';
+import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon, FacebookIcon, InstagramIcon, YoutubeIcon, SendIcon } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -176,7 +176,7 @@ export function Contact() {
   };
 
   return (
-    <div className="w-full bg-white pt-20">
+    <div className="w-full bg-white dark:bg-gray-900 pt-20">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -248,16 +248,16 @@ export function Contact() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-gray-50 dark:text-gray-800">
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
           </svg>
         </div>
       </div>
 
       {/* Contact Form & Info Section */}
-      <section className="relative py-20 md:py-32 bg-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -437,16 +437,16 @@ export function Contact() {
               data-animate-id="contact-form"
             >
               <div className={`${isVisible['contact-form'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="bg-white rounded-3xl p-8 md:p-10 shadow-xl hover:shadow-2xl transition-all duration-500">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-10 shadow-xl hover:shadow-2xl transition-all duration-500">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] rounded-full mb-6 shadow-lg">
                     <SendIcon size={28} className="text-white" strokeWidth={2.5} />
                   </div>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-6">
                     Send Us a Message
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Full Name *
                       </label>
                       <input
@@ -456,13 +456,13 @@ export function Contact() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md"
+                        className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                         placeholder="Enter your full name"
                       />
                     </div>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                           Email Address *
                         </label>
                         <input
@@ -472,12 +472,12 @@ export function Contact() {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md"
+                          className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                           placeholder="your@email.com"
                         />
                       </div>
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                           Phone Number
                         </label>
                         <input
@@ -486,13 +486,13 @@ export function Contact() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md"
+                          className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                           placeholder="+254 700 000 000"
                         />
                       </div>
                     </div>
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Subject *
                       </label>
                       <select
@@ -501,7 +501,7 @@ export function Contact() {
                         value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white"
+                        className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100"
                       >
                         <option value="">Select a subject</option>
                         <option value="membership">Membership Inquiry</option>
@@ -513,7 +513,7 @@ export function Contact() {
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="message" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Message *
                       </label>
                       <textarea
@@ -523,7 +523,7 @@ export function Contact() {
                         onChange={handleChange}
                         required
                         rows={6}
-                        className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md resize-none"
+                        className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md resize-none bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                         placeholder="Tell us how we can help you..."
                       ></textarea>
                     </div>
@@ -548,12 +548,12 @@ export function Contact() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full mb-6 shadow-lg">
                   <MailIcon size={28} className="text-white" strokeWidth={2.5} />
                 </div>
-                <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-8">
                   Contact Information
                 </h2>
                 <div className="space-y-6 mb-12">
                   <div
-                    className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group"
+                    className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group border border-gray-100 dark:border-gray-700"
                     data-animate-id="contact-address"
                   >
                     <div className={`${isVisible['contact-address'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
@@ -562,10 +562,10 @@ export function Contact() {
                           <MapPinIcon size={24} className="text-white" strokeWidth={2.5} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                          <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
                             Office Address
                           </h3>
-                          <p className="text-gray-600 leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                             APECK Headquarters<br />
                             Nairobi, Kenya<br />
                             P.O. Box 12345-00100
@@ -576,7 +576,7 @@ export function Contact() {
                   </div>
 
                   <div
-                    className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group"
+                    className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group border border-gray-100 dark:border-gray-700"
                     data-animate-id="contact-phone"
                   >
                     <div className={`${isVisible['contact-phone'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`} style={{ transitionDelay: '100ms' }}>
@@ -585,10 +585,10 @@ export function Contact() {
                           <PhoneIcon size={24} className="text-white" strokeWidth={2.5} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                          <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
                             Phone Numbers
                           </h3>
-                          <p className="text-gray-600 leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                             Main Office: +254 700 000 000<br />
                             Training Dept: +254 700 000 001<br />
                             Membership: +254 700 000 002
@@ -599,7 +599,7 @@ export function Contact() {
                   </div>
 
                   <div
-                    className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group"
+                    className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group border border-gray-100 dark:border-gray-700"
                     data-animate-id="contact-email"
                   >
                     <div className={`${isVisible['contact-email'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`} style={{ transitionDelay: '200ms' }}>
@@ -608,10 +608,10 @@ export function Contact() {
                           <MailIcon size={24} className="text-white" strokeWidth={2.5} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                          <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
                             Email Addresses
                           </h3>
-                          <p className="text-gray-600 leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                             General: info@apeck.or.ke<br />
                             Programs: programs@apeck.or.ke<br />
                             Membership: membership@apeck.or.ke
@@ -622,7 +622,7 @@ export function Contact() {
                   </div>
 
                   <div
-                    className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group"
+                    className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group border border-gray-100 dark:border-gray-700"
                     data-animate-id="contact-hours"
                   >
                     <div className={`${isVisible['contact-hours'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`} style={{ transitionDelay: '300ms' }}>
@@ -631,10 +631,10 @@ export function Contact() {
                           <ClockIcon size={24} className="text-white" strokeWidth={2.5} />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                          <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
                             Office Hours
                           </h3>
-                          <p className="text-gray-600 leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                             Monday - Friday: 8:00 AM - 5:00 PM<br />
                             Saturday: 9:00 AM - 1:00 PM<br />
                             Sunday: Closed
@@ -651,8 +651,8 @@ export function Contact() {
                   className={`${isVisible['social-media'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}
                   style={{ transitionDelay: '400ms' }}
                 >
-                  <div className="bg-white rounded-3xl p-8 shadow-xl">
-                    <h3 className="text-xl font-bold text-[#8B2332] mb-6">
+                  <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+                    <h3 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-6">
                       Connect With Us
                     </h3>
                     <div className="flex flex-wrap gap-4">
@@ -666,9 +666,9 @@ export function Contact() {
                       <a
                         href="#"
                         className="w-14 h-14 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full flex items-center justify-center text-white hover:from-[#6A6A35] hover:to-[#7A7A3F] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
-                        aria-label="Twitter"
+                        aria-label="X"
                       >
-                        <TwitterIcon size={22} strokeWidth={2.5} />
+                        <img src="https://img.icons8.com/?size=100&id=fJp7hepMryiw&format=png&color=000000" alt="X" className="w-5 h-5" />
                       </a>
                       <a
                         href="#"
@@ -694,16 +694,16 @@ export function Contact() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50">
+      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="white"/>
+          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-white dark:text-gray-900">
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
           </svg>
         </div>
       </div>
 
       {/* Map Section */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -907,10 +907,10 @@ export function Contact() {
                   LOCATION
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
                 Find Us
               </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
                 Visit our office in Nairobi
               </p>
             </div>

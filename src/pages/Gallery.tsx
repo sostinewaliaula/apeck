@@ -144,7 +144,7 @@ export function Gallery() {
   }, [selectedPhoto, currentPhotoIndex, filteredPhotos]);
 
   return (
-    <div className="w-full bg-white pt-20">
+    <div className="w-full bg-white dark:bg-gray-900 pt-20">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -216,16 +216,16 @@ export function Gallery() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-gray-50 dark:text-gray-800">
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
           </svg>
         </div>
       </div>
 
       {/* Filter Section */}
-      <section className="relative py-12 md:py-16 bg-gray-50 overflow-hidden">
+      <section className="relative py-12 md:py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -284,7 +284,7 @@ export function Gallery() {
                     className={`inline-flex items-center space-x-2 px-5 py-2.5 rounded-full font-semibold text-xs md:text-sm transition-all duration-300 transform hover:scale-105 ${
                       isSelected
                         ? 'bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white shadow-xl shadow-[#8B2332]/30'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 shadow-lg hover:shadow-xl'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg hover:shadow-xl'
                     }`}
                   >
                     <IconComponent size={18} strokeWidth={2.5} />
@@ -298,7 +298,7 @@ export function Gallery() {
       </section>
 
       {/* Gallery Grid Section */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -516,16 +516,16 @@ export function Gallery() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-gray-50 dark:text-gray-800">
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
           </svg>
         </div>
       </div>
 
       {/* Stats Section */}
-      <section className="relative py-20 md:py-32 bg-gray-50 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -704,14 +704,14 @@ export function Gallery() {
           >
             <div className={`${isVisible['stats-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-                <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
+            <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                   OUR IMPACT
                 </span>
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
               Our Impact in Pictures
             </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
               Documenting our journey of faith and service
             </p>
             </div>
@@ -729,13 +729,13 @@ export function Gallery() {
                 data-animate-id={`stat-${index}`}
               >
                 <div className={`${isVisible[`stat-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'} transition-all duration-700`} style={{ transitionDelay: `${index * 100}ms` }}>
-                  <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#8B2332]/10 to-[#7A7A3F]/10 rounded-full mb-6 shadow-lg">
-                    <CameraIcon size={32} className="text-[#8B2332]" strokeWidth={2.5} />
+                  <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#8B2332]/10 to-[#7A7A3F]/10 dark:from-[#B85C6D]/15 dark:to-[#9B9B5F]/15 rounded-full mb-6 shadow-lg">
+                    <CameraIcon size={32} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                   </div>
                   <div className="text-3xl md:text-4xl font-bold mb-3" style={{ color: stat.color }}>
                     {stat.value}
                   </div>
-                  <div className="text-gray-600 font-semibold text-sm md:text-base">
+                  <div className="text-gray-600 dark:text-gray-400 font-semibold text-sm md:text-base">
                     {stat.label}
                   </div>
             </div>

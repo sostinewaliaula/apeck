@@ -603,11 +603,11 @@ export function ProgramDetail() {
 
   if (!program) {
     return (
-      <div className="w-full bg-white pt-20">
+      <div className="w-full bg-white dark:bg-gray-900 pt-20">
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-[#8B2332] mb-4">Program Not Found</h1>
-            <p className="text-gray-600 mb-8">The program you're looking for doesn't exist.</p>
+            <h1 className="text-4xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4">Program Not Found</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">The program you're looking for doesn't exist.</p>
             <Link to="/programs" className="px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-colors inline-flex items-center space-x-2">
               <ArrowLeftIcon size={18} />
               <span>Back to Programs</span>
@@ -622,7 +622,7 @@ export function ProgramDetail() {
   const programColor = program.color;
 
   return (
-    <div className="w-full bg-white pt-20">
+    <div className="w-full bg-white dark:bg-gray-900 pt-20">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 text-white overflow-hidden">
         {/* Background Image */}
@@ -722,16 +722,16 @@ export function ProgramDetail() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
-          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+          <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-gray-50 dark:text-gray-800">
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
           </svg>
         </div>
       </div>
 
       {/* Program Details */}
-      <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -910,7 +910,7 @@ export function ProgramDetail() {
                 className="transform transition-all duration-700"
                 data-animate-id="objectives"
               >
-                <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10 ${
+                <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 ${
                   isVisible['objectives'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                 }`}>
                   <div className="flex items-center space-x-4 mb-6">
@@ -927,8 +927,8 @@ export function ProgramDetail() {
                   <ul className="space-y-4">
                     {program.objectives.map((objective: string, index: number) => (
                       <li key={index} className="flex items-start space-x-3">
-                        <CheckIcon size={22} className="text-[#7A7A3F] mt-1 flex-shrink-0" strokeWidth={2.5} />
-                        <span className="text-gray-700 text-lg leading-relaxed">{objective}</span>
+                        <CheckIcon size={22} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-1 flex-shrink-0" strokeWidth={2.5} />
+                        <span className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{objective}</span>
                       </li>
                     ))}
                   </ul>
@@ -940,7 +940,7 @@ export function ProgramDetail() {
                 className="transform transition-all duration-700"
                 data-animate-id="content"
               >
-                <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10 ${
+                <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 ${
                   isVisible['content'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                 }`}>
                   <div className="flex items-center space-x-4 mb-6">
@@ -964,7 +964,7 @@ export function ProgramDetail() {
                           {topics.map((topic: string, index: number) => (
                             <li key={index} className="flex items-start space-x-3">
                               <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: programColor }}></div>
-                              <span className="text-gray-700 leading-relaxed">{topic}</span>
+                              <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{topic}</span>
                             </li>
                           ))}
                         </ul>
@@ -979,7 +979,7 @@ export function ProgramDetail() {
                 className="transform transition-all duration-700"
                 data-animate-id="outcomes"
               >
-                <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10 ${
+                <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 ${
                   isVisible['outcomes'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                 }`}>
                   <div className="flex items-center space-x-4 mb-6">
@@ -999,7 +999,7 @@ export function ProgramDetail() {
                         <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: `${programColor}20` }}>
                           <span className="text-sm font-bold" style={{ color: programColor }}>{index + 1}</span>
                         </div>
-                        <span className="text-gray-700 text-lg leading-relaxed">{outcome}</span>
+                        <span className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{outcome}</span>
                       </li>
                     ))}
                   </ul>
@@ -1054,7 +1054,7 @@ export function ProgramDetail() {
                       {Object.entries(program.price).map(([key, price]: [string, any]) => (
                         <div key={key} className="pb-6 border-b last:border-b-0 last:pb-0" style={{ borderColor: `${programColor}20` }}>
                           <div className="mb-2">
-                            <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                            <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                               {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                             </p>
                           </div>
@@ -1063,7 +1063,7 @@ export function ProgramDetail() {
                               {price.currency} {price.amount.toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{price.period}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{price.period}</p>
                         </div>
                       ))}
                     </div>
@@ -1075,7 +1075,7 @@ export function ProgramDetail() {
                   className="transform transition-all duration-700"
                   data-animate-id="quick-info"
                 >
-                  <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 ${
+                  <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 ${
                     isVisible['quick-info'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                   }`}>
                     <h3 className="text-xl font-bold mb-6" style={{ color: programColor }}>
@@ -1085,22 +1085,22 @@ export function ProgramDetail() {
                       <div className="flex items-start space-x-3">
                         <ClockIcon size={20} className="text-[#7A7A3F] mt-1 flex-shrink-0" strokeWidth={2.5} />
                         <div>
-                          <p className="font-semibold text-gray-900">Duration</p>
-                          <p className="text-gray-600">{program.duration}</p>
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">Duration</p>
+                          <p className="text-gray-600 dark:text-gray-400">{program.duration}</p>
                         </div>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <CalendarIcon size={20} className="text-[#7A7A3F] mt-1 flex-shrink-0" strokeWidth={2.5} />
+                        <CalendarIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-1 flex-shrink-0" strokeWidth={2.5} />
                         <div>
-                          <p className="font-semibold text-gray-900">Modules</p>
-                          <p className="text-gray-600">{program.modules} module{program.modules > 1 ? 's' : ''}</p>
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">Modules</p>
+                          <p className="text-gray-600 dark:text-gray-400">{program.modules} module{program.modules > 1 ? 's' : ''}</p>
                         </div>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <AwardIcon size={20} className="text-[#7A7A3F] mt-1 flex-shrink-0" strokeWidth={2.5} />
+                        <AwardIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-1 flex-shrink-0" strokeWidth={2.5} />
                         <div>
-                          <p className="font-semibold text-gray-900">Certificate</p>
-                          <p className="text-gray-600 text-sm">{program.certificate}</p>
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">Certificate</p>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">{program.certificate}</p>
                         </div>
                       </div>
                     </div>
@@ -1112,7 +1112,7 @@ export function ProgramDetail() {
                   className="transform transition-all duration-700"
                   data-animate-id="requirements"
                 >
-                  <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 ${
+                  <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 ${
                     isVisible['requirements'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                   }`}>
                     <h3 className="text-xl font-bold mb-6" style={{ color: programColor }}>
@@ -1121,8 +1121,8 @@ export function ProgramDetail() {
                     <ul className="space-y-3">
                       {program.requirements.map((requirement: string, index: number) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <CheckIcon size={18} className="text-[#7A7A3F] mt-1 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="text-gray-700 text-sm leading-relaxed">{requirement}</span>
+                          <CheckIcon size={18} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-1 flex-shrink-0" strokeWidth={2.5} />
+                          <span className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{requirement}</span>
                         </li>
                       ))}
                     </ul>
