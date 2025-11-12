@@ -93,6 +93,14 @@ export function NewsDetail() {
     };
   }, []);
 
+  // Available images 4-9
+  const availableImages = ['/assets/image4.jpg', '/assets/image5.jpg', '/assets/image6.jpg', '/assets/image7.jpg', '/assets/image8.jpg', '/assets/image9.jpg'];
+  
+  // Function to get random image from available images
+  const getRandomImage = () => {
+    return availableImages[Math.floor(Math.random() * availableImages.length)];
+  };
+
   // News data with detailed content
   const newsData: { [key: string]: {
     id: number;
@@ -107,7 +115,7 @@ export function NewsDetail() {
   } } = {
     'annual-leadership-conference-2024': {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&q=75',
+      image: getRandomImage(),
       date: 'December 15, 2024',
       title: 'Annual Leadership Conference 2024',
       category: 'Conference',
@@ -124,7 +132,7 @@ export function NewsDetail() {
     },
     'new-pastoral-care-certification-program': {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1200&q=75',
+      image: getRandomImage(),
       date: 'December 10, 2024',
       title: 'New Pastoral Care Certification Program',
       category: 'Program',
@@ -141,7 +149,7 @@ export function NewsDetail() {
     },
     'community-outreach-initiative-success': {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1200&q=75',
+      image: getRandomImage(),
       date: 'December 5, 2024',
       title: 'Community Outreach Initiative Success',
       category: 'Outreach',
@@ -159,7 +167,7 @@ export function NewsDetail() {
     },
     'leadership-workshop-series-announced': {
       id: 4,
-      image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&q=75',
+      image: getRandomImage(),
       date: 'November 28, 2024',
       title: 'Leadership Workshop Series Announced',
       category: 'Workshop',
@@ -176,7 +184,7 @@ export function NewsDetail() {
     },
     'youth-ministry-training-success': {
       id: 5,
-      image: 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?w=1200&q=75',
+      image: getRandomImage(),
       date: 'November 20, 2024',
       title: 'Youth Ministry Training Success',
       category: 'Training',
@@ -194,7 +202,7 @@ export function NewsDetail() {
     },
     'new-regional-chapters-launched': {
       id: 6,
-      image: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=1200&q=75',
+      image: getRandomImage(),
       date: 'November 15, 2024',
       title: 'New Regional Chapters Launched',
       category: 'Announcement',
@@ -214,12 +222,12 @@ export function NewsDetail() {
 
   // Get all news for related articles (moved before hooks)
   const allNews = [
-    { id: 1, slug: 'annual-leadership-conference-2024', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&q=75', date: 'December 15, 2024', title: 'Annual Leadership Conference 2024', category: 'Conference' },
-    { id: 2, slug: 'new-pastoral-care-certification-program', image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=75', date: 'December 10, 2024', title: 'New Pastoral Care Certification Program', category: 'Program' },
-    { id: 3, slug: 'community-outreach-initiative-success', image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&q=75', date: 'December 5, 2024', title: 'Community Outreach Initiative Success', category: 'Outreach' },
-    { id: 4, slug: 'leadership-workshop-series-announced', image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=75', date: 'November 28, 2024', title: 'Leadership Workshop Series Announced', category: 'Workshop' },
-    { id: 5, slug: 'youth-ministry-training-success', image: 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?w=600&q=75', date: 'November 20, 2024', title: 'Youth Ministry Training Success', category: 'Training' },
-    { id: 6, slug: 'new-regional-chapters-launched', image: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=600&q=75', date: 'November 15, 2024', title: 'New Regional Chapters Launched', category: 'Announcement' }
+    { id: 1, slug: 'annual-leadership-conference-2024', image: getRandomImage(), date: 'December 15, 2024', title: 'Annual Leadership Conference 2024', category: 'Conference' },
+    { id: 2, slug: 'new-pastoral-care-certification-program', image: getRandomImage(), date: 'December 10, 2024', title: 'New Pastoral Care Certification Program', category: 'Program' },
+    { id: 3, slug: 'community-outreach-initiative-success', image: getRandomImage(), date: 'December 5, 2024', title: 'Community Outreach Initiative Success', category: 'Outreach' },
+    { id: 4, slug: 'leadership-workshop-series-announced', image: getRandomImage(), date: 'November 28, 2024', title: 'Leadership Workshop Series Announced', category: 'Workshop' },
+    { id: 5, slug: 'youth-ministry-training-success', image: getRandomImage(), date: 'November 20, 2024', title: 'Youth Ministry Training Success', category: 'Training' },
+    { id: 6, slug: 'new-regional-chapters-launched', image: getRandomImage(), date: 'November 15, 2024', title: 'New Regional Chapters Launched', category: 'Announcement' }
   ];
 
   // Get current news article
