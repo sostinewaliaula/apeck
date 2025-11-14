@@ -367,9 +367,19 @@ export function Home() {
     }}></div>
   );
 
-  return <div className="w-full bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
-      {/* Hero Carousel Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
+  return (
+    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+      <div
+        className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+        }}
+      ></div>
+
+      <div className="relative z-10">
+        {/* Hero Carousel Section */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 z-0">
           <DottedPattern />
@@ -483,14 +493,14 @@ export function Home() {
 
       {/* Section Divider */}
       <div className="relative w-full h-1 bg-gradient-to-r from-transparent via-[#8B2332]/10 dark:via-[#B85C6D]/10 to-transparent"></div>
-      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="relative w-full overflow-hidden bg-transparent dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#8B2332]/20 dark:via-[#B85C6D]/20 to-transparent"></div>
         </div>
       </div>
 
       {/* About Section with Modern Graphics */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background patterns - multiple layers */}
         <DottedPattern opacity={0.04} size="28px" />
         <DottedPattern opacity={0.02} size="40px" className="mix-blend-multiply" />
@@ -900,7 +910,7 @@ export function Home() {
       </div>
 
       {/* Programs Preview with Modern Card Design */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background patterns - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1525,7 +1535,7 @@ export function Home() {
       </div>
 
       {/* Recent Updates */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1983,5 +1993,7 @@ export function Home() {
           </div>
         </div>
       </section>
-    </div>;
+    </div>
+  </div>
+  );
 }
