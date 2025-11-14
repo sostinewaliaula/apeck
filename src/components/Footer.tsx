@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FacebookIcon, InstagramIcon, YoutubeIcon, MailIcon, PhoneIcon, MapPinIcon } from 'lucide-react';
 export function Footer() {
-  return <footer className="relative bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 overflow-hidden transition-colors duration-300">
+  return <footer className="relative bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/80 to-[#EFE4D7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 overflow-hidden transition-colors duration-300">
       {/* Enhanced background patterns */}
       <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]">
         <div style={{
@@ -26,8 +26,8 @@ export function Footer() {
       </div>
       
       {/* Blur effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8B2332]/5 dark:bg-[#B85C6D]/5 rounded-full blur-3xl opacity-50"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#7A7A3F]/5 dark:bg-[#9B9B5F]/5 rounded-full blur-3xl opacity-50"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8B2332]/15 dark:bg-[#B85C6D]/10 rounded-full blur-3xl opacity-60"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#7A7A3F]/12 dark:bg-[#9B9B5F]/10 rounded-full blur-3xl opacity-50"></div>
       
       {/* Additional decorative graphics */}
       {/* Floating geometric shapes */}
@@ -37,7 +37,7 @@ export function Footer() {
           <polygon points="50,20 80,50 50,80 20,50" fill="#7A7A3F" opacity="0.12"/>
         </svg>
       </div>
-      <div className="absolute top-20 right-20 w-40 h-40 opacity-[0.03] hidden lg:block animate-pulse-slow">
+      <div className="absolute top-20 right-20 w-40 h-40 opacity-[0.05] hidden lg:block animate-pulse-slow">
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <circle cx="50" cy="50" r="40" fill="none" stroke="#8B2332" strokeWidth="0.5" opacity="0.2"/>
           <circle cx="50" cy="50" r="25" fill="none" stroke="#7A7A3F" strokeWidth="0.3" opacity="0.15"/>

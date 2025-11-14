@@ -250,8 +250,15 @@ export function NewsDetail() {
 
   if (!currentNews) {
     return (
-      <div className="w-full bg-white dark:bg-gray-900 pt-20 min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 min-h-screen flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+          }}
+        ></div>
+        <div className="relative z-10 text-center px-4">
           <h1 className="text-4xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4">News Article Not Found</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">The article you're looking for doesn't exist.</p>
           <Link to="/news" className="px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2">
@@ -267,7 +274,15 @@ export function NewsDetail() {
   const cardsPerView = 3; // Desktop shows 3 cards
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 pt-20">
+    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 overflow-hidden transition-colors duration-300">
+      <div
+        className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+        }}
+      ></div>
+      <div className="relative z-10">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 text-white overflow-hidden">
         {/* Background Image */}
@@ -386,7 +401,7 @@ export function NewsDetail() {
       </section>
 
       {/* Content Section */}
-      <section className="relative py-16 md:py-24 bg-white dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -586,7 +601,7 @@ export function NewsDetail() {
 
       {/* Related News Section */}
       {relatedNews.length > 0 && (
-        <section className="relative py-16 md:py-24 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+        <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FDFBF7] via-white to-[#F6F0E8] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
           {/* Enhanced background graphics - multiple layers */}
           <DottedPattern opacity={0.03} size="32px" />
           <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -889,6 +904,7 @@ export function NewsDetail() {
           </div>
         </section>
       )}
+      </div>
     </div>
   );
 }

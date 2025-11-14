@@ -138,7 +138,15 @@ export function Gallery() {
   }, [selectedPhoto, currentPhotoIndex, filteredPhotos]);
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 pt-20">
+    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 overflow-hidden transition-colors duration-300">
+      <div
+        className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+        }}
+      ></div>
+      <div className="relative z-10">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -219,7 +227,7 @@ export function Gallery() {
       </div>
 
       {/* Filter Section */}
-      <section className="relative py-12 md:py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-12 md:py-16 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -292,7 +300,7 @@ export function Gallery() {
       </section>
 
       {/* Gallery Grid Section */}
-      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FDFBF7] via-white to-[#F6F0E8] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -519,7 +527,7 @@ export function Gallery() {
       </div>
 
       {/* Stats Section */}
-      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#F7F3EC] via-[#F2EBE1] to-[#EADFD2] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -837,6 +845,7 @@ export function Gallery() {
           }
         }
       `}</style>
+      </div>
     </div>
   );
 }

@@ -138,16 +138,16 @@ export function Programs() {
         </div>
       </section>
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Main Programs */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -630,16 +630,16 @@ export function Programs() {
         </div>
       </section>
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-800 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Additional Programs */}
-      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-800 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -933,16 +933,16 @@ export function Programs() {
         </div>
       </section>
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
-            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="#F9FAFB"/>
+            <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
           </svg>
         </div>
       </div>
 
       {/* Program Features */}
-      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1236,7 +1236,7 @@ export function Programs() {
       </div>
 
       {/* CTA Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FAF9F7] via-[#F5F4F2] to-[#FAF9F7] dark:from-gray-800 dark:via-gray-900/50 dark:to-gray-800 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#F7F3EC] via-[#F2EBE1] to-[#EADFD2] dark:from-gray-800 dark:via-gray-900/50 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />

@@ -176,7 +176,7 @@ export function About() {
       </div>
 
       {/* History - Moved to second section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" />
@@ -546,7 +546,7 @@ export function About() {
       </div>
 
       {/* Core Values */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />

@@ -176,7 +176,15 @@ export function Contact() {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 pt-20">
+    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 overflow-hidden transition-colors duration-300">
+      <div
+        className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+        }}
+      ></div>
+      <div className="relative z-10">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         {/* Background Image */}
@@ -248,7 +256,7 @@ export function Contact() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-white to-transparent dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-gray-50 dark:text-gray-800">
             <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
@@ -257,7 +265,7 @@ export function Contact() {
       </div>
 
       {/* Contact Form & Info Section */}
-      <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -694,7 +702,7 @@ export function Contact() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-900">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#F6F2EA] via-[#F9F6F1] to-transparent dark:bg-gray-900">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16 text-white dark:text-gray-900">
             <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor"/>
@@ -703,7 +711,7 @@ export function Contact() {
       </div>
 
       {/* Map Section */}
-      <section className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#F7F3EC] via-[#F2EBE1] to-[#EADFD2] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.03} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -938,6 +946,7 @@ export function Contact() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }
