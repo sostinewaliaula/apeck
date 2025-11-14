@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
@@ -16,6 +16,7 @@ const News = lazy(() => import('./pages/News').then(module => ({ default: module
 const NewsDetail = lazy(() => import('./pages/NewsDetail').then(module => ({ default: module.NewsDetail })));
 const Gallery = lazy(() => import('./pages/Gallery').then(module => ({ default: module.Gallery })));
 const Contact = lazy(() => import('./pages/Contact').then(module => ({ default: module.Contact })));
+const AdminApp = lazy(() => import('./admin/AdminApp').then(module => ({ default: module.AdminApp })));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -27,29 +28,43 @@ const PageLoader = () => (
   </div>
 );
 
+function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      {!isAdminRoute && <Navigation />}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/programs/:programId" element={<ProgramDetail />} />
+          <Route path="/membership" element={<Membership />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/news/:newsId" element={<NewsDetail />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/*" element={<AdminApp />} />
+        </Routes>
+      </Suspense>
+      {!isAdminRoute && (
+        <>
+          <Footer />
+          <ScrollToTopButton />
+        </>
+      )}
+    </div>
+  );
+}
+
 export function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-          <Navigation />
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/programs/:programId" element={<ProgramDetail />} />
-              <Route path="/membership" element={<Membership />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/news/:newsId" element={<NewsDetail />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
-          </Suspense>
-          <Footer />
-          <ScrollToTopButton />
-        </div>
+        <AppContent />
       </BrowserRouter>
     </ThemeProvider>
   );
