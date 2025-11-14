@@ -1,11 +1,52 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, StarIcon, ArrowRightIcon } from 'lucide-react';
+import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, StarIcon, ArrowRightIcon, XIcon } from 'lucide-react';
 import { EnrollForm } from '../components/EnrollForm';
+
+declare global {
+  interface Window {
+    PaystackPop?: any;
+  }
+}
+
+type IndividualFormState = {
+  fullName: string;
+  phone: string;
+  idNumber: string;
+  email: string;
+  county: string;
+  subCounty: string;
+  ward: string;
+  diasporaCountry: string;
+  mpesaCode: string;
+};
+
+const PAYSTACK_PUBLIC_KEY = 'pk_test_97fb3d0e02556d5237fe7c44543d50a4c7b86ca3';
+const APPLICATION_EMAIL = 'membership@apeck.org'; // TODO: Replace with official intake email
+const INDIVIDUAL_REG_FEE = 1050;
+const GOOGLE_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLScI8o9LqnLQDI3TxtEL8BRuhvsfQn-dp2rTZ7cWkoxlQ9nNpQ/viewform';
+const initialIndividualForm: IndividualFormState = {
+  fullName: '',
+  phone: '',
+  idNumber: '',
+  email: '',
+  county: '',
+  subCounty: '',
+  ward: '',
+  diasporaCountry: '',
+  mpesaCode: '',
+};
 
 export function Membership() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [isEnrollFormOpen, setIsEnrollFormOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [showIndividualModal, setShowIndividualModal] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentReference, setPaymentReference] = useState<string | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [individualForm, setIndividualForm] = useState<IndividualFormState>(initialIndividualForm);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Pattern components (memoized for performance)
@@ -90,6 +131,115 @@ export function Membership() {
       }
     };
   }, []);
+
+  // Load Paystack inline script
+  useEffect(() => {
+    const scriptId = 'paystack-inline';
+    if (document.getElementById(scriptId)) return;
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  const resetIndividualForm = () => {
+    setIndividualForm(initialIndividualForm);
+    setPaymentReference(null);
+    setPaymentMessage(null);
+    setIsPaying(false);
+    setIsSubmittingApplication(false);
+  };
+
+  const handleIndividualInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setIndividualForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePaystackPayment = () => {
+    if (!individualForm.email || !individualForm.phone || !individualForm.fullName) {
+      setPaymentMessage('Please fill in your name, phone, and email before initiating payment.');
+      return;
+    }
+    if (!window.PaystackPop) {
+      setPaymentMessage('Payment gateway is loading. Please try again in a moment.');
+      return;
+    }
+
+    setIsPaying(true);
+    setPaymentMessage(null);
+
+    const handler = window.PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: individualForm.email,
+      amount: INDIVIDUAL_REG_FEE * 100, // Paystack accepts amount in base currency minor units
+      currency: 'KES',
+      reference: `APECK-IND-${Date.now()}`,
+      label: individualForm.fullName,
+      metadata: {
+        custom_fields: [
+          { display_name: 'Phone Number', variable_name: 'phone_number', value: individualForm.phone },
+        ],
+      },
+      callback: (response: { reference: string }) => {
+        setIsPaying(false);
+        setPaymentReference(response.reference);
+        setPaymentMessage('Payment verified! Reference: ' + response.reference);
+      },
+      onClose: () => {
+        setIsPaying(false);
+        if (!paymentReference) {
+          setPaymentMessage('Payment window closed before completion.');
+        }
+      },
+    });
+
+    handler.openIframe();
+  };
+
+  const closeIndividualModal = () => {
+    setShowIndividualModal(false);
+    resetIndividualForm();
+  };
+
+  const handleIndividualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!paymentReference) {
+      setPaymentMessage('Please complete payment before submitting the application.');
+      return;
+    }
+
+    setIsSubmittingApplication(true);
+    const bodyLines = [
+      'New Individual Membership Application',
+      '',
+      `Payment Reference: ${paymentReference}`,
+      `Full Name: ${individualForm.fullName}`,
+      `Phone Number: ${individualForm.phone}`,
+      `ID Number: ${individualForm.idNumber}`,
+      `Email Address: ${individualForm.email}`,
+      `County: ${individualForm.county}`,
+      `Sub-County: ${individualForm.subCounty}`,
+      `Ward: ${individualForm.ward}`,
+      `Diaspora / Country: ${individualForm.diasporaCountry}`,
+      `Manual M-Pesa Code (if applicable): ${individualForm.mpesaCode}`,
+    ];
+
+    const mailtoLink = `mailto:${APPLICATION_EMAIL}?subject=${encodeURIComponent(
+      'APECK Individual Membership Application'
+    )}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+
+    window.location.href = mailtoLink;
+    setIsSubmittingApplication(false);
+    closeIndividualModal();
+  };
+
+  const triggerIndividualApplication = () => {
+    setSelectedTier('Individual Member');
+    setShowIndividualModal(true);
+  };
 
   return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
@@ -626,7 +776,7 @@ export function Membership() {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
-            {/* Associate Member */}
+            {/* Individual Member */}
             <div 
               className="transform transition-all duration-700"
               data-animate-id="tier-1"
@@ -641,36 +791,33 @@ export function Membership() {
                     backgroundSize: '20px 20px',
                   }}></div>
                   <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Associate Member</h3>
-                    <p className="text-white/80 mb-4">For emerging clergy</p>
-                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 5,000</div>
-                    <p className="text-white/80 text-sm">per year</p>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Individual Member</h3>
+                    <p className="text-white/80 mb-4">For clergy seeking personal support</p>
+                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 1,050</div>
+                    <p className="text-white/80 text-sm">registration fee</p>
                   </div>
                 </div>
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Access to basic training programs</span>
+                      <span className="text-gray-700 dark:text-gray-300">Access to core training programs & webinars</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Quarterly newsletters</span>
+                      <span className="text-gray-700 dark:text-gray-300">Quarterly ministry insights newsletter</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Online resource access</span>
+                      <span className="text-gray-700 dark:text-gray-300">Digital resource library & templates</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Networking opportunities</span>
+                      <span className="text-gray-700 dark:text-gray-300">Access to national clergy networking forum</span>
                     </li>
                   </ul>
                   <button 
-                    onClick={() => {
-                      setSelectedTier('Associate Member');
-                      setIsEnrollFormOpen(true);
-                    }}
+                    onClick={triggerIndividualApplication}
                     className="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
                   >
                     Apply Now
@@ -679,7 +826,7 @@ export function Membership() {
               </div>
             </div>
 
-            {/* Full Member - Featured */}
+            {/* Corporate Membership - Featured */}
             <div 
               className="transform transition-all duration-700"
               data-animate-id="tier-2"
@@ -699,38 +846,38 @@ export function Membership() {
                     backgroundSize: '20px 20px',
                   }}></div>
                   <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Full Member</h3>
-                    <p className="text-white/80 mb-4">For established clergy</p>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Corporate Membership</h3>
+                    <p className="text-white/80 mb-4">For churches & ministry organizations</p>
                     <div className="text-2xl md:text-3xl font-bold mb-1">KSh 10,000</div>
-                    <p className="text-white/80 text-sm">per year</p>
+                    <p className="text-white/80 text-sm">corporate registration</p>
                   </div>
                 </div>
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">All Associate benefits</span>
+                      <span className="text-gray-700 dark:text-gray-300">Covers up to 5 designated clergy leaders</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Full training program access</span>
+                      <span className="text-gray-700 dark:text-gray-300">Priority booking for onsite training & audits</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Mentorship opportunities</span>
+                      <span className="text-gray-700 dark:text-gray-300">Custom leadership retreats & mentorship tracks</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Conference discounts</span>
+                      <span className="text-gray-700 dark:text-gray-300">Discounted exhibition & conference booths</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Voting rights</span>
+                      <span className="text-gray-700 dark:text-gray-300">Voting rights & policy participation</span>
                     </li>
                   </ul>
                   <button 
                     onClick={() => {
-                      setSelectedTier('Full Member');
+                      setSelectedTier('Corporate Membership');
                       setIsEnrollFormOpen(true);
                     }}
                     className="w-full px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all shadow-xl hover:shadow-2xl hover:scale-105"
@@ -741,7 +888,7 @@ export function Membership() {
               </div>
             </div>
 
-            {/* Lifetime Member */}
+            {/* Housing Corporations */}
             <div 
               className="transform transition-all duration-700"
               data-animate-id="tier-3"
@@ -756,38 +903,38 @@ export function Membership() {
                     backgroundSize: '20px 20px',
                   }}></div>
                   <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Lifetime Member</h3>
-                    <p className="text-white/80 mb-4">For senior clergy</p>
-                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 50,000</div>
-                    <p className="text-white/80 text-sm">one-time payment</p>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Housing Corporations</h3>
+                    <p className="text-white/80 mb-4">Strategic partners for clergy housing</p>
+                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 5,050</div>
+                    <p className="text-white/80 text-sm">housing co-op registration</p>
                   </div>
                 </div>
                 <div className="p-8">
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">All Full Member benefits</span>
+                      <span className="text-gray-700 dark:text-gray-300">Co-branding on APECK housing initiatives</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Lifetime membership</span>
+                      <span className="text-gray-700 dark:text-gray-300">Direct access to clergy housing cooperative</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Priority event access</span>
+                      <span className="text-gray-700 dark:text-gray-300">Pipeline of pre-qualified ministry clients</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Leadership opportunities</span>
+                      <span className="text-gray-700 dark:text-gray-300">Invitation to investment forums & expos</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Legacy recognition</span>
+                      <span className="text-gray-700 dark:text-gray-300">Dedicated partnership & compliance support</span>
                     </li>
                   </ul>
                   <button 
                     onClick={() => {
-                      setSelectedTier('Lifetime Member');
+                      setSelectedTier('Housing Corporations');
                       setIsEnrollFormOpen(true);
                     }}
                     className="w-full px-6 py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all shadow-lg hover:shadow-xl hover:scale-105"
@@ -1025,6 +1172,122 @@ export function Membership() {
           </div>
         </div>
       </section>
+
+      {showIndividualModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-full">
+            <div className="flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800">
+              <div>
+                <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                  Individual Member Application
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                  Fill in the details below, make your payment, and we will receive your application instantly.
+                  Prefer Google Forms?{' '}
+                  <a
+                    href={GOOGLE_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#8B2332] underline font-semibold"
+                  >
+                    Open the official form
+                  </a>
+                </p>
+              </div>
+              <button
+                onClick={closeIndividualModal}
+                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Close individual member application form"
+              >
+                <XIcon size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleIndividualSubmit} className="p-6 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  { label: 'Full Name *', name: 'fullName', type: 'text', required: true },
+                  { label: 'Phone Number *', name: 'phone', type: 'tel', required: true },
+                  { label: 'ID Number *', name: 'idNumber', type: 'text', required: true },
+                  { label: 'Email Address *', name: 'email', type: 'email', required: true },
+                  { label: 'County *', name: 'county', type: 'text', required: true },
+                  { label: 'Sub-County *', name: 'subCounty', type: 'text', required: true },
+                  { label: 'Ward *', name: 'ward', type: 'text', required: true },
+                  { label: 'Diaspora / Country (if outside Kenya)', name: 'diasporaCountry', type: 'text', required: false },
+                ].map((field) => (
+                  <label key={field.name} className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    {field.label}
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={individualForm[field.name as keyof IndividualFormState]}
+                      onChange={handleIndividualInputChange}
+                      required={field.required}
+                      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                ))}
+              </div>
+
+              <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                Manual M-Pesa Code (if you already paid via Paybill 400222 / Account 9859474#)
+                <input
+                  type="text"
+                  name="mpesaCode"
+                  value={individualForm.mpesaCode}
+                  onChange={handleIndividualInputChange}
+                  className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                />
+              </label>
+
+              <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40 text-sm text-gray-700 dark:text-gray-300 space-y-2">
+                <p className="font-semibold text-gray-900 dark:text-gray-100">Payment Instructions</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Registration fee: <span className="font-bold">KSh 1,050</span></li>
+                  <li>Pay with Paystack (MPesa, card, bank) or use Paybill <strong>400222</strong> / Account <strong>9859474#</strong> (PECK Housing Cooperative Society Ltd).</li>
+                  <li>Keep the confirmation code; we will verify it alongside the Paystack reference.</li>
+                </ul>
+              </div>
+
+              <div className="flex flex-wrap gap-4 items-center">
+                <button
+                  type="button"
+                  onClick={handlePaystackPayment}
+                  disabled={isPaying}
+                  className="px-5 py-3 rounded-full bg-[#8B2332] text-white font-semibold hover:bg-[#6B1A28] transition-all shadow-lg disabled:opacity-60"
+                >
+                  {isPaying ? 'Processing Payment...' : 'Pay with Paystack'}
+                </button>
+                {paymentReference && (
+                  <span className="text-green-600 dark:text-green-400 font-semibold">
+                    Payment verified: {paymentReference}
+                  </span>
+                )}
+                {paymentMessage && (
+                  <span className="text-sm text-gray-600 dark:text-gray-300">{paymentMessage}</span>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <button
+                  type="button"
+                  onClick={closeIndividualModal}
+                  className="px-5 py-3 rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!paymentReference || isSubmittingApplication}
+                  className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60"
+                >
+                  {isSubmittingApplication ? 'Sending...' : 'Submit Application'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Enrollment Form Modal */}
       <EnrollForm 
