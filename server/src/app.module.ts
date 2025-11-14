@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PagesModule } from './pages/pages.module';
+import { RoutesModule } from './routes/routes.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PagesModule } from './pages/pages.module';
     UsersModule,
     AuthModule,
     PagesModule,
+    RoutesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useMemo, useState, ReactNode } from 'react';
-import { fetchRoutes, loginRequest, RouteSummary } from './api';
+import { AdminRoute, fetchRoutes, loginRequest } from './api';
 import { ACCESS_TOKEN_KEY, AUTH_USER_KEY, clearStored, getStored, REFRESH_TOKEN_KEY, setStored } from './auth-storage';
 
 type AuthUser = {
@@ -15,10 +15,10 @@ type AuthContextValue = {
   user: AuthUser | null;
   accessToken: string | null;
   refreshToken: string | null;
-  routes: RouteSummary[];
+  routes: AdminRoute[];
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  reloadRoutes: () => Promise<void>;
+  reloadRoutes: (tokenOverride?: string) => Promise<void>;
   isLoadingRoutes: boolean;
   authError: string | null;
 };
@@ -29,26 +29,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(() => getStored<string>(ACCESS_TOKEN_KEY));
   const [refreshToken, setRefreshToken] = useState<string | null>(() => getStored<string>(REFRESH_TOKEN_KEY));
   const [user, setUser] = useState<AuthUser | null>(() => getStored<AuthUser>(AUTH_USER_KEY));
-  const [routes, setRoutes] = useState<RouteSummary[]>([]);
+  const [routes, setRoutes] = useState<AdminRoute[]>([]);
   const [isLoadingRoutes, setIsLoadingRoutes] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  const reloadRoutes = useCallback(async () => {
-    if (!accessToken) {
-      setRoutes([]);
-      return;
-    }
-    setIsLoadingRoutes(true);
-    try {
-      const data = await fetchRoutes(accessToken);
-      setRoutes(data);
-      setAuthError(null);
-    } catch (err) {
-      setAuthError(err instanceof Error ? err.message : 'Failed to fetch routes');
-    } finally {
-      setIsLoadingRoutes(false);
-    }
-  }, [accessToken]);
+  const reloadRoutes = useCallback(
+    async (tokenOverride?: string) => {
+      const tokenToUse = tokenOverride ?? accessToken;
+      if (!tokenToUse) {
+        setRoutes([]);
+        return;
+      }
+      setIsLoadingRoutes(true);
+      try {
+        const data = await fetchRoutes(tokenToUse);
+        setRoutes(data);
+        setAuthError(null);
+      } catch (err) {
+        setAuthError(err instanceof Error ? err.message : 'Failed to fetch routes');
+      } finally {
+        setIsLoadingRoutes(false);
+      }
+    },
+    [accessToken],
+  );
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -67,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setStored(REFRESH_TOKEN_KEY, response.refreshToken);
       setStored(AUTH_USER_KEY, normalizedUser);
       setAuthError(null);
-      await reloadRoutes();
+      await reloadRoutes(response.accessToken);
     },
     [reloadRoutes],
   );

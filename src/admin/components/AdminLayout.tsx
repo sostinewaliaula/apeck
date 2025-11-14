@@ -13,7 +13,7 @@ type AdminLayoutProps = {
 const navItems = [
   { label: 'Overview', icon: LayoutDashboard, href: '/admin' },
   { label: 'Routes', icon: MapPinned, href: '/admin/routes' },
-  { label: 'Pages', icon: NotebookPen, href: '/admin/pages', comingSoon: true },
+  { label: 'Pages', icon: NotebookPen, href: '/admin/pages' },
   { label: 'Media', icon: Palette, href: '/admin/media', comingSoon: true },
 ];
 

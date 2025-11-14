@@ -3,6 +3,8 @@ import { AuthProvider, useAuth } from './auth-context';
 import { AdminLoginPage } from './pages/Login';
 import { AdminDashboard } from './pages/Dashboard';
 import { AdminRoutesPage } from './pages/Routes';
+import { AdminPagesList } from './pages/PagesList';
+import { AdminPageDetail } from './pages/PageDetail';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -29,6 +31,22 @@ function AdminRouter() {
         element={
           <ProtectedRoute>
             <AdminRoutesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pages"
+        element={
+          <ProtectedRoute>
+            <AdminPagesList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pages/:pageId"
+        element={
+          <ProtectedRoute>
+            <AdminPageDetail />
           </ProtectedRoute>
         }
       />
