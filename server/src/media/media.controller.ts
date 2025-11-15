@@ -23,7 +23,7 @@ export class MediaController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: (req, file, cb) => {
-          const destinationPath = join(process.cwd(), 'server', 'uploads');
+          const destinationPath = join(process.cwd(), 'uploads');
           fs.mkdir(destinationPath, { recursive: true })
             .then(() => cb(null, destinationPath))
             .catch((err) => cb(err as Error, destinationPath));

@@ -11,7 +11,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api', { exclude: [] });
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
     prefix: '/uploads/',
   });
   const defaultOrigins = ['http://localhost:5173', 'http://localhost:4173'];
