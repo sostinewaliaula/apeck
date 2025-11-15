@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
 import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
 
 type HeroSlide = {
   image: string;
@@ -140,8 +141,16 @@ export function Home() {
     }
   ];
 
+  const normalizeSlide = (slide: HeroSlide): HeroSlide => ({
+    ...slide,
+    image: resolveMediaUrl(slide.image) || slide.image,
+    imageMobile: slide.imageMobile ? resolveMediaUrl(slide.imageMobile) : undefined,
+  });
+
   const heroSection = sectionContent['hero_slides'] as HeroSectionContent | undefined;
-  const heroSlides: HeroSlide[] = heroSection?.slides?.length ? (heroSection.slides as HeroSlide[]) : defaultHeroSlides;
+  const heroSlides: HeroSlide[] = heroSection?.slides?.length
+    ? (heroSection.slides as HeroSlide[]).map(normalizeSlide)
+    : defaultHeroSlides.map(normalizeSlide);
   const ctaContent = sectionContent['cta'] as CtaSectionContent | undefined;
   const finalCtaTitle = ctaContent?.title ?? 'Ready to Make an Impact?';
   const finalCtaDescription =
