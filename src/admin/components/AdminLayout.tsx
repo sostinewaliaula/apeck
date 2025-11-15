@@ -14,7 +14,7 @@ const navItems = [
   { label: 'Overview', icon: LayoutDashboard, href: '/admin' },
   { label: 'Routes', icon: MapPinned, href: '/admin/routes' },
   { label: 'Pages', icon: NotebookPen, href: '/admin/pages' },
-  { label: 'Media', icon: Palette, href: '/admin/media', comingSoon: true },
+  { label: 'Media', icon: Palette, href: '/admin/media' },
 ];
 
 export function AdminLayout({ title, description, actions, children }: AdminLayoutProps) {
@@ -36,22 +36,15 @@ export function AdminLayout({ title, description, actions, children }: AdminLayo
             return (
               <NavLink
                 key={item.href}
-                to={item.comingSoon ? '/admin' : item.href}
+                to={item.href}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                   isActive
                     ? 'bg-[#2F1E1A] text-white shadow-lg shadow-[#2F1E1A]/20'
                     : 'text-[#6B4E3D] hover:bg-white/80'
-                } ${item.comingSoon ? 'opacity-60 cursor-not-allowed' : ''}`}
-                aria-disabled={item.comingSoon}
-                onClick={(e) => {
-                  if (item.comingSoon) e.preventDefault();
-                }}
+                }`}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
-                {item.comingSoon && (
-                  <span className="ml-auto text-[10px] uppercase tracking-wide text-[#B15C5C]">Soon</span>
-                )}
               </NavLink>
             );
           })}

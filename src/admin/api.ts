@@ -297,3 +297,44 @@ export function deletePageSection(accessToken: string, sectionId: string) {
   });
 }
 
+export type MediaAsset = {
+  id: string;
+  file_name: string;
+  url: string;
+  alt_text?: string;
+  mime_type?: string;
+  created_at?: string;
+};
+
+export function fetchMediaAssets(accessToken: string) {
+  return request<MediaAsset[]>('/admin/media', {
+    method: 'GET',
+    accessToken,
+  });
+}
+
+export function uploadMediaAsset(accessToken: string, file: File, altText?: string) {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (altText) formData.append('altText', altText);
+  return fetch(`${API_BASE_URL}/admin/media`, {
+    method: 'POST',
+    headers: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+    body: formData,
+  }).then(async (res) => {
+    if (!res.ok) {
+      throw new Error((await res.text()) || 'Failed to upload media');
+    }
+    return res.json() as Promise<MediaAsset>;
+  });
+}
+
+export function deleteMediaAsset(accessToken: string, id: string) {
+  return request<void>(`/admin/media/${id}`, {
+    method: 'DELETE',
+    accessToken,
+  });
+}
+

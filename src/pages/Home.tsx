@@ -1,6 +1,32 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
+import { fetchPageContent } from '../lib/pageContent';
+
+type HeroSlide = {
+  image: string;
+  imageMobile?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+};
+
+type HeroSectionContent = {
+  slides?: HeroSlide[];
+};
+
+type CtaSectionContent = {
+  title?: string;
+  description?: string;
+  primaryCta?: {
+    label: string;
+    href: string;
+  };
+  secondaryCta?: {
+    label: string;
+    href: string;
+  };
+};
 
 export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -9,9 +35,29 @@ export function Home() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [countedValues, setCountedValues] = useState<{ [key: number]: number }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchPageContent('home')
+      .then((page) => {
+        if (!isMounted) return;
+        const map: Record<string, unknown> = {};
+        page.sections?.forEach((section) => {
+          map[section.key] = section.content;
+        });
+        setSectionContent(map);
+      })
+      .catch(() => {
+        // fail silently and fall back to defaults
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Optimized image sizes - use smaller widths and add quality parameter
-  const slides = [{
+  const defaultHeroSlides = [{
     image: '/assets/image9.jpg',
     imageMobile: '/assets/image9.jpg',
     title: 'Empowering the Clergy',
@@ -37,7 +83,7 @@ export function Home() {
     description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth'
   }];
 
-  const testimonials = [
+  const defaultTestimonials = [
     {
       name: 'Rev. Dr. James Mwangi',
       role: 'Senior Pastor, Nairobi',
@@ -94,15 +140,25 @@ export function Home() {
     }
   ];
 
+  const heroSection = sectionContent['hero_slides'] as HeroSectionContent | undefined;
+  const heroSlides: HeroSlide[] = heroSection?.slides?.length ? (heroSection.slides as HeroSlide[]) : defaultHeroSlides;
+  const ctaContent = sectionContent['cta'] as CtaSectionContent | undefined;
+  const finalCtaTitle = ctaContent?.title ?? 'Ready to Make an Impact?';
+  const finalCtaDescription =
+    ctaContent?.description ??
+    'Join a community of passionate clergy committed to transforming Kenya through the Gospel';
+  const primaryCta = ctaContent?.primaryCta ?? { label: 'Become a Member', href: '/membership' };
+  const secondaryCta = ctaContent?.secondaryCta ?? { label: 'Get in Touch', href: '/contact' };
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slides.length);
+      setCurrentSlide(prev => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [heroSlides.length]);
 
   // News updates data - expanded with more items (optimized image sizes)
-  const newsUpdates = [
+  const defaultNewsUpdates = [
     { 
       image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&q=75', 
       date: 'DECEMBER 15, 2024',
@@ -161,7 +217,7 @@ export function Home() {
 
   // Calculate number of slides (3 cards per slide on desktop, 1 on mobile)
   const cardsPerSlide = 3;
-  const totalSlides = Math.ceil(newsUpdates.length / cardsPerSlide);
+  const totalSlides = Math.ceil(defaultNewsUpdates.length / cardsPerSlide);
 
   // Auto-slide for news carousel
   useEffect(() => {
@@ -181,7 +237,7 @@ export function Home() {
 
   // Testimonials carousel configuration
   const testimonialsPerSlide = 3;
-  const totalTestimonialSlides = Math.ceil(testimonials.length / testimonialsPerSlide);
+  const totalTestimonialSlides = Math.ceil(defaultTestimonials.length / testimonialsPerSlide);
 
   // Auto-slide for testimonials carousel
   useEffect(() => {
@@ -269,11 +325,11 @@ export function Home() {
   }, [isVisible, countedValues]); // Keep dependencies but optimize inside
 
   const nextSlide = () => {
-    setCurrentSlide(prev => (prev + 1) % slides.length);
+    setCurrentSlide(prev => (prev + 1) % heroSlides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide(prev => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
   // Memoized pattern components for better performance
@@ -388,7 +444,7 @@ export function Home() {
         </div>
 
         {/* Slides */}
-        {slides.map((slide, index) => (
+        {heroSlides.map((slide, index) => (
           <div 
             key={index} 
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
@@ -412,7 +468,7 @@ export function Home() {
         <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-6rem)] py-12 md:py-16">
           {/* Main Heading with staggered animation */}
           <div className="mb-4 md:mb-6">
-            {slides.map((slide, index) => (
+          {heroSlides.map((slide, index) => (
               <div 
                 key={index} 
                 className={`transition-all duration-1000 ${index === currentSlide ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 absolute w-full left-0'}`}
@@ -480,7 +536,7 @@ export function Home() {
 
         {/* Slide Indicators - positioned at the very bottom of the section */}
         <div className="absolute bottom-8 md:bottom-10 left-1/2 transform -translate-x-1/2 z-40 flex space-x-2">
-          {slides.map((_, index) => (
+          {heroSlides.map((_, index) => (
             <button 
               key={index} 
               onClick={() => setCurrentSlide(index)} 
@@ -1418,7 +1474,7 @@ export function Home() {
                 {/* Render slides */}
                 {Array.from({ length: totalTestimonialSlides }).map((_, slideIndex) => {
                   const startIndex = slideIndex * testimonialsPerSlide;
-                  const slideTestimonials = testimonials.slice(startIndex, startIndex + testimonialsPerSlide);
+                  const slideTestimonials = defaultTestimonials.slice(startIndex, startIndex + testimonialsPerSlide);
                   
                   return (
                     <div 
@@ -1791,7 +1847,7 @@ export function Home() {
                 {/* Render slides */}
                 {Array.from({ length: totalSlides }).map((_, slideIndex) => {
                   const startIndex = slideIndex * cardsPerSlide;
-                  const slideCards = newsUpdates.slice(startIndex, startIndex + cardsPerSlide);
+                  const slideCards = defaultNewsUpdates.slice(startIndex, startIndex + cardsPerSlide);
                   
                   return (
                     <div 
@@ -1968,25 +2024,24 @@ export function Home() {
           
           <div className={`${isVisible['cta-final'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
-              Ready to Make an Impact?
+              {finalCtaTitle}
             </h2>
             <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed">
-              Join a community of passionate clergy committed to transforming
-              Kenya through the Gospel
+              {finalCtaDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
               <Link 
-                to="/membership" 
+                to={primaryCta.href} 
                 className="px-8 md:px-10 py-4 md:py-5 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] dark:border-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
               >
-                <span className="relative z-10">Become a Member</span>
+                <span className="relative z-10">{primaryCta.label}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
               <Link 
-                to="/contact" 
+                to={secondaryCta.href} 
                 className="px-8 md:px-10 py-4 md:py-5 bg-[#7A7A3F] border-2 border-[#7A7A3F] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#6A6A35] hover:border-[#6A6A35] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
               >
-                <span className="relative z-10">Get in Touch</span>
+                <span className="relative z-10">{secondaryCta.label}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Link>
             </div>

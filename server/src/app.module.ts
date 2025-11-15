@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PagesModule } from './pages/pages.module';
 import { RoutesModule } from './routes/routes.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RoutesModule } from './routes/routes.module';
     AuthModule,
     PagesModule,
     RoutesModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

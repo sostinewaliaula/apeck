@@ -1,14 +1,19 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true });
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api', { exclude: [] });
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
   const defaultOrigins = ['http://localhost:5173', 'http://localhost:4173'];
   const appUrl = configService.get<string>('app.url');
   const corsOrigins = appUrl ? Array.from(new Set([...defaultOrigins, appUrl])) : defaultOrigins;

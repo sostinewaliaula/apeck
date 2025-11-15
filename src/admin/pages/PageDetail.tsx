@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AlertTriangle, ArrowLeft, Braces, Check, Save, Trash2 } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Braces, Check, Save, Trash2, Plus, Trash } from 'lucide-react';
 
 import { AdminLayout } from '../components/AdminLayout';
 import { useAuth } from '../auth-context';
@@ -13,13 +13,17 @@ import {
   updatePage,
   updatePageSection,
   createPageSection,
+  fetchMediaAssets,
+  uploadMediaAsset,
+  MediaAsset,
 } from '../api';
+import { getSectionSchema, SECTION_SCHEMAS, SectionField } from '../sections/schema';
+import { resolveMediaUrl } from '../../lib/media';
 
-const defaultNewSection = {
+const blankNewSection = {
   key: '',
   displayOrder: 0,
-  status: 'draft',
-  content: '{}',
+  status: 'draft' as 'draft' | 'published',
 };
 
 export function AdminPageDetail() {
@@ -37,8 +41,8 @@ export function AdminPageDetail() {
     seoDescription: '',
   });
   const [isSavingMeta, setIsSavingMeta] = useState(false);
-  const [sectionDrafts, setSectionDrafts] = useState<Record<string, { content: string }>>({});
-  const [newSection, setNewSection] = useState(defaultNewSection);
+  const [sectionDrafts, setSectionDrafts] = useState<Record<string, Record<string, unknown>>>({});
+  const [newSection, setNewSection] = useState(blankNewSection);
   const [isPublishing, setIsPublishing] = useState(false);
 
   useEffect(() => {
@@ -55,11 +59,9 @@ export function AdminPageDetail() {
           seoTitle: data.seoTitle ?? '',
           seoDescription: data.seoDescription ?? '',
         });
-        const drafts: Record<string, { content: string }> = {};
+        const drafts: Record<string, Record<string, unknown>> = {};
         data.sections.forEach((section) => {
-          drafts[section.id] = {
-            content: JSON.stringify(section.content ?? {}, null, 2),
-          };
+          drafts[section.id] = section.content ?? {};
         });
         setSectionDrafts(drafts);
         setError(null);
@@ -93,23 +95,23 @@ export function AdminPageDetail() {
     }
   };
 
-  const handleSectionField = (sectionId: string, content: string) => {
-    setSectionDrafts((prev) => ({
-      ...prev,
-      [sectionId]: { content },
-    }));
+  const updateDraftField = (sectionId: string, path: string[], value: unknown) => {
+    setSectionDrafts((prev) => {
+      const draft = JSON.parse(JSON.stringify(prev[sectionId] ?? {})) as Record<string, unknown>;
+      setValueInDraft(draft, path, value);
+      return { ...prev, [sectionId]: draft };
+    });
   };
 
   const saveSection = async (section: PageSection) => {
     if (!pageId || !accessToken) return;
     try {
-      const draft = sectionDrafts[section.id]?.content ?? '{}';
-      const parsed = JSON.parse(draft);
+    const draft = sectionDrafts[section.id] ?? {};
       const updated = await updatePageSection(accessToken, section.id, {
         key: section.key,
         displayOrder: section.displayOrder,
         status: section.status,
-        content: parsed,
+        content: draft,
       });
       setPage((prev) =>
         prev
@@ -140,21 +142,38 @@ export function AdminPageDetail() {
 
   const addSection = async (event: FormEvent) => {
     event.preventDefault();
-    if (!pageId || !accessToken) return;
+    if (!pageId || !accessToken || !newSection.key) {
+      setError('Select a section type before adding.');
+      return;
+    }
     try {
-      const parsed = JSON.parse(newSection.content || '{}');
+      const schema = getSectionSchema(newSection.key);
+      const initialContent =
+        schema?.fields.reduce<Record<string, unknown>>((acc, field) => {
+          if (field.type === 'repeatable') {
+            acc[field.name] = [];
+          } else if (field.type === 'link') {
+            acc[field.name] = field.fields.reduce<Record<string, string>>((linkAcc, linkField) => {
+              linkAcc[linkField.name] = '';
+              return linkAcc;
+            }, {});
+          } else if ('name' in field) {
+            acc[field.name] = '';
+          }
+          return acc;
+        }, {}) ?? {};
       const created = await createPageSection(accessToken, pageId, {
         key: newSection.key,
         displayOrder: Number(newSection.displayOrder) || 0,
         status: newSection.status as 'draft' | 'published',
-        content: parsed,
+        content: initialContent,
       });
       setPage((prev) => (prev ? { ...prev, sections: [...prev.sections, created] } : prev));
       setSectionDrafts((prev) => ({
         ...prev,
-        [created.id]: { content: JSON.stringify(created.content ?? {}, null, 2) },
+        [created.id]: created.content ?? {},
       }));
-      setNewSection(defaultNewSection);
+      setNewSection(blankNewSection);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add section');
     }
@@ -348,13 +367,43 @@ export function AdminPageDetail() {
                     </button>
                   </div>
                 </div>
-                <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Content (JSON)</label>
-                <textarea
-                  className="w-full rounded-xl border border-[#E7DED1] bg-white px-4 py-2 font-mono text-xs"
-                  rows={8}
-                  value={sectionDrafts[section.id]?.content ?? ''}
-                  onChange={(e) => handleSectionField(section.id, e.target.value)}
-                />
+                {(() => {
+                  const schema = getSectionSchema(section.key);
+                  if (!schema) {
+                    return (
+                      <>
+                        <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Content (JSON)</label>
+                        <textarea
+                          className="w-full rounded-xl border border-[#E7DED1] bg-white px-4 py-2 font-mono text-xs"
+                          rows={8}
+                          value={JSON.stringify(sectionDrafts[section.id] ?? {}, null, 2)}
+                          onChange={(e) => {
+                            try {
+                              const parsed = JSON.parse(e.target.value);
+                              setSectionDrafts((prev) => ({ ...prev, [section.id]: parsed }));
+                            } catch {
+                              // ignore parse error until valid JSON
+                            }
+                          }}
+                        />
+                      </>
+                    );
+                  }
+                  return (
+                    <div className="space-y-4">
+                      {schema.fields.map((field) => (
+                        <SectionFieldEditor
+                          key={`${section.id}-${field.name}`}
+                          field={field}
+                          sectionId={section.id}
+                          draft={sectionDrafts[section.id] ?? {}}
+                          onChange={updateDraftField}
+                          accessToken={accessToken}
+                        />
+                      ))}
+                    </div>
+                  );
+                })()}
                 <div className="flex flex-wrap gap-3 text-xs text-[#6B4E3D]/80">
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#E6F6EF] px-3 py-1 text-[#1E7A55]">
                     <Braces size={12} />
@@ -370,13 +419,23 @@ export function AdminPageDetail() {
           <p className="text-sm uppercase tracking-wide text-[#B15C5C]">Add section</p>
           <div className="grid gap-3 md:grid-cols-3">
             <div>
-              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Key</label>
-              <input
+              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Section type</label>
+              <select
                 className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
                 value={newSection.key}
                 onChange={(e) => setNewSection((prev) => ({ ...prev, key: e.target.value }))}
                 required
-              />
+              >
+                <option value="">Select section</option>
+                {SECTION_SCHEMAS.map((schema) => (
+                  <option key={schema.key} value={schema.key}>
+                    {schema.title}
+                  </option>
+                ))}
+              </select>
+              {newSection.key && getSectionSchema(newSection.key)?.description && (
+                <p className="text-xs text-[#6B4E3D]/70 mt-1">{getSectionSchema(newSection.key)?.description}</p>
+              )}
             </div>
             <div>
               <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Order</label>
@@ -392,22 +451,12 @@ export function AdminPageDetail() {
               <select
                 className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
                 value={newSection.status}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, status: e.target.value }))}
+                onChange={(e) => setNewSection((prev) => ({ ...prev, status: e.target.value as 'draft' | 'published' }))}
               >
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
               </select>
             </div>
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Content (JSON)</label>
-            <textarea
-              className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 font-mono text-xs"
-              rows={6}
-              value={newSection.content}
-              onChange={(e) => setNewSection((prev) => ({ ...prev, content: e.target.value }))}
-              required
-            />
           </div>
           <button
             type="submit"
@@ -420,4 +469,366 @@ export function AdminPageDetail() {
     </AdminLayout>
   );
 }
+
+type SectionFieldEditorProps = {
+  field: SectionField;
+  sectionId: string;
+  draft: Record<string, unknown>;
+  onChange: (sectionId: string, path: string[], value: unknown) => void;
+  path?: string[];
+  accessToken?: string | null;
+};
+
+const SectionFieldEditor = ({ field, sectionId, draft, onChange, path, accessToken }: SectionFieldEditorProps) => {
+  const fieldPath = path ?? [field.name];
+  if (field.type === 'text') {
+    const value = (getValueFromDraft(draft, fieldPath) as string) ?? '';
+    return (
+      <div>
+        <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">{field.label}</label>
+        <input
+          className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+          value={value}
+          placeholder={field.placeholder}
+          onChange={(e) => onChange(sectionId, fieldPath, e.target.value)}
+        />
+      </div>
+    );
+  }
+  if (field.type === 'textarea') {
+    const value = (getValueFromDraft(draft, fieldPath) as string) ?? '';
+    return (
+      <div>
+        <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">{field.label}</label>
+        <textarea
+          className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+          rows={4}
+          value={value}
+          placeholder={field.placeholder}
+          onChange={(e) => onChange(sectionId, fieldPath, e.target.value)}
+        />
+      </div>
+    );
+  }
+  if (field.type === 'image') {
+    const value = (getValueFromDraft(draft, fieldPath) as string) ?? '';
+    return (
+      <ImageFieldEditor
+        label={field.label}
+        value={value}
+        onChange={(next) => onChange(sectionId, fieldPath, next)}
+        accessToken={accessToken}
+      />
+    );
+  }
+  if (field.type === 'link') {
+    const value = (getValueFromDraft(draft, fieldPath) as Record<string, string>) ?? {};
+    return (
+      <div className="grid gap-3 md:grid-cols-2">
+        {field.fields.map((linkField) => (
+          <div key={linkField.name}>
+            <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">{linkField.label}</label>
+            <input
+              className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+              value={value[linkField.name] ?? ''}
+              onChange={(e) => onChange(sectionId, [...fieldPath, linkField.name], e.target.value)}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (field.type === 'repeatable') {
+    const items = (getValueFromDraft(draft, fieldPath) as Record<string, unknown>[]) ?? [];
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <label className="text-xs uppercase tracking-wide text-[#6B4E3D]/70">{field.label}</label>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 rounded-full border border-[#CAB9A7] px-3 py-1 text-xs text-[#6B4E3D]"
+            onClick={() => {
+              const newItem = createDefaultItem(field.itemFields);
+              const nextItems = [...items, newItem];
+              onChange(sectionId, fieldPath, nextItems);
+            }}
+          >
+            <Plus size={12} />
+            Add
+          </button>
+        </div>
+        {items.length === 0 && <p className="text-xs text-[#6B4E3D]/70">No entries yet.</p>}
+        <div className="space-y-4">
+          {items.map((_, index) => (
+            <div key={index} className="rounded-xl border border-[#E7DED1] bg-white p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#2F1E1A]">Item {index + 1}</p>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1 rounded-full border border-red-200 px-3 py-1 text-xs text-red-700"
+                  onClick={() => {
+                    const nextItems = items.filter((__, i) => i !== index);
+                    onChange(sectionId, fieldPath, nextItems);
+                  }}
+                >
+                  <Trash size={12} />
+                  Remove
+                </button>
+              </div>
+              {field.itemFields.map((childField) => (
+                <SectionFieldEditor
+                  key={`${childField.name}-${index}`}
+                  field={childField}
+                  sectionId={sectionId}
+                  draft={draft}
+                  onChange={onChange}
+                  path={[...fieldPath, String(index), childField.name]}
+                  accessToken={accessToken}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+function getValueFromDraft(draft: Record<string, unknown>, path: string[]): unknown {
+  let current: Record<string, unknown> | unknown[] | undefined = draft;
+  for (const segment of path) {
+    if (current === undefined || current === null) return undefined;
+    const isArray = Array.isArray(current);
+    const key = Number.isNaN(Number(segment)) ? segment : Number(segment);
+    current = isArray
+      ? (current as unknown[])[key as number]
+      : (current as Record<string, unknown>)[key as string];
+  }
+  return current;
+}
+
+function setValueInDraft(target: Record<string, unknown>, path: string[], value: unknown) {
+  let current: Record<string, unknown> | unknown[] = target;
+  path.forEach((segment, idx) => {
+    const isArray = Array.isArray(current);
+    const key = Number.isNaN(Number(segment)) ? segment : Number(segment);
+    if (idx === path.length - 1) {
+      if (isArray) {
+        (current as unknown[])[key as number] = value;
+      } else {
+        (current as Record<string, unknown>)[key as string] = value;
+      }
+    } else {
+      const nextSegment = path[idx + 1];
+      const nextIsNumber = !Number.isNaN(Number(nextSegment));
+      const existing = isArray
+        ? (current as unknown[])[key as number]
+        : (current as Record<string, unknown>)[key as string];
+      if (existing === undefined) {
+        const nextValue = nextIsNumber ? [] : {};
+        if (isArray) {
+          (current as unknown[])[key as number] = nextValue;
+        } else {
+          (current as Record<string, unknown>)[key as string] = nextValue;
+        }
+      }
+      current = isArray
+        ? ((current as unknown[])[key as number] as Record<string, unknown> | unknown[])
+        : ((current as Record<string, unknown>)[key as string] as Record<string, unknown> | unknown[]);
+    }
+  });
+}
+
+function createDefaultItem(fields: SectionField[]): Record<string, unknown> {
+  return fields.reduce<Record<string, unknown>>((acc, field) => {
+    if (field.type === 'repeatable') {
+      acc[field.name] = [];
+    } else if (field.type === 'link') {
+      acc[field.name] = field.fields.reduce<Record<string, string>>((linkAcc, linkField) => {
+        linkAcc[linkField.name] = '';
+        return linkAcc;
+      }, {});
+    } else {
+      acc[field.name] = '';
+    }
+    return acc;
+  }, {});
+}
+
+type ImageFieldProps = {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  accessToken?: string | null;
+};
+
+const ImageFieldEditor = ({ label, value, onChange, accessToken }: ImageFieldProps) => {
+  const [isPickerOpen, setPickerOpen] = useState(false);
+  return (
+    <div className="space-y-2">
+      <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">{label}</label>
+      <div className="flex gap-2">
+        <input
+          className="flex-1 rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="https://..."
+        />
+        <button
+          type="button"
+          className="rounded-xl border border-[#CAB9A7] px-3 py-2 text-xs font-semibold text-[#6B4E3D]"
+          onClick={() => setPickerOpen(true)}
+          disabled={!accessToken}
+        >
+          Select
+        </button>
+      </div>
+      {value && (
+        <div className="mt-2">
+          <img src={resolveMediaUrl(value)} alt="" className="w-full max-w-xs rounded-xl border border-[#E7DED1]" />
+        </div>
+      )}
+      {isPickerOpen && accessToken && (
+        <MediaPickerModal
+          accessToken={accessToken}
+          onSelect={(asset) => {
+            onChange(asset.url);
+            setPickerOpen(false);
+          }}
+          onClose={() => setPickerOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+type MediaPickerModalProps = {
+  accessToken: string;
+  onSelect: (asset: MediaAsset) => void;
+  onClose: () => void;
+};
+
+const MediaPickerModal = ({ accessToken, onSelect, onClose }: MediaPickerModalProps) => {
+  const [assets, setAssets] = useState<MediaAsset[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [altText, setAltText] = useState('');
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchMediaAssets(accessToken);
+        setAssets(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load media');
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [accessToken]);
+
+  const handleUpload = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!file) return;
+    setUploading(true);
+    try {
+      const asset = await uploadMediaAsset(accessToken, file, altText);
+      setAssets((prev) => [asset, ...prev]);
+      setFile(null);
+      setAltText('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between border-b border-[#E7DED1] px-6 py-4">
+          <div>
+            <p className="text-sm font-semibold text-[#2F1E1A]">Select media</p>
+            <p className="text-xs text-[#6B4E3D]/70">Pick an existing image or upload a new one.</p>
+          </div>
+          <button
+            type="button"
+            className="text-sm text-[#6B4E3D] hover:text-[#8B2332]"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+        <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          <form className="grid gap-4 md:grid-cols-[2fr,1fr]" onSubmit={handleUpload}>
+            <div>
+              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">
+                Upload image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="mt-1 block w-full text-sm text-[#6B4E3D]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">
+                Alt text
+              </label>
+              <input
+                className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+                value={altText}
+                onChange={(e) => setAltText(e.target.value)}
+                placeholder="Describe the image"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <button
+                type="submit"
+                disabled={uploading || !file}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#8B2332] px-4 py-2 text-sm font-semibold text-white hover:bg-[#761c29] disabled:opacity-60"
+              >
+                {uploading ? 'Uploading…' : 'Upload'}
+              </button>
+              {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+            </div>
+          </form>
+          <div>
+            <p className="text-sm font-semibold text-[#2F1E1A] mb-3">Library</p>
+            {isLoading ? (
+              <p className="text-sm text-[#6B4E3D]">Loading media…</p>
+            ) : assets.length === 0 ? (
+              <p className="text-sm text-[#6B4E3D]">No media uploaded yet.</p>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {assets.map((asset) => (
+                  <button
+                    type="button"
+                    key={asset.id}
+                    className="text-left rounded-2xl border border-[#E7DED1] bg-white overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    onClick={() => onSelect(asset)}
+                  >
+                    <div className="aspect-video bg-gray-100">
+                      <img src={resolveMediaUrl(asset.url)} alt={asset.alt_text ?? ''} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-xs font-semibold text-[#2F1E1A] truncate">{asset.file_name}</p>
+                      <p className="text-[11px] text-[#6B4E3D]/80 truncate">{asset.alt_text || 'No alt text'}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 

@@ -5,6 +5,7 @@ import { AdminDashboard } from './pages/Dashboard';
 import { AdminRoutesPage } from './pages/Routes';
 import { AdminPagesList } from './pages/PagesList';
 import { AdminPageDetail } from './pages/PageDetail';
+import { AdminMediaLibrary } from './pages/MediaLibrary';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -47,6 +48,14 @@ function AdminRouter() {
         element={
           <ProtectedRoute>
             <AdminPageDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/media"
+        element={
+          <ProtectedRoute>
+            <AdminMediaLibrary />
           </ProtectedRoute>
         }
       />
