@@ -151,6 +151,11 @@ type CtaSectionContent = {
   };
 };
 
+type CtaLink = {
+  label: string;
+  href: string;
+};
+
 const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   month: 'long',
   day: 'numeric',
@@ -580,13 +585,54 @@ export function Home() {
 
   const isInternalLink = (href?: string) =>
     !!href && (href.startsWith('/') || href.startsWith('#'));
+
+  const renderCtaButton = (cta: CtaLink | null, classes: string) => {
+    if (!cta) return null;
+    if (isInternalLink(cta.href)) {
+      return (
+        <Link to={cta.href} className={classes}>
+          {cta.label}
+        </Link>
+      );
+    }
+    return (
+      <a href={cta.href} className={classes} target="_blank" rel="noreferrer">
+        {cta.label}
+      </a>
+    );
+  };
+  const defaultPrimaryCta: CtaLink = { label: 'Become a Member', href: '/membership' };
+  const defaultSecondaryCta: CtaLink = { label: 'Get in Touch', href: '/contact' };
+
   const ctaContent = sectionContent['cta'] as CtaSectionContent | undefined;
   const finalCtaTitle = ctaContent?.title ?? 'Ready to Make an Impact?';
   const finalCtaDescription =
     ctaContent?.description ??
     'Join a community of passionate clergy committed to transforming Kenya through the Gospel';
-  const primaryCta = ctaContent?.primaryCta ?? { label: 'Become a Member', href: '/membership' };
-  const secondaryCta = ctaContent?.secondaryCta ?? { label: 'Get in Touch', href: '/contact' };
+
+  const resolveCtaLink = (
+    link: { label?: string; href?: string } | undefined,
+    fallback: CtaLink,
+    shouldFallback: boolean,
+  ): CtaLink | null => {
+    const label = link?.label?.trim();
+    const href = link?.href?.trim();
+    if (label && href) {
+      return { label, href };
+    }
+    if (shouldFallback) {
+      return fallback;
+    }
+    return null;
+  };
+
+  const shouldUseFallback = !ctaContent;
+  const primaryCta = resolveCtaLink(ctaContent?.primaryCta, defaultPrimaryCta, shouldUseFallback);
+  const secondaryCta = resolveCtaLink(
+    ctaContent?.secondaryCta,
+    defaultSecondaryCta,
+    shouldUseFallback,
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -2483,20 +2529,14 @@ export function Home() {
               {finalCtaDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
-              <Link 
-                to={primaryCta.href} 
-                className="px-8 md:px-10 py-4 md:py-5 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] dark:border-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
-              >
-                <span className="relative z-10">{primaryCta.label}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#8B2332]/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </Link>
-              <Link 
-                to={secondaryCta.href} 
-                className="px-8 md:px-10 py-4 md:py-5 bg-[#7A7A3F] border-2 border-[#7A7A3F] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#6A6A35] hover:border-[#6A6A35] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group"
-              >
-                <span className="relative z-10">{secondaryCta.label}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </Link>
+              {renderCtaButton(
+                primaryCta,
+                'px-8 md:px-10 py-4 md:py-5 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold text-base md:text-lg border-2 border-[#8B2332] dark:border-[#B85C6D] hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:border-[#8B2332] dark:hover:border-[#B85C6D] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group',
+              )}
+              {renderCtaButton(
+                secondaryCta,
+                'px-8 md:px-10 py-4 md:py-5 bg-[#7A7A3F] border-2 border-[#7A7A3F] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#6A6A35] hover:border-[#6A6A35] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 transform relative overflow-hidden group',
+              )}
             </div>
           </div>
         </div>

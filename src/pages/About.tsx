@@ -1,9 +1,178 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { TargetIcon, EyeIcon, HeartIcon, AwardIcon } from 'lucide-react';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
+
+type AboutHeroContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  backgroundImage?: string;
+};
+
+type AboutStoryContent = {
+  badgeLabel?: string;
+  title?: string;
+  image?: string;
+  paragraphs?: Array<{ text?: string }>;
+};
+
+type MissionVisionContent = {
+  missionTitle?: string;
+  missionDescription?: string;
+  missionIcon?: string;
+  visionTitle?: string;
+  visionDescription?: string;
+  visionIcon?: string;
+};
+
+type ValuesSectionContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  items?: Array<{
+    title?: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+  }>;
+};
+
+type LeadershipSectionContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  leaders?: Array<{
+    name?: string;
+    role?: string;
+    description?: string;
+    image?: string;
+  }>;
+};
+
+const defaultHeroContent: Required<AboutHeroContent> = {
+  badgeLabel: 'ABOUT US',
+  title: 'About APECK',
+  description:
+    'Building a unified community of Pentecostal and Evangelical clergy dedicated to excellence in ministry and Kingdom impact',
+  backgroundImage: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=75',
+};
+
+const defaultStoryContent = {
+  badgeLabel: 'OUR STORY',
+  title: 'Our Story',
+  image: '/assets/image1.jpg',
+  paragraphs: [
+    'APECK was founded in **2009** by a group of visionary clergy leaders who recognized the urgent need for a unified platform to support, empower, and connect Pentecostal and Evangelical ministers across Kenya. These founding members, representing diverse denominations and regions, shared a common vision: to create an organization that would bridge divides, foster collaboration, and elevate the standards of clergy practice nationwide.',
+    'The initial meetings took place in Nairobi, where **15 founding pastors** gathered to discuss the challenges facing clergy in Kenya. They identified critical gaps in training, support systems, and networking opportunities. From these humble beginnings, APECK was officially registered as a national association, establishing its first headquarters in the capital city.',
+    'What began as a small gathering of passionate pastors has grown into a national movement representing over **1,500 clergy members** from all **47 counties** of Kenya. Our growth has been marked by strategic expansion into regional chapters, each led by dedicated coordinators who understand the unique ministry contexts of their areas.',
+    'Over the past **15 years**, we have facilitated hundreds of training programs, provided mentorship to emerging leaders, and created a supportive community where clergy can grow, learn, and thrive in their calling. Our training initiatives have covered topics ranging from biblical exegesis and theological studies to practical ministry skills including counseling, leadership development, financial management, and community engagement. We\'ve organized **250+ workshops**, **47 annual conferences**, and numerous online learning opportunities.',
+    'Our impact extends beyond training. APECK has facilitated partnerships with international organizations, securing resources and expertise to enhance our programs. We\'ve launched initiatives supporting clergy welfare, including health insurance programs, emergency relief funds, and professional development scholarships. Our advocacy efforts have seen us engage with government bodies on matters affecting religious freedom, clergy welfare, and community development.',
+    'The association has been instrumental in establishing mentorship programs that pair experienced clergy with emerging leaders. These relationships have resulted in **300+ mentorship pairings**, creating pathways for knowledge transfer and spiritual growth. Through our networking events, regional conferences, and digital platforms, clergy members have found lasting friendships, ministry partnerships, and collaborative opportunities.',
+    'Today, APECK stands as a beacon of unity, excellence, and impact in the Kenyan church landscape, continuing to fulfill our mission of empowering clergy for Kingdom impact. We remain committed to our founding principles while adapting to the changing needs of ministry in the 21st century.',
+  ],
+};
+
+const defaultMissionVision = {
+  missionTitle: 'Our Mission',
+  missionDescription:
+    'To empower, equip, and unite Pentecostal and Evangelical clergy across Kenya through comprehensive training, spiritual development, and collaborative ministry initiatives.',
+  missionIcon: 'target',
+  visionTitle: 'Our Vision',
+  visionDescription:
+    'A Kenya where every Pentecostal and Evangelical clergy member is fully equipped, spiritually vibrant, and effectively leading transformative ministries that impact communities for Christ.',
+  visionIcon: 'eye',
+};
+
+const defaultValuesSection = {
+  badgeLabel: 'OUR VALUES',
+  title: 'Core Values',
+  description: 'The principles that guide everything we do',
+  items: [
+    {
+      title: 'Spiritual Excellence',
+      description: 'Pursuing the highest standards in spiritual life and ministry practice',
+      icon: 'heart',
+      color: '#8B2332',
+    },
+    {
+      title: 'Integrity',
+      description: 'Maintaining the highest ethical standards in all our dealings',
+      icon: 'award',
+      color: '#7A7A3F',
+    },
+    {
+      title: 'Unity',
+      description: 'Fostering collaboration and partnership among clergy and ministries',
+      icon: 'target',
+      color: '#8B2332',
+    },
+    {
+      title: 'Empowerment',
+      description: 'Equipping clergy with tools and resources for effective ministry',
+      icon: 'eye',
+      color: '#7A7A3F',
+    },
+  ],
+};
+
+const defaultLeadershipSection = {
+  badgeLabel: 'LEADERSHIP',
+  title: 'Our Leadership',
+  description: 'Experienced leaders committed to serving the clergy community',
+  leaders: [
+    {
+      name: 'Bishop David Kimani',
+      role: 'National Chairman',
+      description: 'Leading APECK with vision and passion for clergy empowerment',
+      image: '/assets/image1.jpg',
+    },
+    {
+      name: 'Rev. Peter Omondi',
+      role: 'General Secretary',
+      description: 'Coordinating programs and member services across Kenya',
+      image: '/assets/image2.jpg',
+    },
+    {
+      name: 'Pastor James Mwangi',
+      role: 'Training Director',
+      description: 'Overseeing all training and development initiatives',
+      image: '/assets/image3.jpg',
+    },
+  ],
+};
+
+const ABOUT_ICON_MAP = {
+  target: TargetIcon,
+  eye: EyeIcon,
+  heart: HeartIcon,
+  award: AwardIcon,
+};
+
+const highlightParagraph = (text: string) =>
+  text.split(/(\*\*[^*]+\*\*)/g).map((chunk, index) => {
+    if (chunk.startsWith('**') && chunk.endsWith('**')) {
+      return (
+        <span key={index} className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">
+          {chunk.replace(/\*\*/g, '')}
+        </span>
+      );
+    }
+    return <span key={index}>{chunk}</span>;
+  });
+
+const toMediaUrl = (url?: string) => {
+  if (!url) return '';
+  if (url.startsWith('/assets') || url.startsWith('http')) {
+    return url;
+  }
+  return resolveMediaUrl(url);
+};
 
 export function About() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Memoized Dotted pattern background component
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -83,6 +252,25 @@ export function About() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    fetchPageContent('about')
+      .then((page) => {
+        if (!isMounted) return;
+        const sections: Record<string, unknown> = {};
+        page.sections?.forEach((section) => {
+          sections[section.key] = section.content;
+        });
+        setSectionContent(sections);
+      })
+      .catch(() => {
+        /* fall back to defaults */
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
         const updates: { [key: string]: boolean } = {};
@@ -115,6 +303,69 @@ export function About() {
     };
   }, [isVisible]);
 
+  const heroContent = sectionContent['about_hero'] as AboutHeroContent | undefined;
+  const heroBackgroundImage =
+    heroContent?.backgroundImage?.trim()
+      ? toMediaUrl(heroContent.backgroundImage.trim())
+      : defaultHeroContent.backgroundImage;
+  const heroBadgeLabel = heroContent?.badgeLabel?.trim() || defaultHeroContent.badgeLabel;
+  const heroTitle = heroContent?.title?.trim() || defaultHeroContent.title;
+  const heroDescription = heroContent?.description?.trim() || defaultHeroContent.description;
+
+  const storySection = sectionContent['about_story'] as AboutStoryContent | undefined;
+  const storyBadgeLabel = storySection?.badgeLabel?.trim() || defaultStoryContent.badgeLabel;
+  const storyTitle = storySection?.title?.trim() || defaultStoryContent.title;
+  const storyImage =
+    storySection?.image?.trim() ? toMediaUrl(storySection.image.trim()) : defaultStoryContent.image;
+  const storyParagraphs =
+    storySection?.paragraphs?.map((item) => item.text?.trim()).filter(Boolean) ??
+    defaultStoryContent.paragraphs;
+  const storyFirstParagraphs = storyParagraphs.slice(0, 2);
+  const storyLaterParagraphs = storyParagraphs.slice(2);
+
+  const missionVisionSection = sectionContent['about_mission_vision'] as MissionVisionContent | undefined;
+  const missionTitle = missionVisionSection?.missionTitle?.trim() || defaultMissionVision.missionTitle;
+  const missionDescription =
+    missionVisionSection?.missionDescription?.trim() || defaultMissionVision.missionDescription;
+  const missionIconName = (missionVisionSection?.missionIcon ?? defaultMissionVision.missionIcon).toLowerCase();
+  const MissionIcon =
+    ABOUT_ICON_MAP[missionIconName as keyof typeof ABOUT_ICON_MAP] ?? TargetIcon;
+
+  const visionTitle = missionVisionSection?.visionTitle?.trim() || defaultMissionVision.visionTitle;
+  const visionDescription =
+    missionVisionSection?.visionDescription?.trim() || defaultMissionVision.visionDescription;
+  const visionIconName = (missionVisionSection?.visionIcon ?? defaultMissionVision.visionIcon).toLowerCase();
+  const VisionIcon =
+    ABOUT_ICON_MAP[visionIconName as keyof typeof ABOUT_ICON_MAP] ?? EyeIcon;
+
+  const valuesSection = sectionContent['about_values'] as ValuesSectionContent | undefined;
+  const valuesBadge = valuesSection?.badgeLabel?.trim() || defaultValuesSection.badgeLabel;
+  const valuesTitle = valuesSection?.title?.trim() || defaultValuesSection.title;
+  const valuesDescription =
+    valuesSection?.description?.trim() || defaultValuesSection.description;
+  const valueItems =
+    valuesSection?.items?.map((item) => ({
+      title: item.title?.trim() || '',
+      description: item.description?.trim() || '',
+      icon: item.icon?.trim()?.toLowerCase() || 'heart',
+      color: item.color?.trim() || '#8B2332',
+    })).filter((item) => item.title && item.description) ?? defaultValuesSection.items;
+
+  const leadershipSection = sectionContent['about_leadership'] as LeadershipSectionContent | undefined;
+  const leadershipBadge =
+    leadershipSection?.badgeLabel?.trim() || defaultLeadershipSection.badgeLabel;
+  const leadershipTitle =
+    leadershipSection?.title?.trim() || defaultLeadershipSection.title;
+  const leadershipDescription =
+    leadershipSection?.description?.trim() || defaultLeadershipSection.description;
+  const leaders =
+    leadershipSection?.leaders?.map((leader) => ({
+      name: leader.name?.trim() || '',
+      role: leader.role?.trim() || '',
+      description: leader.description?.trim() || '',
+      image: leader.image?.trim() ? toMediaUrl(leader.image.trim()) : '',
+    })).filter((leader) => leader.name && leader.role) ?? defaultLeadershipSection.leaders;
+
   return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
@@ -122,7 +373,7 @@ export function About() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=75)',
+            backgroundImage: `url(${heroBackgroundImage})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -153,15 +404,14 @@ export function About() {
             <div className={`${isVisible['about-hero'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-white/20 backdrop-blur-sm rounded-full text-xs md:text-sm font-bold uppercase tracking-wider border border-white/30">
-                  ABOUT US
+                  {heroBadgeLabel}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                About APECK
+                {heroTitle}
               </h1>
               <p className="text-sm md:text-base text-white/90 max-w-3xl leading-relaxed">
-                Building a unified community of Pentecostal and Evangelical clergy
-                dedicated to excellence in ministry and Kingdom impact
+                {heroDescription}
               </p>
             </div>
           </div>
@@ -200,114 +450,52 @@ export function About() {
               {/* Badge and Title */}
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  OUR STORY
+                  {storyBadgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-6 md:mb-8 leading-tight">
-                Our Story
+                {storyTitle}
               </h2>
               
               {/* Text content with image floating inside */}
               <div className="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  APECK was founded in <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">2009</span> by a group of visionary clergy
-                  leaders who recognized the urgent need for a unified platform to
-                  support, empower, and connect Pentecostal and Evangelical
-                  ministers across Kenya. These founding members, representing diverse
-                  denominations and regions, shared a common vision: to create an
-                  organization that would bridge divides, foster collaboration, and
-                  elevate the standards of clergy practice nationwide.
-                </p>
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  The initial meetings took place in Nairobi, where <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">15 founding
-                  pastors</span> gathered to discuss the challenges facing clergy in
-                  Kenya. They identified critical gaps in training, support systems,
-                  and networking opportunities. From these humble beginnings, APECK
-                  was officially registered as a national association, establishing
-                  its first headquarters in the capital city.
-                </p>
+                {storyFirstParagraphs.map((paragraph, index) => (
+                  <p key={`story-top-${index}`} className="transform transition-all duration-500 hover:translate-x-2">
+                    {highlightParagraph(paragraph)}
+                  </p>
+                ))}
                 
-                {/* Image floated to the right - positioned in the middle of text flow */}
-                <div 
-                  className="relative transform transition-all duration-700 my-8 md:my-12"
-                  data-animate-id="history-image"
-                >
-                  <div className={`md:float-right md:ml-8 mb-6 md:mb-8 w-full md:w-96 lg:w-[420px] mx-auto md:mx-0 ${isVisible['history-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
-                    <div className="relative group">
-                      <img 
-                        src="/assets/image1.jpg"
-                        loading="lazy" 
-                        alt="Church gathering" 
-                        className="rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700 w-full" 
-                        style={{ willChange: 'transform' }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-                      
-                      {/* Decorative elements */}
-                      <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#8B2332]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#7A7A3F]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      
-                      {/* Corner accents */}
-                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                {storyImage && (
+                  <div 
+                    className="relative transform transition-all duration-700 my-8 md:my-12"
+                    data-animate-id="history-image"
+                  >
+                    <div className={`md:float-right md:ml-8 mb-6 md:mb-8 w-full md:w-96 lg:w-[420px] mx-auto md:mx-0 ${isVisible['history-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
+                      <div className="relative group">
+                        <img 
+                          src={storyImage}
+                          loading="lazy" 
+                          alt="APECK history" 
+                          className="rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700 w-full" 
+                          style={{ willChange: 'transform' }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                        
+                        <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#8B2332]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#7A7A3F]/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/30 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
                 
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  What began as a small gathering of passionate pastors has
-                  grown into a national movement representing over <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">1,500 clergy
-                  members</span> from all <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">47 counties</span> of Kenya. Our growth
-                  has been marked by strategic expansion into regional chapters,
-                  each led by dedicated coordinators who understand the unique
-                  ministry contexts of their areas. From the coastal regions of
-                  Mombasa to the highlands of the Rift Valley, APECK has established
-                  a presence that truly represents the diversity of Kenya's
-                  Pentecostal and Evangelical community.
-                </p>
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  Over the past <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">15 years</span>, we have facilitated hundreds of
-                  training programs, provided mentorship to emerging leaders,
-                  and created a supportive community where clergy can grow,
-                  learn, and thrive in their calling. Our training initiatives
-                  have covered topics ranging from biblical exegesis and theological
-                  studies to practical ministry skills including counseling,
-                  leadership development, financial management, and community
-                  engagement. We've organized <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">250+ workshops</span>, <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">47 annual
-                  conferences</span>, and numerous online learning opportunities.
-                </p>
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  Our impact extends beyond training. APECK has facilitated
-                  partnerships with international organizations, securing resources
-                  and expertise to enhance our programs. We've launched initiatives
-                  supporting clergy welfare, including health insurance programs,
-                  emergency relief funds, and professional development scholarships.
-                  Our advocacy efforts have seen us engage with government bodies
-                  on matters affecting religious freedom, clergy welfare, and
-                  community development.
-                </p>
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  The association has been instrumental in establishing
-                  mentorship programs that pair experienced clergy with emerging
-                  leaders. These relationships have resulted in <span className="font-semibold text-[#7A7A3F] dark:text-[#9B9B5F]">300+ mentorship
-                  pairings</span>, creating pathways for knowledge transfer and
-                  spiritual growth. Through our networking events, regional
-                  conferences, and digital platforms, clergy members have found
-                  lasting friendships, ministry partnerships, and collaborative
-                  opportunities.
-                </p>
-                <p className="transform transition-all duration-500 hover:translate-x-2">
-                  Today, APECK stands as a beacon of unity, excellence, and
-                  impact in the Kenyan church landscape, continuing to fulfill
-                  our mission of empowering clergy for Kingdom impact. We remain
-                  committed to our founding principles while adapting to the
-                  changing needs of ministry in the 21st century. Our vision for
-                  the future includes expanded training facilities, increased
-                  digital resources, enhanced member services, and deeper community
-                  engagement across all regions of Kenya. We believe that empowered,
-                  equipped, and united clergy are essential for the transformation
-                  of our nation and the advancement of God's Kingdom.
-                </p>
+                {storyLaterParagraphs.map((paragraph, index) => (
+                  <p key={`story-bottom-${index}`} className="transform transition-all duration-500 hover:translate-x-2">
+                    {highlightParagraph(paragraph)}
+                  </p>
+                ))}
               </div>
               
               {/* Clear float to prevent layout issues */}
@@ -479,7 +667,7 @@ export function About() {
                     {/* Transparent lighter maroon circle background */}
                     <div className="w-24 h-24 bg-[#8B2332]/40 rounded-full flex items-center justify-center">
                       {/* White outline target icon */}
-                      <TargetIcon 
+                      <MissionIcon 
                         size={48} 
                         className="text-white"
                         strokeWidth={2.5}
@@ -489,12 +677,9 @@ export function About() {
                   </div>
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Mission</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">{missionTitle}</h2>
                 <p className="text-xs md:text-sm text-white leading-relaxed">
-                  To empower, equip, and unite Pentecostal and Evangelical clergy
-                  across Kenya through comprehensive training, spiritual
-                  development, and collaborative ministry initiatives that advance
-                  the Kingdom of God and transform communities.
+                  {missionDescription}
                 </p>
               </div>
             </div>
@@ -513,7 +698,7 @@ export function About() {
                     {/* Transparent lighter olive green circle background */}
                     <div className="w-24 h-24 bg-[#7A7A3F]/40 rounded-full flex items-center justify-center">
                       {/* White outline eye icon */}
-                      <EyeIcon 
+                      <VisionIcon 
                         size={48} 
                         className="text-white"
                         strokeWidth={2.5}
@@ -523,12 +708,9 @@ export function About() {
                   </div>
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">Our Vision</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">{visionTitle}</h2>
                 <p className="text-xs md:text-sm text-white leading-relaxed">
-                  A Kenya where every Pentecostal and Evangelical clergy member is
-                  fully equipped, spiritually vibrant, and effectively leading
-                  transformative ministries that impact individuals, families, and
-                  communities for Christ.
+                  {visionDescription}
                 </p>
               </div>
             </div>
@@ -658,27 +840,23 @@ export function About() {
             <div className={`${isVisible['values-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  OUR VALUES
+                  {valuesBadge}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                Core Values
+                {valuesTitle}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                The principles that guide everything we do
+                {valuesDescription}
               </p>
             </div>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { icon: HeartIcon, title: 'Spiritual Excellence', description: 'Pursuing the highest standards in spiritual life and ministry practice', color: '#8B2332' },
-              { icon: AwardIcon, title: 'Integrity', description: 'Maintaining the highest ethical standards in all our dealings', color: '#7A7A3F' },
-              { icon: TargetIcon, title: 'Unity', description: 'Fostering collaboration and partnership among clergy and ministries', color: '#8B2332' },
-              { icon: EyeIcon, title: 'Empowerment', description: 'Equipping clergy with tools and resources for effective ministry', color: '#7A7A3F' }
-            ].map((value, index) => {
-              const Icon = value.icon;
+            {valueItems.map((value, index) => {
+              const Icon = ABOUT_ICON_MAP[value.icon as keyof typeof ABOUT_ICON_MAP] ?? HeartIcon;
               const delay = index * 150;
+              const accentColor = value.color || '#8B2332';
               return (
                 <div 
                   key={index}
@@ -717,20 +895,20 @@ export function About() {
                         <div 
                           className="absolute inset-0 rounded-full blur-xl animate-pulse-slow transition-all group-hover:scale-125"
                           style={{ 
-                            backgroundColor: value.color === '#8B2332' ? 'rgba(139, 34, 50, 0.25)' : 'rgba(122, 122, 63, 0.25)'
+                            backgroundColor: `${accentColor}40`,
                           }}
                         ></div>
                         <div 
-                          className={`relative w-24 h-24 rounded-full flex items-center justify-center border-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl ${
-                            value.color === '#8B2332' 
-                              ? 'bg-gradient-to-br from-[#8B2332]/20 via-[#8B2332]/15 to-[#8B2332]/10 border-[#8B2332]/30 group-hover:border-[#8B2332]/50 group-hover:bg-gradient-to-br group-hover:from-[#8B2332]/25 group-hover:via-[#8B2332]/20 group-hover:to-[#8B2332]/15' 
-                              : 'bg-gradient-to-br from-[#7A7A3F]/20 via-[#7A7A3F]/15 to-[#7A7A3F]/10 border-[#7A7A3F]/30 group-hover:border-[#7A7A3F]/50 group-hover:bg-gradient-to-br group-hover:from-[#7A7A3F]/25 group-hover:via-[#7A7A3F]/20 group-hover:to-[#7A7A3F]/15'
-                          }`}
+                          className="relative w-24 h-24 rounded-full flex items-center justify-center border-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg group-hover:shadow-xl"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.08), transparent)',
+                            borderColor: `${accentColor}40`,
+                          }}
                         >
                           <Icon 
                             size={40} 
                             className="group-hover:scale-110 transition-transform duration-300"
-                            style={{ color: value.color }}
+                            style={{ color: accentColor }}
                             strokeWidth={2.5}
                           />
                         </div>
@@ -754,9 +932,8 @@ export function About() {
                       </div>
                     </div>
                     
-                    <h3 className={`text-xl md:text-2xl font-bold mb-4 text-center transition-colors duration-300 relative z-10 ${
-                      value.color === '#8B2332' ? 'text-[#8B2332] dark:text-[#B85C6D] group-hover:text-[#6B1A28] dark:group-hover:text-[#C96D7E]' : 'text-[#7A7A3F] dark:text-[#9B9B5F] group-hover:text-[#6A6A35] dark:group-hover:text-[#8B8B4F]'
-                    }`}>
+                    <h3 className="text-xl md:text-2xl font-bold mb-4 text-center transition-colors duration-300 relative z-10"
+                      style={{ color: accentColor }}>
                       {value.title}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-400 text-center leading-relaxed relative z-10 text-sm md:text-base">
@@ -766,17 +943,17 @@ export function About() {
                     {/* Enhanced decorative corners */}
                     <div 
                       className="absolute top-0 right-0 w-24 h-24 border-t-3 border-r-3 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ borderColor: `${value.color}40` }}
+                      style={{ borderColor: `${accentColor}40` }}
                     ></div>
                     <div 
                       className="absolute bottom-0 left-0 w-20 h-20 border-b-3 border-l-3 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ borderColor: `${value.color}40` }}
+                      style={{ borderColor: `${accentColor}40` }}
                     ></div>
                     
                     {/* Bottom accent line */}
                     <div 
                       className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-500 rounded-b-3xl"
-                      style={{ color: value.color }}
+                      style={{ color: accentColor }}
                     ></div>
                   </div>
                 </div>
@@ -910,25 +1087,22 @@ export function About() {
             <div className={`${isVisible['leadership-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  LEADERSHIP
+                  {leadershipBadge}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                Our Leadership
+                {leadershipTitle}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                Experienced leaders committed to serving the clergy community
+                {leadershipDescription}
               </p>
             </div>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {[
-              { name: 'Bishop David Kimani', role: 'National Chairman', description: 'Leading APECK with vision and passion for clergy empowerment', image: '/assets/image1.jpg' },
-              { name: 'Rev. Peter Omondi', role: 'General Secretary', description: 'Coordinating programs and member services across Kenya', image: '/assets/image2.jpg' },
-              { name: 'Pastor James Mwangi', role: 'Training Director', description: 'Overseeing all training and development initiatives', image: '/assets/image3.jpg' }
-            ].map((leader, index) => {
+            {leaders.map((leader, index) => {
               const delay = index * 150;
+              const leaderImage = leader.image || '/assets/image1.jpg';
               return (
                 <div 
                   key={index}
@@ -950,13 +1124,17 @@ export function About() {
                     
                     {/* Image container with enhanced styling */}
                     <div className="relative overflow-hidden bg-gray-100 dark:bg-gray-700">
-                      <img 
-                        src={leader.image.startsWith('/') ? leader.image : `${leader.image}&q=75`}
-                        alt={leader.name}
-                        loading="lazy"
-                        className="w-full h-64 md:h-72 object-cover object-top transform group-hover:scale-105 transition-transform duration-700" 
-                        style={{ willChange: 'transform' }}
-                      />
+                      {leaderImage ? (
+                        <img 
+                          src={leaderImage}
+                          alt={leader.name}
+                          loading="lazy"
+                          className="w-full h-64 md:h-72 object-cover object-top transform group-hover:scale-105 transition-transform duration-700" 
+                          style={{ willChange: 'transform' }}
+                        />
+                      ) : (
+                        <div className="w-full h-64 md:h-72 bg-gray-200 dark:bg-gray-700" />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
                       {/* Decorative corner with enhanced styling */}

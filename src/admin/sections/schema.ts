@@ -258,6 +258,116 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  {
+    key: 'about_hero',
+    title: 'About Hero',
+    description: 'Top hero banner for the About page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'ABOUT US' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'About APECK' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Building a unified community...',
+      },
+      { type: 'image', label: 'Background Image', name: 'backgroundImage' },
+    ],
+  },
+  {
+    key: 'about_story',
+    title: 'About Story',
+    description: 'History section content for the About page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'OUR STORY' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Our Story' },
+      { type: 'image', label: 'Primary Image', name: 'image' },
+      {
+        type: 'repeatable',
+        label: 'Paragraphs',
+        name: 'paragraphs',
+        minItems: 1,
+        itemFields: [{ type: 'textarea', label: 'Paragraph Text', name: 'text' }],
+      },
+    ],
+  },
+  {
+    key: 'about_mission_vision',
+    title: 'Mission & Vision',
+    description: 'Mission and vision cards for the About page.',
+    fields: [
+      { type: 'text', label: 'Mission Title', name: 'missionTitle', placeholder: 'Our Mission' },
+      {
+        type: 'textarea',
+        label: 'Mission Description',
+        name: 'missionDescription',
+        placeholder: 'To empower, equip...',
+      },
+      { type: 'text', label: 'Mission Icon (target|eye|heart|award)', name: 'missionIcon', placeholder: 'target' },
+      { type: 'text', label: 'Vision Title', name: 'visionTitle', placeholder: 'Our Vision' },
+      {
+        type: 'textarea',
+        label: 'Vision Description',
+        name: 'visionDescription',
+        placeholder: 'A Kenya where...',
+      },
+      { type: 'text', label: 'Vision Icon (target|eye|heart|award)', name: 'visionIcon', placeholder: 'eye' },
+    ],
+  },
+  {
+    key: 'about_values',
+    title: 'Core Values',
+    description: 'Values grid on the About page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'OUR VALUES' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Core Values' },
+      {
+        type: 'textarea',
+        label: 'Intro Description',
+        name: 'description',
+        placeholder: 'The principles that guide everything we do',
+      },
+      {
+        type: 'repeatable',
+        label: 'Values',
+        name: 'items',
+        minItems: 1,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title', placeholder: 'Integrity' },
+          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Maintaining the highest ethical standards...' },
+          { type: 'text', label: 'Icon (target|eye|heart|award)', name: 'icon', placeholder: 'heart' },
+          { type: 'text', label: 'Accent Color (#hex)', name: 'color', placeholder: '#8B2332' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'about_leadership',
+    title: 'Leadership Section',
+    description: 'Leadership cards for the About page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'LEADERSHIP' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Our Leadership' },
+      {
+        type: 'textarea',
+        label: 'Intro Description',
+        name: 'description',
+        placeholder: 'Experienced leaders committed...',
+      },
+      {
+        type: 'repeatable',
+        label: 'Leaders',
+        name: 'leaders',
+        minItems: 1,
+        itemFields: [
+          { type: 'text', label: 'Name', name: 'name', placeholder: 'Bishop David Kimani' },
+          { type: 'text', label: 'Role', name: 'role', placeholder: 'National Chairman' },
+          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Leading APECK with vision...' },
+          { type: 'image', label: 'Photo', name: 'image' },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getSectionSchema(key: string): SectionSchema | undefined {
