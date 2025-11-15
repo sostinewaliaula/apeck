@@ -1,14 +1,22 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
+
 const STAT_ICON_MAP: Record<string, typeof UsersIcon> = {
   users: UsersIcon,
   trend: TrendingUpIcon,
   book: BookOpenIcon,
   award: AwardIcon,
 };
-import { fetchPageContent } from '../lib/pageContent';
-import { resolveMediaUrl } from '../lib/media';
+
+const PROGRAM_ICON_MAP: Record<string, typeof BookOpenIcon> = {
+  book: BookOpenIcon,
+  users: UsersIcon,
+  sparkles: SparklesIcon,
+  heart: HeartIcon,
+};
 
 type HeroButton = {
   label: string;
@@ -57,6 +65,28 @@ type ImpactStat = {
 
 type ImpactStatsSectionContent = {
   stats?: ImpactStatInput[];
+};
+
+type ProgramCardInput = {
+  title?: string;
+  description?: string;
+  icon?: string;
+  accent?: string;
+};
+
+type ProgramCard = {
+  title: string;
+  description: string;
+  accent: string;
+  icon: typeof BookOpenIcon;
+};
+
+type ProgramsSectionContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  cta?: { label?: string; href?: string };
+  items?: ProgramCardInput[];
 };
 
 type HeroSectionContent = {
@@ -173,6 +203,42 @@ export function Home() {
     ],
     [],
   );
+
+  const defaultProgramsSection: { badgeLabel: string; title: string; description: string; cta: { label: string; href: string }; items: ProgramCardInput[] } = {
+    badgeLabel: 'OUR SERVICES',
+    title: 'Our Programs & Initiatives',
+    description: 'Comprehensive programs designed to empower clergy and strengthen ministry impact',
+    cta: {
+      label: 'Explore All Programs',
+      href: '/programs',
+    },
+    items: [
+      {
+        title: 'Training Programs',
+        description: 'Comprehensive theological and leadership training for clergy at all levels',
+        icon: 'book',
+        accent: '#8B2332',
+      },
+      {
+        title: 'Clergy Empowerment',
+        description: 'Resources and support for personal and ministerial growth',
+        icon: 'users',
+        accent: '#7A7A3F',
+      },
+      {
+        title: 'Leadership Development',
+        description: 'Mentorship and coaching for emerging and established leaders',
+        icon: 'sparkles',
+        accent: '#8B2332',
+      },
+      {
+        title: 'Community Outreach',
+        description: 'Collaborative initiatives to serve communities across Kenya',
+        icon: 'heart',
+        accent: '#7A7A3F',
+      },
+    ],
+  };
 
   const defaultTestimonials = [
     {
@@ -312,6 +378,43 @@ export function Home() {
 
     return fromCms.length > 0 ? fromCms : defaultImpactStats;
   }, [impactStatsSection, defaultImpactStats]);
+
+  const programsSection = sectionContent['programs'] as ProgramsSectionContent | undefined;
+  const programsCta =
+    programsSection?.cta?.label
+      ? {
+          label: programsSection.cta.label,
+          href: programsSection.cta.href || defaultProgramsSection.cta.href,
+        }
+      : defaultProgramsSection.cta;
+  const programsContent = {
+    badgeLabel: programsSection?.badgeLabel?.trim() || defaultProgramsSection.badgeLabel,
+    title: programsSection?.title?.trim() || defaultProgramsSection.title,
+    description: programsSection?.description?.trim() || defaultProgramsSection.description,
+    cta: programsCta,
+  };
+  const programsFromCms =
+    programsSection?.items
+      ?.filter((item) => item?.title && item?.description)
+      .map((item) => {
+        const iconKey = (item.icon ?? '').toLowerCase();
+        const icon = PROGRAM_ICON_MAP[iconKey] ?? BookOpenIcon;
+        return {
+          title: item.title as string,
+          description: item.description as string,
+          accent: item.accent?.trim() || '#8B2332',
+          icon,
+        };
+      }) ?? [];
+  const resolvedPrograms: ProgramCard[] =
+    programsFromCms.length > 0
+      ? programsFromCms
+      : defaultProgramsSection.items.map((item) => ({
+          title: item.title ?? '',
+          description: item.description ?? '',
+          accent: item.accent ?? '#8B2332',
+          icon: PROGRAM_ICON_MAP[item.icon ?? 'book'] ?? BookOpenIcon,
+        }));
 
   const heroIconMap: Record<string, JSX.Element> = {
     arrow: <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />,
@@ -1305,57 +1408,27 @@ export function Home() {
               {/* Modern badge with gradient */}
               <div className="inline-block">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 text-[#8B2332] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20">
-                  OUR SERVICES
+                  {programsContent.badgeLabel}
                 </span>
               </div>
               
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                Our Programs & Initiatives
+                {programsContent.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-                Comprehensive programs designed to empower clergy and strengthen
-                ministry impact
+                {programsContent.description}
               </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { 
-                icon: BookOpenIcon, 
-                title: 'Training Programs', 
-                description: 'Comprehensive theological and leadership training for clergy at all levels',
-                iconBg: 'bg-gradient-to-br from-[#8B2332]/15 to-[#8B2332]/8',
-                iconColor: 'text-[#8B2332]',
-                accent: '#8B2332'
-              },
-              { 
-                icon: UsersIcon, 
-                title: 'Clergy Empowerment', 
-                description: 'Resources and support for personal and ministerial growth',
-                iconBg: 'bg-gradient-to-br from-[#7A7A3F]/15 to-[#7A7A3F]/8',
-                iconColor: 'text-[#7A7A3F]',
-                accent: '#7A7A3F'
-              },
-              { 
-                icon: SparklesIcon, 
-                title: 'Leadership Development', 
-                description: 'Mentorship and coaching for emerging and established leaders',
-                iconBg: 'bg-gradient-to-br from-[#8B2332]/15 to-[#8B2332]/8',
-                iconColor: 'text-[#8B2332]',
-                accent: '#8B2332'
-              },
-              { 
-                icon: HeartIcon, 
-                title: 'Community Outreach', 
-                description: 'Collaborative initiatives to serve communities across Kenya',
-                iconBg: 'bg-gradient-to-br from-[#7A7A3F]/15 to-[#7A7A3F]/8',
-                iconColor: 'text-[#7A7A3F]',
-                accent: '#7A7A3F'
-              }
-            ].map((program, index) => {
+            {resolvedPrograms.map((program, index) => {
               const delay = index * 100;
               const isAnimated = isVisible[`program-${index}`];
+              const accent = program.accent || '#8B2332';
+              const gradientBg = `linear-gradient(135deg, ${accent}26, ${accent}13)`;
+              const borderColor = `${accent}33`;
+              const overlayGradient = `linear-gradient(135deg, transparent, transparent, ${accent}08)`;
               
               return (
                 <div 
@@ -1382,8 +1455,8 @@ export function Home() {
                       
                       {/* Gradient overlay on hover */}
                       <div 
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-transparent to-[#8B2332]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{ background: `linear-gradient(135deg, transparent, transparent, ${program.accent}08)` }}
+                        className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: overlayGradient }}
                       ></div>
                       
                       {/* Icon container with enhanced styling */}
@@ -1391,25 +1464,30 @@ export function Home() {
                         {/* Outer glow */}
                         <div 
                           className={`absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg`}
-                          style={{ backgroundColor: `${program.accent}15` }}
+                          style={{ backgroundColor: `${accent}20` }}
                         ></div>
                         
                         {/* Icon background with gradient - matching reference style */}
                         <div 
-                          className={`relative w-20 h-20 md:w-24 md:h-24 ${program.iconBg} rounded-2xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-xl z-10 border border-[${program.accent}]/10`}
+                          className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-xl z-10"
+                          style={{
+                            background: gradientBg,
+                            border: `1px solid ${borderColor}`,
+                          }}
                         >
                           {/* Shine effect */}
                           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                           
                           <program.icon 
                             size={40} 
-                            className={`${program.iconColor} md:w-10 md:h-10 transform group-hover:scale-110 transition-transform duration-300 relative z-10`}
+                            className="md:w-10 md:h-10 transform group-hover:scale-110 transition-transform duration-300 relative z-10"
+                            style={{ color: accent }}
                           />
                         </div>
                         
                         {/* Decorative corner dots */}
-                        <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: program.accent }}></div>
-                        <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: program.accent }}></div>
+                        <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: accent }}></div>
+                        <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: accent }}></div>
                       </div>
                       
                       {/* Title */}
@@ -1423,14 +1501,14 @@ export function Home() {
                       </p>
                       
                       {/* Decorative elements */}
-                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${program.accent}20` }}></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${program.accent}15` }}></div>
+                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${accent}20` }}></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ borderColor: `${accent}15` }}></div>
                       
                       {/* Animated underline */}
                       <div 
                         className="mt-4 h-0.5 bg-gradient-to-r from-transparent via-[#8B2332] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 w-0 group-hover:w-full"
                         style={{ 
-                          background: `linear-gradient(to right, transparent, ${program.accent}, transparent)` 
+                          background: `linear-gradient(to right, transparent, ${accent}, transparent)` 
                         }}
                       ></div>
                     </div>
@@ -1445,16 +1523,27 @@ export function Home() {
             data-animate-id="programs-cta"
           >
             <div className={`${isVisible['programs-cta'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'}`}>
-              <Link 
-                to="/programs" 
-                className="group relative inline-flex items-center space-x-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-xs md:text-sm"
-              >
-                {/* Shine effect on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                
-                <span className="relative z-10">Explore All Programs</span>
-                <ArrowRightIcon size={20} className="relative z-10 transform group-hover:translate-x-1 transition-transform" />
-              </Link>
+              {isInternalLink(programsContent.cta.href) ? (
+                <Link 
+                  to={programsContent.cta.href ?? '#'} 
+                  className="group relative inline-flex items-center space-x-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-xs md:text-sm"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <span className="relative z-10">{programsContent.cta.label}</span>
+                  <ArrowRightIcon size={20} className="relative z-10 transform group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <a
+                  href={programsContent.cta.href ?? '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group relative inline-flex items-center space-x-2 px-5 md:px-6 py-2.5 md:py-3 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform overflow-hidden text-xs md:text-sm"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <span className="relative z-10">{programsContent.cta.label}</span>
+                  <ArrowRightIcon size={20} className="relative z-10 transform group-hover:translate-x-1 transition-transform" />
+                </a>
+              )}
             </div>
           </div>
         </div>

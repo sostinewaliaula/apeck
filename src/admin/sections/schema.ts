@@ -166,6 +166,43 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  {
+    key: 'programs',
+    title: 'Programs Section',
+    description: 'Homepage programs & initiatives grid.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'OUR SERVICES' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Our Programs & Initiatives' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Comprehensive programs designed to empower clergy…',
+      },
+      {
+        type: 'link',
+        label: 'CTA Button',
+        name: 'cta',
+        fields: [
+          { name: 'label', label: 'Button Label' },
+          { name: 'href', label: 'Link URL' },
+        ],
+      },
+      {
+        type: 'repeatable',
+        label: 'Program Cards',
+        name: 'items',
+        minItems: 1,
+        maxItems: 6,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title', placeholder: 'Training Programs' },
+          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Comprehensive training for clergy…' },
+          { type: 'text', label: 'Icon (book | users | sparkles | heart)', name: 'icon', placeholder: 'book' },
+          { type: 'text', label: 'Accent Color (hex)', name: 'accent', placeholder: '#8B2332' },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getSectionSchema(key: string): SectionSchema | undefined {
