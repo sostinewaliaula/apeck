@@ -203,6 +203,33 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  {
+    key: 'testimonials',
+    title: 'Testimonials Section',
+    description: 'Homepage testimonials carousel content.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'TESTIMONIALS' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'What Our Members Say' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Real stories from clergy transformed through APECK',
+      },
+      {
+        type: 'repeatable',
+        label: 'Testimonials',
+        name: 'items',
+        minItems: 1,
+        itemFields: [
+          { type: 'text', label: 'Name', name: 'name', placeholder: 'Rev. Dr. James Mwangi' },
+          { type: 'text', label: 'Role / Title', name: 'role', placeholder: 'Senior Pastor, Nairobi' },
+          { type: 'textarea', label: 'Quote', name: 'content', placeholder: 'APECK has transformed my ministry...' },
+          { type: 'text', label: 'Rating (1-5)', name: 'rating', placeholder: '5' },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getSectionSchema(key: string): SectionSchema | undefined {

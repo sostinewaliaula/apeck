@@ -89,6 +89,27 @@ type ProgramsSectionContent = {
   items?: ProgramCardInput[];
 };
 
+type TestimonialInput = {
+  name?: string;
+  role?: string;
+  content?: string;
+  rating?: number | string;
+};
+
+type Testimonial = {
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+};
+
+type TestimonialsSectionContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  items?: TestimonialInput[];
+};
+
 type HeroSectionContent = {
   slides?: HeroSlide[];
 };
@@ -240,7 +261,7 @@ export function Home() {
     ],
   };
 
-  const defaultTestimonials = [
+  const defaultTestimonials: Testimonial[] = [
     {
       name: 'Rev. Dr. James Mwangi',
       role: 'Senior Pastor, Nairobi',
@@ -312,6 +333,13 @@ export function Home() {
           }))
       : undefined,
   });
+
+  const defaultTestimonialsSection = {
+    badgeLabel: 'TESTIMONIALS',
+    title: 'What Our Members Say',
+    description: 'Real stories from clergy transformed through APECK',
+    items: defaultTestimonials,
+  };
 
   const heroSection = sectionContent['hero_slides'] as HeroSectionContent | undefined;
   const heroSlides: HeroSlide[] = heroSection?.slides?.length
@@ -415,6 +443,30 @@ export function Home() {
           accent: item.accent ?? '#8B2332',
           icon: PROGRAM_ICON_MAP[item.icon ?? 'book'] ?? BookOpenIcon,
         }));
+
+  const testimonialsSection = sectionContent['testimonials'] as TestimonialsSectionContent | undefined;
+  const testimonialsContent = {
+    badgeLabel: testimonialsSection?.badgeLabel?.trim() || defaultTestimonialsSection.badgeLabel,
+    title: testimonialsSection?.title?.trim() || defaultTestimonialsSection.title,
+    description: testimonialsSection?.description?.trim() || defaultTestimonialsSection.description,
+  };
+  const testimonialsFromCms =
+    testimonialsSection?.items
+      ?.filter((item) => item?.name && item?.content)
+      .map((item) => {
+        const ratingValue = Number(item.rating);
+        const rating = Number.isFinite(ratingValue)
+          ? Math.min(5, Math.max(1, Math.round(ratingValue)))
+          : 5;
+        return {
+          name: item.name?.trim() ?? '',
+          role: item.role?.trim() ?? '',
+          content: item.content?.trim() ?? '',
+          rating,
+        };
+      }) ?? [];
+  const resolvedTestimonials: Testimonial[] =
+    testimonialsFromCms.length > 0 ? testimonialsFromCms : defaultTestimonialsSection.items;
 
   const heroIconMap: Record<string, JSX.Element> = {
     arrow: <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />,
@@ -569,7 +621,7 @@ export function Home() {
 
   // Testimonials carousel configuration
   const testimonialsPerSlide = 3;
-  const totalTestimonialSlides = Math.ceil(defaultTestimonials.length / testimonialsPerSlide);
+  const totalTestimonialSlides = Math.max(1, Math.ceil(resolvedTestimonials.length / testimonialsPerSlide));
 
   // Auto-slide for testimonials carousel
   useEffect(() => {
@@ -1739,15 +1791,15 @@ export function Home() {
               {/* Modern badge with light pink background matching reference */}
               <div className="inline-block">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  TESTIMONIALS
+                  {testimonialsContent.badgeLabel}
                 </span>
               </div>
               
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                What Our Members Say
+                {testimonialsContent.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
-                Real stories from clergy transformed through APECK
+                {testimonialsContent.description}
               </p>
             </div>
           </div>
@@ -1781,7 +1833,7 @@ export function Home() {
                 {/* Render slides */}
                 {Array.from({ length: totalTestimonialSlides }).map((_, slideIndex) => {
                   const startIndex = slideIndex * testimonialsPerSlide;
-                  const slideTestimonials = defaultTestimonials.slice(startIndex, startIndex + testimonialsPerSlide);
+                  const slideTestimonials = resolvedTestimonials.slice(startIndex, startIndex + testimonialsPerSlide);
                   
                   return (
                     <div 
