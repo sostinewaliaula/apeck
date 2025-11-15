@@ -1,21 +1,36 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { CalendarIcon, MapPinIcon, ClockIcon, ArrowRightIcon, BellIcon } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, ClockIcon, ArrowRightIcon, BellIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EnrollForm } from '../components/EnrollForm';
+import { fetchNewsList, PublicNewsSummary } from '../lib/news';
+import { resolveMediaUrl } from '../lib/media';
 
-// Helper function to create URL-friendly slug from title
-const createSlug = (title: string): string => {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
 };
+
+function formatNewsDate(value?: string) {
+  if (!value) return 'Latest update';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Latest update';
+  return date.toLocaleDateString(undefined, NEWS_DATE_FORMAT);
+}
+
+function formatExcerpt(value?: string) {
+  if (!value) return 'Read the latest update from APECK.';
+  return value;
+}
 
 export function News() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<{ name: string; type: 'register' | 'enroll' } | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const [newsData, setNewsData] = useState<PublicNewsSummary[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
+  const [newsError, setNewsError] = useState<string | null>(null);
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -100,6 +115,29 @@ export function News() {
     };
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+    setNewsLoading(true);
+    fetchNewsList({ limit: 9 })
+      .then((items) => {
+        if (!isMounted) return;
+        setNewsData(items);
+        setNewsError(null);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setNewsError('Failed to load the latest articles. Showing highlights instead.');
+      })
+      .finally(() => {
+        if (isMounted) {
+          setNewsLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Available images 4-9 - shuffled randomly
   const availableImages = ['/assets/image4.jpg', '/assets/image5.jpg', '/assets/image6.jpg', '/assets/image7.jpg', '/assets/image8.jpg', '/assets/image9.jpg'];
   
@@ -108,7 +146,7 @@ export function News() {
     return availableImages[Math.floor(Math.random() * availableImages.length)];
   };
   
-  const newsItems = [
+  const defaultNewsItems = [
     {
       id: 1,
       slug: 'annual-leadership-conference-2024',
@@ -164,6 +202,19 @@ export function News() {
       category: 'Announcement'
     }
   ];
+
+  const normalizedNewsItems =
+    newsData.length > 0
+      ? newsData.map((item) => ({
+          id: item.id,
+          slug: item.slug,
+          image: resolveMediaUrl(item.heroImageUrl) || getRandomImage(),
+          date: formatNewsDate(item.publishedAt),
+          title: item.title,
+          description: formatExcerpt(item.excerpt),
+          category: 'News',
+        }))
+      : defaultNewsItems;
 
   const events = [
     {
@@ -749,64 +800,75 @@ export function News() {
               </p>
             </div>
                 </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {newsItems.map((item, index) => (
-              <div 
-                key={item.id}
-                className="transform transition-all duration-700"
-                data-animate-id={`news-${index}`}
-              >
-                <div className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group ${
-                  isVisible[`news-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-                }`}>
-                  {/* Image Container */}
-                  <div className="relative h-64 md:h-72 overflow-hidden">
-                    <img 
-                      src={item.image} 
-                      alt={item.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                      loading="lazy"
-                      style={{ willChange: 'transform' }}
-                    />
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    {/* Category Badge */}
-                    <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 dark:bg-gray-900/80 backdrop-blur-sm text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs font-bold uppercase tracking-wide">
-                      {item.category}
+          {newsError && (
+            <p className="text-center text-red-600 mb-6 text-sm md:text-base">
+              {newsError}
+            </p>
+          )}
+          {newsLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="animate-spin text-[#8B2332]" size={32} />
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {normalizedNewsItems.map((item, index) => (
+                <div 
+                  key={item.id ?? index}
+                  className="transform transition-all duration-700"
+                  data-animate-id={`news-${index}`}
+                >
+                  <div className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group ${
+                    isVisible[`news-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                  }`}>
+                    {/* Image Container */}
+                    <div className="relative h-64 md:h-72 overflow-hidden">
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        loading="lazy"
+                        style={{ willChange: 'transform' }}
+                      />
+                      {/* Gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      {/* Category Badge */}
+                      <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 dark:bg-gray-900/80 backdrop-blur-sm text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs font-bold uppercase tracking-wide">
+                        {item.category}
+                      </div>
+                      
+                      {/* Decorative corner */}
+                      <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/20 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
                     
-                    {/* Decorative corner */}
-                    <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/20 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-6 md:p-8">
-                    <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold mb-4">
-                      <CalendarIcon size={16} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
-                      <span>{item.date}</span>
+                    {/* Content */}
+                    <div className="p-6 md:p-8">
+                      <div className="flex items-center space-x-2 text-sm text-[#7A7A3F] dark:text-[#9B9B5F] font-semibold mb-4">
+                        <CalendarIcon size={16} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
+                        <span>{item.date}</span>
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 group-hover:text-[#6B1A28] transition-colors leading-tight">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-5 leading-relaxed line-clamp-3">
+                        {item.description}
+                      </p>
+                      <Link 
+                        to={`/news/${item.slug}`}
+                        className="text-[#8B2332] dark:text-[#B85C6D] font-semibold hover:text-[#7A7A3F] dark:hover:text-[#9B9B5F] transition-colors inline-flex items-center space-x-2 group/btn"
+                      >
+                        <span>Read More</span>
+                        <ArrowRightIcon size={16} className="transform group-hover/btn:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
-                    <h3 className="text-xl md:text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-3 group-hover:text-[#6B1A28] transition-colors leading-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-5 leading-relaxed line-clamp-3">
-                      {item.description}
-                    </p>
-                    <Link 
-                      to={`/news/${item.slug}`}
-                      className="text-[#8B2332] dark:text-[#B85C6D] font-semibold hover:text-[#7A7A3F] dark:hover:text-[#9B9B5F] transition-colors inline-flex items-center space-x-2 group/btn"
-                    >
-                      <span>Read More</span>
-                      <ArrowRightIcon size={16} className="transform group-hover/btn:translate-x-1 transition-transform" />
-                    </Link>
+                    
+                    {/* Bottom accent line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B2332] via-[#7A7A3F] to-[#8B2332] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
-                  
-                  {/* Bottom accent line */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#8B2332] via-[#7A7A3F] to-[#8B2332] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import type { Request } from 'express';
 
 import { UsersService } from '../users/users.service';
@@ -8,11 +15,20 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly usersService: UsersService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto, @Req() req: Request): Promise<AuthResult> {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Req() req: Request,
+  ): Promise<AuthResult> {
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -21,7 +37,7 @@ export class AuthController {
       ipAddress: req.ip,
     };
     const result = await this.authService.login(user, metadata);
-    // eslint-disable-next-line no-console
+
     console.log('[AUTH] Successful login', {
       userId: result.user.id,
       email: result.user.email,
@@ -34,8 +50,11 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() req: Request): Promise<TokenBundle> {
     const payload = req.user as { sub: string; sid: string; token: string };
-    // eslint-disable-next-line no-console
-    console.log('[AUTH] Refresh token request', { userId: payload.sub, sessionId: payload.sid });
+
+    console.log('[AUTH] Refresh token request', {
+      userId: payload.sub,
+      sessionId: payload.sid,
+    });
     return this.authService.refresh(payload.sub, payload.sid, payload.token);
   }
 
@@ -43,10 +62,12 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req: Request) {
     const payload = req.user as { sub: string; sid: string; token: string };
-    // eslint-disable-next-line no-console
-    console.log('[AUTH] Logout request', { userId: payload.sub, sessionId: payload.sid });
+
+    console.log('[AUTH] Logout request', {
+      userId: payload.sub,
+      sessionId: payload.sid,
+    });
     await this.authService.logout(payload.sub, payload.sid);
     return { success: true };
   }
 }
-

@@ -230,6 +230,34 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  {
+    key: 'news_updates',
+    title: 'News & Updates Section',
+    description: 'Homepage recent updates carousel.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'NEWS & UPDATES' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Recent Updates' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Stay informed about our latest activities and events',
+      },
+      {
+        type: 'repeatable',
+        label: 'News Cards',
+        name: 'items',
+        minItems: 1,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title', placeholder: 'Women in Ministry Conference' },
+          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Celebrating and empowering women leaders...' },
+          { type: 'text', label: 'Date Label', name: 'date', placeholder: 'NOVEMBER 10, 2024' },
+          { type: 'text', label: 'Image URL', name: 'image', placeholder: 'https://...' },
+          { type: 'text', label: 'Read More Link', name: 'href', placeholder: '/news/women-in-ministry' },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getSectionSchema(key: string): SectionSchema | undefined {

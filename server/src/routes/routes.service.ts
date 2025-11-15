@@ -38,7 +38,10 @@ export class RoutesService {
     if (dto.target !== undefined) updates.target = dto.target;
     if (dto.isActive !== undefined) updates.is_active = dto.isActive;
 
-    const [route] = await this.knex('routes').where({ id }).update(updates).returning('*');
+    const [route] = await this.knex('routes')
+      .where({ id })
+      .update(updates)
+      .returning('*');
     return route;
   }
 
@@ -46,4 +49,3 @@ export class RoutesService {
     return this.knex('routes').where({ id }).delete();
   }
 }
-

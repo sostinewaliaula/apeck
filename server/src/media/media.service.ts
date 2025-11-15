@@ -45,13 +45,10 @@ export class MediaService {
     await this.knex('media_assets').where({ id }).delete();
     if (asset.file_name) {
       const filePath = join(process.cwd(), 'uploads', asset.file_name);
-      await fs
-        .unlink(filePath)
-        .catch(() => {
-          // ignore missing files
-        });
+      await fs.unlink(filePath).catch(() => {
+        // ignore missing files
+      });
     }
     return { success: true };
   }
 }
-

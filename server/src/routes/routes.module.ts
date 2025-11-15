@@ -11,4 +11,3 @@ import { RoutesService } from './routes.service';
   exports: [RoutesService],
 })
 export class RoutesModule {}
-

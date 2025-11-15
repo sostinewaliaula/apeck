@@ -31,4 +31,3 @@ export class KnexService implements OnModuleDestroy {
     await this.knexInstance.destroy();
   }
 }
-

@@ -12,4 +12,3 @@ import { AdminPagesController } from './admin-pages.controller';
   exports: [PagesService],
 })
 export class PagesModule {}
-

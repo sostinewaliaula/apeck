@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
+import { fetchNewsList, PublicNewsSummary } from '../lib/news';
 
 const STAT_ICON_MAP: Record<string, typeof UsersIcon> = {
   users: UsersIcon,
@@ -110,6 +111,29 @@ type TestimonialsSectionContent = {
   items?: TestimonialInput[];
 };
 
+type NewsCardInput = {
+  title?: string;
+  description?: string;
+  date?: string;
+  image?: string;
+  href?: string;
+};
+
+type NewsCard = {
+  title: string;
+  description: string;
+  date: string;
+  image: string;
+  href?: string;
+};
+
+type NewsUpdatesSectionContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  items?: NewsCardInput[];
+};
+
 type HeroSectionContent = {
   slides?: HeroSlide[];
 };
@@ -127,6 +151,19 @@ type CtaSectionContent = {
   };
 };
 
+const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+};
+
+function formatNewsDate(value?: string) {
+  if (!value) return 'Latest update';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Latest update';
+  return date.toLocaleDateString(undefined, NEWS_DATE_FORMAT).toUpperCase();
+}
+
 export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentNewsSlide, setCurrentNewsSlide] = useState(0);
@@ -135,6 +172,7 @@ export function Home() {
   const [countedValues, setCountedValues] = useState<{ [key: number]: number }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
+  const [featuredNews, setFeaturedNews] = useState<PublicNewsSummary[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -149,6 +187,22 @@ export function Home() {
       })
       .catch(() => {
         // fail silently and fall back to defaults
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchNewsList({ featured: true, limit: 9 })
+      .then((news) => {
+        if (isMounted) {
+          setFeaturedNews(news);
+        }
+      })
+      .catch(() => {
+        // ignore errors and fall back to CMS/default content
       });
     return () => {
       isMounted = false;
@@ -542,7 +596,7 @@ export function Home() {
   }, [heroSlides.length]);
 
   // News updates data - expanded with more items (optimized image sizes)
-  const defaultNewsUpdates = [
+  const defaultNewsUpdates: NewsCard[] = [
     { 
       image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&q=75', 
       date: 'DECEMBER 15, 2024',
@@ -600,8 +654,48 @@ export function Home() {
   ];
 
   // Calculate number of slides (3 cards per slide on desktop, 1 on mobile)
+  const defaultNewsSection = {
+    badgeLabel: 'NEWS & UPDATES',
+    title: 'Recent Updates',
+    description: 'Stay informed about our latest activities and events',
+    items: defaultNewsUpdates,
+  };
+
   const cardsPerSlide = 3;
-  const totalSlides = Math.ceil(defaultNewsUpdates.length / cardsPerSlide);
+  const newsSection = sectionContent['news_updates'] as NewsUpdatesSectionContent | undefined;
+  const newsContent = {
+    badgeLabel: newsSection?.badgeLabel?.trim() || defaultNewsSection.badgeLabel,
+    title: newsSection?.title?.trim() || defaultNewsSection.title,
+    description: newsSection?.description?.trim() || defaultNewsSection.description,
+  };
+  const fallbackNewsImages = defaultNewsSection.items.map((item) => item.image);
+  const newsItemsFromApi: NewsCard[] = featuredNews.map((item, index) => ({
+    title: item.title,
+    description: item.excerpt?.trim() || 'Read the latest update from APECK.',
+    date: formatNewsDate(item.publishedAt),
+    image:
+      resolveMediaUrl(item.heroImageUrl) ||
+      fallbackNewsImages[index % fallbackNewsImages.length] ||
+      '/assets/image9.jpg',
+    href: `/news/${item.slug}`,
+  }));
+  const newsItemsFromCms =
+    newsSection?.items
+      ?.filter((item) => item?.title && item?.description && item?.image)
+      .map((item) => ({
+        title: item.title?.trim() ?? '',
+        description: item.description?.trim() ?? '',
+        date: item.date?.trim() ?? '',
+        image: resolveMediaUrl(item.image),
+        href: item.href?.trim(),
+      })) ?? [];
+  const resolvedNewsCards: NewsCard[] =
+    newsItemsFromApi.length > 0
+      ? newsItemsFromApi
+      : newsItemsFromCms.length > 0
+        ? newsItemsFromCms
+        : defaultNewsSection.items;
+  const totalSlides = Math.max(1, Math.ceil(resolvedNewsCards.length / cardsPerSlide));
 
   // Auto-slide for news carousel
   useEffect(() => {
@@ -2164,15 +2258,15 @@ export function Home() {
               {/* Modern badge with light brown matching reference */}
               <div className="inline-block">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  NEWS & UPDATES
+                  {newsContent.badgeLabel}
                 </span>
               </div>
               
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] mb-4 leading-tight">
-                Recent Updates
+                {newsContent.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
-                Stay informed about our latest activities and events
+                {newsContent.description}
               </p>
             </div>
           </div>
@@ -2206,7 +2300,7 @@ export function Home() {
                 {/* Render slides */}
                 {Array.from({ length: totalSlides }).map((_, slideIndex) => {
                   const startIndex = slideIndex * cardsPerSlide;
-                  const slideCards = defaultNewsUpdates.slice(startIndex, startIndex + cardsPerSlide);
+                  const slideCards = resolvedNewsCards.slice(startIndex, startIndex + cardsPerSlide);
                   
                   return (
                     <div 
@@ -2274,7 +2368,7 @@ export function Home() {
                                 
                                 {/* Read More link with enhanced styling */}
                                 <Link 
-                                  to="/news" 
+                                  to={update.href ?? '/news'} 
                                   className="group inline-flex items-center space-x-2 text-[#8B2332] dark:text-[#B85C6D] font-semibold hover:text-[#7A7A3F] dark:hover:text-[#9B9B5F] transition-colors"
                                 >
                                   <span>Read More</span>

@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { PagesModule } from './pages/pages.module';
 import { RoutesModule } from './routes/routes.module';
 import { MediaModule } from './media/media.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MediaModule } from './media/media.module';
     PagesModule,
     RoutesModule,
     MediaModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

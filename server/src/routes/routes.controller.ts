@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreateRouteDto } from './dto/create-route.dto';
@@ -31,4 +40,3 @@ export class RoutesController {
     return { success: true };
   }
 }
-

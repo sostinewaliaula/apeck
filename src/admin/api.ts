@@ -338,3 +338,124 @@ export function deleteMediaAsset(accessToken: string, id: string) {
   });
 }
 
+export type AdminNews = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  status: string;
+  showOnHome: boolean;
+  homeDisplayOrder: number;
+  heroImageUrl?: string;
+  publishedAt?: string;
+  updatedAt?: string;
+  readingTime?: string;
+};
+
+type NewsResponse = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string | null;
+  status: string;
+  show_on_home: number | boolean;
+  home_display_order?: number | null;
+  hero_image_url?: string | null;
+  published_at?: string | null;
+  updated_at?: string | null;
+  reading_time?: string | null;
+};
+
+const normalizeNews = (news: NewsResponse): AdminNews => ({
+  id: news.id,
+  slug: news.slug,
+  title: news.title,
+  excerpt: news.excerpt ?? undefined,
+  status: news.status,
+  showOnHome: Boolean(news.show_on_home),
+  homeDisplayOrder: news.home_display_order ?? 0,
+  heroImageUrl: news.hero_image_url ?? undefined,
+  publishedAt: news.published_at ?? undefined,
+  updatedAt: news.updated_at ?? undefined,
+  readingTime: news.reading_time ?? undefined,
+});
+
+type NewsDetailResponse = NewsResponse & {
+  body: string;
+};
+
+export type NewsDetail = AdminNews & {
+  body: string;
+};
+
+const normalizeNewsDetail = (news: NewsDetailResponse): NewsDetail => ({
+  ...normalizeNews(news),
+  body: news.body,
+});
+
+export type NewsPayload = {
+  title: string;
+  slug?: string;
+  excerpt?: string;
+  body: string;
+  status?: 'draft' | 'scheduled' | 'published';
+  heroImageUrl?: string;
+  heroMediaId?: string;
+  showOnHome?: boolean;
+  homeDisplayOrder?: number;
+  readingTime?: string;
+  publishedAt?: string;
+};
+
+export function fetchAdminNews(
+  accessToken: string,
+  filters?: { status?: string; showOnHome?: boolean; search?: string },
+) {
+  return request<NewsResponse[]>('/admin/news', {
+    method: 'GET',
+    accessToken,
+    query: {
+      status: filters?.status,
+      showOnHome: filters?.showOnHome !== undefined ? String(filters.showOnHome) : undefined,
+      search: filters?.search,
+    },
+  }).then((rows) => rows.map(normalizeNews));
+}
+
+export function fetchNewsDetail(accessToken: string, id: string) {
+  return request<NewsDetailResponse>(`/admin/news/${id}`, {
+    method: 'GET',
+    accessToken,
+  }).then(normalizeNewsDetail);
+}
+
+export function createNews(accessToken: string, payload: NewsPayload) {
+  return request<NewsResponse>('/admin/news', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeNews);
+}
+
+export function updateNews(accessToken: string, id: string, payload: Partial<NewsPayload>) {
+  return request<NewsResponse>(`/admin/news/${id}`, {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeNewsDetail);
+}
+
+export function publishNews(accessToken: string, id: string) {
+  return request<NewsResponse>(`/admin/news/${id}/publish`, {
+    method: 'POST',
+    accessToken,
+  }).then(normalizeNewsDetail);
+}
+
+export function deleteNews(accessToken: string, id: string) {
+  return request<void>(`/admin/news/${id}`, {
+    method: 'DELETE',
+    accessToken,
+  });
+}
+

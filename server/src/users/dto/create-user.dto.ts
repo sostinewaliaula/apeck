@@ -18,4 +18,3 @@ export class CreateUserDto {
   @IsString()
   role?: 'admin' | 'editor' | 'viewer';
 }
-

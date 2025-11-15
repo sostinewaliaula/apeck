@@ -52,19 +52,31 @@ export class AuthService {
       access: accessSecret,
       refresh: refreshSecret,
     };
-    const accessTtl = (this.configService.get<string>('jwt.accessTtl', '900s') ?? '900s') as StringValue;
-    const refreshTtl = (this.configService.get<string>('jwt.refreshTtl', '7d') ?? '7d') as StringValue;
+    const accessTtl = (this.configService.get<string>(
+      'jwt.accessTtl',
+      '900s',
+    ) ?? '900s') as StringValue;
+    const refreshTtl = (this.configService.get<string>(
+      'jwt.refreshTtl',
+      '7d',
+    ) ?? '7d') as StringValue;
     this.jwtTtls = {
       access: accessTtl,
       refresh: refreshTtl,
     };
   }
 
-  async validateUser(email: string, password: string): Promise<UserEntity | null> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UserEntity | null> {
     return this.usersService.validateCredentials(email, password);
   }
 
-  async login(user: UserEntity, metadata: SessionMetadata): Promise<AuthResult> {
+  async login(
+    user: UserEntity,
+    metadata: SessionMetadata,
+  ): Promise<AuthResult> {
     await this.usersService.recordLogin(user.id);
     const tokens = await this.issueTokens(user, metadata);
     return {
@@ -79,12 +91,16 @@ export class AuthService {
     };
   }
 
-  async refresh(userId: string, sessionId: string, token: string): Promise<TokenBundle> {
-    // eslint-disable-next-line no-console
+  async refresh(
+    userId: string,
+    sessionId: string,
+    token: string,
+  ): Promise<TokenBundle> {
     console.log('[AUTH] Refresh called', { userId, sessionId });
-    const session = await this.knex('user_sessions').where({ id: sessionId, user_id: userId }).first();
+    const session = await this.knex('user_sessions')
+      .where({ id: sessionId, user_id: userId })
+      .first();
     if (!session || new Date(session.expires_at) < new Date()) {
-      // eslint-disable-next-line no-console
       console.warn('[AUTH] Session expired or missing', { sessionId, userId });
       throw new UnauthorizedException('Session expired');
     }
@@ -92,33 +108,46 @@ export class AuthService {
     const tokenValid = await bcrypt.compare(token, session.refresh_token_hash);
     if (!tokenValid) {
       await this.knex('user_sessions').where({ id: sessionId }).delete();
-      // eslint-disable-next-line no-console
-      console.warn('[AUTH] Invalid refresh token hash compare failed', { sessionId, userId });
+
+      console.warn('[AUTH] Invalid refresh token hash compare failed', {
+        sessionId,
+        userId,
+      });
       throw new UnauthorizedException('Invalid refresh token');
     }
 
     const user = await this.usersService.findById(userId);
     if (!user) {
-      // eslint-disable-next-line no-console
       console.warn('[AUTH] Refresh user not found', { userId });
       throw new UnauthorizedException('User not found');
     }
 
     await this.knex('user_sessions').where({ id: sessionId }).delete();
-    return this.issueTokens(user, { userAgent: session.user_agent, ipAddress: session.ip_address });
+    return this.issueTokens(user, {
+      userAgent: session.user_agent,
+      ipAddress: session.ip_address,
+    });
   }
 
   async logout(userId: string, sessionId: string): Promise<void> {
-    // eslint-disable-next-line no-console
     console.log('[AUTH] Logout called', { userId, sessionId });
-    await this.knex('user_sessions').where({ id: sessionId, user_id: userId }).delete();
+    await this.knex('user_sessions')
+      .where({ id: sessionId, user_id: userId })
+      .delete();
   }
 
-  private async issueTokens(user: UserEntity, metadata: SessionMetadata): Promise<TokenBundle> {
+  private async issueTokens(
+    user: UserEntity,
+    metadata: SessionMetadata,
+  ): Promise<TokenBundle> {
     const sessionId = uuid();
     const payload = { sub: user.id, role: user.role };
-    // eslint-disable-next-line no-console
-    console.log('[AUTH] Issuing tokens', { userId: user.id, sessionId, role: user.role });
+
+    console.log('[AUTH] Issuing tokens', {
+      userId: user.id,
+      sessionId,
+      role: user.role,
+    });
 
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: this.jwtSecrets.access,
@@ -137,7 +166,7 @@ export class AuthService {
       refreshToken,
       metadata,
     });
-    // eslint-disable-next-line no-console
+
     console.log('[AUTH] Session persisted', { sessionId, userId: user.id });
 
     const expiresIn = this.ttlStringToSeconds(this.jwtTtls.access);
@@ -185,4 +214,3 @@ export class AuthService {
     return this.ttlStringToMs(ttl) / 1000;
   }
 }
-

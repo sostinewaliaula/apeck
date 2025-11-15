@@ -6,7 +6,10 @@ import type { Request } from 'express';
 import type { StrategyOptionsWithRequest } from 'passport-jwt';
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+export class JwtRefreshStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
   constructor(configService: ConfigService) {
     const refreshSecret = configService.get<string>('jwt.refreshSecret');
     if (!refreshSecret) {
@@ -25,4 +28,3 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
     return { ...payload, token };
   }
 }
-

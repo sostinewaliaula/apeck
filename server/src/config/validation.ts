@@ -17,4 +17,3 @@ export const validationSchema = Joi.object({
 
   PASSWORD_PEPPER: Joi.string().min(8).required(),
 });
-

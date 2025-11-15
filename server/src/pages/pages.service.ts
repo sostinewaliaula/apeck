@@ -21,16 +21,20 @@ export class PagesService {
   }
 
   private async reloadSection(sectionId: string) {
-    const section = await this.knex('page_sections').where({ id: sectionId }).first();
+    const section = await this.knex('page_sections')
+      .where({ id: sectionId })
+      .first();
     if (!section) {
       throw new NotFoundException('Section not found');
     }
     return this.mapSection(section);
   }
 
-  private mapSection<T extends Record<string, unknown> | undefined>(section: T) {
+  private mapSection<T extends Record<string, unknown> | undefined>(
+    section: T,
+  ) {
     if (!section) return section;
-    const content = section.content as unknown;
+    const content = section.content;
     return {
       ...section,
       content: typeof content === 'string' ? JSON.parse(content) : content,
@@ -38,7 +42,9 @@ export class PagesService {
   }
 
   async findPublishedPage(slug: string) {
-    const page = await this.knex('pages').where({ slug, status: 'published' }).first();
+    const page = await this.knex('pages')
+      .where({ slug, status: 'published' })
+      .first();
     if (!page) {
       throw new NotFoundException('Page not found');
     }
@@ -97,10 +103,13 @@ export class PagesService {
     if (dto.title !== undefined) updates.title = dto.title;
     if (dto.excerpt !== undefined) updates.excerpt = dto.excerpt;
     if (dto.seoTitle !== undefined) updates.seo_title = dto.seoTitle;
-    if (dto.seoDescription !== undefined) updates.seo_description = dto.seoDescription;
+    if (dto.seoDescription !== undefined)
+      updates.seo_description = dto.seoDescription;
     if (dto.status !== undefined) updates.status = dto.status;
 
-    const affected = await this.knex('pages').where({ id: pageId }).update(updates);
+    const affected = await this.knex('pages')
+      .where({ id: pageId })
+      .update(updates);
     if (!affected) {
       throw new NotFoundException('Page not found');
     }
@@ -108,7 +117,9 @@ export class PagesService {
   }
 
   async publishPage(pageId: string) {
-    const affected = await this.knex('pages').where({ id: pageId }).update({ status: 'published' });
+    const affected = await this.knex('pages')
+      .where({ id: pageId })
+      .update({ status: 'published' });
     if (!affected) {
       throw new NotFoundException('Page not found');
     }
@@ -135,10 +146,14 @@ export class PagesService {
   async updateSection(sectionId: string, dto: UpdateSectionDto) {
     const updates: Record<string, unknown> = {};
     if (dto.key !== undefined) updates.key = dto.key;
-    if (dto.displayOrder !== undefined) updates.display_order = dto.displayOrder;
+    if (dto.displayOrder !== undefined)
+      updates.display_order = dto.displayOrder;
     if (dto.status !== undefined) updates.status = dto.status;
-    if (dto.content !== undefined) updates.content = JSON.stringify(dto.content);
-    const affected = await this.knex('page_sections').where({ id: sectionId }).update(updates);
+    if (dto.content !== undefined)
+      updates.content = JSON.stringify(dto.content);
+    const affected = await this.knex('page_sections')
+      .where({ id: sectionId })
+      .update(updates);
     if (!affected) {
       throw new NotFoundException('Section not found');
     }
@@ -146,11 +161,12 @@ export class PagesService {
   }
 
   async deleteSection(sectionId: string) {
-    const deleted = await this.knex('page_sections').where({ id: sectionId }).delete();
+    const deleted = await this.knex('page_sections')
+      .where({ id: sectionId })
+      .delete();
     if (!deleted) {
       throw new NotFoundException('Section not found');
     }
     return { success: true };
   }
 }
-

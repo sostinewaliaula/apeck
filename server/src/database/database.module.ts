@@ -15,4 +15,3 @@ import { KnexService } from './knex.service';
   exports: [KNEX_CONNECTION, KnexService],
 })
 export class DatabaseModule {}
-

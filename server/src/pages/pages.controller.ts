@@ -16,4 +16,3 @@ export class PagesController {
     return this.pagesService.listRoutes();
   }
 }
-

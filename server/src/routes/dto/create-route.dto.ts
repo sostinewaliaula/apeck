@@ -12,4 +12,3 @@ export class CreateRouteDto {
   @IsBoolean()
   isActive = true;
 }
-

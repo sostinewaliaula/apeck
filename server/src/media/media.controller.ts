@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -44,7 +54,10 @@ export class MediaController {
       limits: { fileSize: 5 * 1024 * 1024 },
     }),
   )
-  async upload(@UploadedFile() file: Express.Multer.File, @Body('altText') altText?: string) {
+  async upload(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('altText') altText?: string,
+  ) {
     if (!file) {
       throw new Error('File upload missing');
     }
@@ -62,4 +75,3 @@ export class MediaController {
     return this.mediaService.removeAsset(id);
   }
 }
-

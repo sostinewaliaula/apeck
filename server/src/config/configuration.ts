@@ -20,4 +20,3 @@ export default () => ({
     passwordPepper: process.env.PASSWORD_PEPPER ?? '',
   },
 });
-

@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsObject } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsObject,
+} from 'class-validator';
 
 export class CreateSectionDto {
   @IsString()
@@ -17,4 +23,3 @@ export class CreateSectionDto {
   @IsOptional()
   status?: 'draft' | 'published';
 }
-

@@ -1,14 +1,39 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CalendarIcon, ArrowLeftIcon, ArrowRightIcon, UserIcon, TagIcon, Share2Icon } from 'lucide-react';
+import { CalendarIcon, ArrowLeftIcon, ArrowRightIcon, UserIcon, Share2Icon, Loader2 } from 'lucide-react';
+import { fetchNewsArticle, fetchNewsList, PublicNewsArticle, PublicNewsSummary } from '../lib/news';
+import { resolveMediaUrl } from '../lib/media';
+
+const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+};
+
+function formatNewsDate(value?: string) {
+  if (!value) return 'Latest update';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Latest update';
+  return date.toLocaleDateString(undefined, NEWS_DATE_FORMAT);
+}
+
+function splitBodyContent(body?: string) {
+  if (!body) return [];
+  return body
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
 
 export function NewsDetail() {
-  const { newsId } = useParams<{ newsId: string }>();
-  const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
+  const { slug } = useParams<{ slug: string }>();
   const [currentRelatedSlide, setCurrentRelatedSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
+  const [article, setArticle] = useState<PublicNewsArticle | null>(null);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(true);
+  const [articleError, setArticleError] = useState<string | null>(null);
+  const [relatedArticles, setRelatedArticles] = useState<PublicNewsSummary[]>([]);
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -68,30 +93,47 @@ export function NewsDetail() {
 
   // Intersection Observer for scroll animations
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const newVisible: { [key: string]: boolean } = {};
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('data-animate-id');
-            if (id) newVisible[id] = true;
-            observerRef.current?.unobserve(entry.target);
-          }
-        });
-        setIsVisible((prev) => ({ ...prev, ...newVisible }));
-      },
-      { threshold: 0.1, rootMargin: '50px' }
-    );
-
-    const elements = document.querySelectorAll('[data-animate-id]');
-    elements.forEach((el) => observerRef.current?.observe(el));
-
+    if (!slug) return;
+    let isMounted = true;
+    setIsLoadingArticle(true);
+    fetchNewsArticle(slug)
+      .then((data) => {
+        if (!isMounted) return;
+        setArticle(data);
+        setArticleError(null);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setArticle(null);
+        setArticleError('News article not found.');
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingArticle(false);
+        }
+      });
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+      isMounted = false;
     };
-  }, []);
+  }, [slug]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchNewsList({ limit: 6 })
+      .then((items) => {
+        if (!isMounted) return;
+        const filtered = items.filter((item) => item.slug !== slug).slice(0, 6);
+        setRelatedArticles(filtered);
+      })
+      .catch(() => {
+        if (isMounted) {
+          setRelatedArticles([]);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
 
   // Available images 4-9
   const availableImages = ['/assets/image4.jpg', '/assets/image5.jpg', '/assets/image6.jpg', '/assets/image7.jpg', '/assets/image8.jpg', '/assets/image9.jpg'];
@@ -101,154 +143,42 @@ export function NewsDetail() {
     return availableImages[Math.floor(Math.random() * availableImages.length)];
   };
 
-  // News data with detailed content
-  const newsData: { [key: string]: {
-    id: number;
-    image: string;
-    date: string;
-    title: string;
-    category: string;
-    author: string;
-    readTime: string;
-    content: string[];
-    related: number[];
-  } } = {
-    'annual-leadership-conference-2024': {
-      id: 1,
-      image: getRandomImage(),
-      date: 'December 15, 2024',
-      title: 'Annual Leadership Conference 2024',
-      category: 'Conference',
-      author: 'APECK Communications',
-      readTime: '5 min read',
-      content: [
-        'We are thrilled to announce our flagship Annual Leadership Conference 2024, set to take place from December 18-20, 2024 at the Kenyatta International Convention Centre (KICC) in Nairobi. This three-day gathering promises to be a transformative experience for clergy leaders across Kenya and beyond.',
-        'With over 500 registered participants expected, this year\'s conference will focus on "Empowering Leaders for Kingdom Impact in the 21st Century." The event will feature powerful teaching sessions, practical workshops, and networking opportunities designed to equip and inspire ministry leaders.',
-        'Our keynote speakers include renowned ministry leaders from across Africa, bringing decades of experience in church leadership, community development, and biblical scholarship. Topics will cover essential areas such as:',
-        'The conference will also include special sessions on youth ministry, women in leadership, and practical ministry tools. Evening sessions will feature worship, prayer, and fellowship opportunities.',
-        'Early bird registration is now open, with special rates available for APECK members. Don\'t miss this opportunity to be part of what promises to be a landmark event in our ministry calendar.'
-      ],
-      related: [2, 4, 5]
-    },
-    'new-pastoral-care-certification-program': {
-      id: 2,
-      image: getRandomImage(),
-      date: 'December 10, 2024',
-      title: 'New Pastoral Care Certification Program',
-      category: 'Program',
-      author: 'APECK Training Department',
-      readTime: '4 min read',
-      content: [
-        'APECK is excited to announce the launch of our comprehensive Pastoral Care and Biblical Counseling Certification Program, scheduled to begin in January 2025. This intensive 6-month program is designed to equip clergy with essential skills in pastoral care, crisis counseling, and biblical counseling.',
-        'The program will be delivered through a combination of in-person workshops, online modules, and supervised practical experience. Participants will learn from experienced counselors and pastoral care specialists, gaining both theoretical knowledge and hands-on skills.',
-        'Key components of the certification program include:',
-        'The program is limited to 30 participants per cohort to ensure personalized attention and quality training. Applications are now open, with priority given to APECK members. Successful completion of the program will result in a recognized certification that can enhance ministry effectiveness and credibility.',
-        'This initiative represents APECK\'s commitment to providing practical, applicable training that addresses real-world ministry challenges. We believe that equipped leaders can better serve their congregations and communities.'
-      ],
-      related: [1, 3, 5]
-    },
-    'community-outreach-initiative-success': {
-      id: 3,
-      image: getRandomImage(),
-      date: 'December 5, 2024',
-      title: 'Community Outreach Initiative Success',
-      category: 'Outreach',
-      author: 'APECK Outreach Coordinator',
-      readTime: '6 min read',
-      content: [
-        'We are delighted to report the outstanding success of our latest Community Outreach Initiative, which concluded last month. Through the collective efforts of APECK member churches across 10 counties, we reached over 5,000 families with essential support and services.',
-        'The initiative, launched in September 2024, focused on addressing critical needs in underserved communities. Our network of churches mobilized resources and volunteers to provide food security, medical assistance, educational support, and spiritual care to families facing various challenges.',
-        'Key achievements of the initiative include:',
-        'The success of this initiative demonstrates the power of collaborative ministry. When churches work together under the APECK umbrella, we can achieve far more than any single congregation could accomplish alone.',
-        'We extend our heartfelt gratitude to all participating churches, volunteers, and donors who made this initiative possible. Your commitment to serving communities reflects the heart of the Gospel and demonstrates the positive impact of united ministry efforts.',
-        'Plans are already underway for the next phase of community outreach initiatives in 2025, with expanded reach and additional services planned.'
-      ],
-      related: [2, 6]
-    },
-    'leadership-workshop-series-announced': {
-      id: 4,
-      image: getRandomImage(),
-      date: 'November 28, 2024',
-      title: 'Leadership Workshop Series Announced',
-      category: 'Workshop',
-      author: 'APECK Leadership Development',
-      readTime: '3 min read',
-      content: [
-        'Starting January 2025, APECK will launch a monthly Leadership Workshop Series designed to provide ongoing development opportunities for clergy leaders at all stages of ministry.',
-        'These workshops will cover a wide range of practical leadership topics, delivered by experienced ministry leaders and professional trainers. Each workshop is designed to be immediately applicable to daily ministry contexts.',
-        'The series will include sessions on:',
-        'Each workshop will be held on the last Saturday of the month at the APECK Training Center in Nairobi, with options for online participation for members outside the capital. Registration for individual workshops or the entire series is now open.',
-        'This initiative reflects our commitment to continuous learning and leadership development. We believe that effective leaders are lifelong learners, and these workshops provide accessible opportunities for growth and skill enhancement.'
-      ],
-      related: [1, 5]
-    },
-    'youth-ministry-training-success': {
-      id: 5,
-      image: getRandomImage(),
-      date: 'November 20, 2024',
-      title: 'Youth Ministry Training Success',
-      category: 'Training',
-      author: 'APECK Youth Division',
-      readTime: '5 min read',
-      content: [
-        'We celebrate the successful completion of our Intensive Youth Ministry Training Program, with over 200 youth leaders graduating from the program last month. The graduation ceremony, held at the APECK Training Center in Nairobi, was a joyful celebration of commitment and achievement.',
-        'The 3-month intensive program equipped youth leaders with essential skills in youth ministry, discipleship, event planning, and crisis management. Participants came from churches across Kenya, representing diverse backgrounds and ministry contexts.',
-        'Program highlights included:',
-        'Feedback from graduates has been overwhelmingly positive, with many reporting increased confidence and effectiveness in their youth ministry roles. Several graduates have already implemented new programs and initiatives in their home churches.',
-        'The success of this training program demonstrates the importance of specialized training for youth ministry. Young people face unique challenges in today\'s world, and they need leaders who are equipped, engaged, and committed to their spiritual growth.',
-        'Applications for the next cohort, starting in March 2025, will open in January. We encourage all churches with youth ministry to consider sending their youth leaders for this transformative training experience.'
-      ],
-      related: [1, 4]
-    },
-    'new-regional-chapters-launched': {
-      id: 6,
-      image: getRandomImage(),
-      date: 'November 15, 2024',
-      title: 'New Regional Chapters Launched',
-      category: 'Announcement',
-      author: 'APECK Administration',
-      readTime: '4 min read',
-      content: [
-        'APECK is proud to announce the launch of three new regional chapters, expanding our reach and ability to serve clergy across Kenya. The new chapters are located in Western Kenya, Coast Region, and Rift Valley.',
-        'This expansion represents a significant milestone in APECK\'s growth and our commitment to making ministry support and training accessible to clergy throughout the country. Each regional chapter will have its own leadership team and will organize local events, training sessions, and networking opportunities.',
-        'The regional chapters will provide:',
-        'The launch events for each regional chapter will take place over the coming months, with opportunities for local clergy to join APECK and get involved in chapter activities. These chapters will work in coordination with the national office to ensure consistent service delivery and support for members.',
-        'This expansion brings the total number of APECK regional chapters to 8, covering all major regions of Kenya. We are excited about the opportunities this presents for reaching more clergy and making a greater impact on ministry across the nation.',
-        'Clergy interested in joining or learning more about these new regional chapters are encouraged to contact the APECK office or visit our regional chapter pages on the website.'
-      ],
-      related: [3, 1]
-    }
-  };
-
-  // Get all news for related articles (moved before hooks)
-  const allNews = [
-    { id: 1, slug: 'annual-leadership-conference-2024', image: getRandomImage(), date: 'December 15, 2024', title: 'Annual Leadership Conference 2024', category: 'Conference' },
-    { id: 2, slug: 'new-pastoral-care-certification-program', image: getRandomImage(), date: 'December 10, 2024', title: 'New Pastoral Care Certification Program', category: 'Program' },
-    { id: 3, slug: 'community-outreach-initiative-success', image: getRandomImage(), date: 'December 5, 2024', title: 'Community Outreach Initiative Success', category: 'Outreach' },
-    { id: 4, slug: 'leadership-workshop-series-announced', image: getRandomImage(), date: 'November 28, 2024', title: 'Leadership Workshop Series Announced', category: 'Workshop' },
-    { id: 5, slug: 'youth-ministry-training-success', image: getRandomImage(), date: 'November 20, 2024', title: 'Youth Ministry Training Success', category: 'Training' },
-    { id: 6, slug: 'new-regional-chapters-launched', image: getRandomImage(), date: 'November 15, 2024', title: 'New Regional Chapters Launched', category: 'Announcement' }
-  ];
-
-  // Get current news article
-  const currentNews = newsId ? newsData[newsId] : null;
-  
-  // Get related news (moved after early return check would be better, but we need it for useEffect)
-  const relatedNews = currentNews ? allNews.filter(news => currentNews.related.includes(news.id)) : [];
+  const heroImage = resolveMediaUrl(article?.heroImageUrl) || getRandomImage();
+  const articleParagraphs = splitBodyContent(article?.body);
+  const articleCategory = 'News';
+  const articleDate = formatNewsDate(article?.publishedAt);
+  const articleAuthor = 'APECK Communications';
+  const articleReadingTime = article?.readingTime ?? '';
+  const relatedCards = relatedArticles.map((news) => ({
+    id: news.id,
+    slug: news.slug,
+    image: resolveMediaUrl(news.heroImageUrl) || getRandomImage(),
+    date: formatNewsDate(news.publishedAt),
+    title: news.title,
+    category: 'News',
+  }));
 
   // Auto-scroll related articles carousel
   useEffect(() => {
-    if (!currentNews || relatedNews.length <= 3 || isPaused) return;
+    if (!article || relatedArticles.length <= 3 || isPaused) return;
     
-    const length = relatedNews.length;
+    const length = relatedArticles.length;
     const timer = setInterval(() => {
       setCurrentRelatedSlide((prev) => (prev + 1) % length);
     }, 4000);
     
     return () => clearInterval(timer);
-  }, [currentNews, relatedNews.length, isPaused]);
+  }, [article, relatedArticles.length, isPaused]);
 
-  if (!currentNews) {
+  if (isLoadingArticle) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FBF7F2] dark:bg-gray-900">
+        <Loader2 className="animate-spin text-[#8B2332]" size={48} />
+      </div>
+    );
+  }
+
+  if (articleError || !article) {
     return (
       <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 min-h-screen flex items-center justify-center overflow-hidden">
         <div
@@ -260,7 +190,7 @@ export function NewsDetail() {
         ></div>
         <div className="relative z-10 text-center px-4">
           <h1 className="text-4xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-4">News Article Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">The article you're looking for doesn't exist.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">{articleError ?? "The article you're looking for doesn't exist."}</p>
           <Link to="/news" className="px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2">
             <ArrowLeftIcon size={20} />
             <span>Back to News</span>
@@ -289,7 +219,7 @@ export function NewsDetail() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${currentNews.image})`,
+            backgroundImage: `url(${heroImage})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -374,28 +304,30 @@ export function NewsDetail() {
           {/* Category Badge */}
           <div className="inline-block mb-6">
             <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full text-sm font-bold uppercase tracking-wider border border-white/20">
-              {currentNews.category}
+              {articleCategory}
             </span>
           </div>
 
           {/* Title */}
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight">
-            {currentNews.title}
+            {article.title}
           </h1>
 
           {/* Meta information */}
           <div className="flex flex-wrap items-center gap-6 text-white/90">
             <div className="flex items-center space-x-2">
               <CalendarIcon size={18} />
-              <span>{currentNews.date}</span>
+              <span>{articleDate}</span>
             </div>
             <div className="flex items-center space-x-2">
               <UserIcon size={18} />
-              <span>{currentNews.author}</span>
+              <span>{articleAuthor}</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <span>{currentNews.readTime}</span>
-            </div>
+            {articleReadingTime && (
+              <div className="flex items-center space-x-2">
+                <span>{articleReadingTime}</span>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -575,11 +507,10 @@ export function NewsDetail() {
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="prose prose-lg max-w-none prose-headings:text-[#8B2332] dark:prose-headings:text-[#B85C6D] prose-p:text-gray-700 dark:prose-p:text-gray-300">
-            {currentNews.content.map((paragraph, index) => (
+            {articleParagraphs.map((paragraph, index) => (
               <p 
                 key={index}
                 className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg"
-                data-animate-id={`content-${index}`}
               >
                 {paragraph}
               </p>
@@ -600,7 +531,7 @@ export function NewsDetail() {
       </section>
 
       {/* Related News Section */}
-      {relatedNews.length > 0 && (
+      {relatedCards.length > 0 && (
         <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FDFBF7] via-white to-[#F6F0E8] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
           {/* Enhanced background graphics - multiple layers */}
           <DottedPattern opacity={0.03} size="32px" />
@@ -781,14 +712,14 @@ export function NewsDetail() {
                 ref={carouselRef}
                 className="overflow-hidden"
               >
-                {relatedNews.length > 3 ? (
+                {relatedCards.length > 3 ? (
                   <div 
                     className="flex gap-8 transition-transform duration-700 ease-in-out"
                     style={{
                       transform: `translateX(calc(-${(currentRelatedSlide * 100) / cardsPerView}% - ${currentRelatedSlide * 2}rem))`
                     }}
                   >
-                    {relatedNews.map((news) => (
+                    {relatedCards.map((news) => (
                       <Link
                         key={news.id}
                         to={`/news/${news.slug}`}
@@ -823,7 +754,7 @@ export function NewsDetail() {
                   </div>
                 ) : (
                   <div className="grid md:grid-cols-3 gap-8">
-                    {relatedNews.map((news) => (
+                    {relatedCards.map((news) => (
                       <Link
                         key={news.id}
                         to={`/news/${news.slug}`}
@@ -860,11 +791,11 @@ export function NewsDetail() {
               </div>
 
               {/* Navigation Buttons (only show if more than 3 items) */}
-              {relatedNews.length > 3 && (
+              {relatedCards.length > 3 && (
                 <>
                   <button
                     onClick={() => setCurrentRelatedSlide(prev => 
-                      prev === 0 ? relatedNews.length - 1 : prev - 1
+                      prev === 0 ? relatedCards.length - 1 : prev - 1
                     )}
                     className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
                     aria-label="Previous article"
@@ -873,7 +804,7 @@ export function NewsDetail() {
                   </button>
                   <button
                     onClick={() => setCurrentRelatedSlide(prev => 
-                      (prev + 1) % relatedNews.length
+                      (prev + 1) % relatedCards.length
                     )}
                     className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-20"
                     aria-label="Next article"
@@ -884,9 +815,9 @@ export function NewsDetail() {
               )}
 
               {/* Carousel Indicators */}
-              {relatedNews.length > 3 && (
+              {relatedCards.length > 3 && (
                 <div className="flex justify-center items-center space-x-2 mt-8">
-                  {relatedNews.map((_, index) => (
+                  {relatedCards.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentRelatedSlide(index)}

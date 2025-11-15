@@ -21,4 +21,3 @@ export class CreatePageDto {
   @IsOptional()
   seoDescription?: string;
 }
-

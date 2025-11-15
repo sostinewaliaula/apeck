@@ -43,7 +43,7 @@ function AppContent() {
           <Route path="/programs/:programId" element={<ProgramDetail />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/news" element={<News />} />
-          <Route path="/news/:newsId" element={<NewsDetail />} />
+          <Route path="/news/:slug" element={<NewsDetail />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/*" element={<AdminApp />} />

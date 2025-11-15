@@ -13,4 +13,3 @@ export class UpdateRouteDto {
   @IsOptional()
   isActive?: boolean;
 }
-

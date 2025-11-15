@@ -6,6 +6,8 @@ import { AdminRoutesPage } from './pages/Routes';
 import { AdminPagesList } from './pages/PagesList';
 import { AdminPageDetail } from './pages/PageDetail';
 import { AdminMediaLibrary } from './pages/MediaLibrary';
+import { AdminNewsList } from './pages/NewsList';
+import { AdminNewsDetail } from './pages/NewsDetail';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -56,6 +58,22 @@ function AdminRouter() {
         element={
           <ProtectedRoute>
             <AdminMediaLibrary />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/news"
+        element={
+          <ProtectedRoute>
+            <AdminNewsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/news/:newsId"
+        element={
+          <ProtectedRoute>
+            <AdminNewsDetail />
           </ProtectedRoute>
         }
       />

@@ -25,4 +25,3 @@ export class UpdatePageDto {
   @IsOptional()
   status?: 'draft' | 'published';
 }
-

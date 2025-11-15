@@ -7,7 +7,9 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api', { exclude: [] });
@@ -16,7 +18,9 @@ async function bootstrap() {
   });
   const defaultOrigins = ['http://localhost:5173', 'http://localhost:4173'];
   const appUrl = configService.get<string>('app.url');
-  const corsOrigins = appUrl ? Array.from(new Set([...defaultOrigins, appUrl])) : defaultOrigins;
+  const corsOrigins = appUrl
+    ? Array.from(new Set([...defaultOrigins, appUrl]))
+    : defaultOrigins;
   app.enableCors({
     origin: corsOrigins,
     credentials: true,
@@ -35,7 +39,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error('Failed to bootstrap server', err);
   process.exit(1);
 });

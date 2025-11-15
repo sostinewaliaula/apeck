@@ -16,7 +16,10 @@ export class UsersService {
     @Inject(KNEX_CONNECTION) private readonly knex: Knex,
     private readonly configService: ConfigService,
   ) {
-    this.passwordPepper = this.configService.get<string>('security.passwordPepper', '');
+    this.passwordPepper = this.configService.get<string>(
+      'security.passwordPepper',
+      '',
+    );
   }
 
   private hashPassword(plain: string): Promise<string> {
@@ -43,7 +46,9 @@ export class UsersService {
   }
 
   async ensureAdminUser(): Promise<void> {
-    const adminCountResult = await this.knex('users').where({ role: 'admin' }).first();
+    const adminCountResult = await this.knex('users')
+      .where({ role: 'admin' })
+      .first();
     if (!adminCountResult) {
       this.logger.warn(
         'No admin user detected. Please create one via POST /users or seed script before enabling admin portal.',
@@ -52,14 +57,19 @@ export class UsersService {
   }
 
   findByEmail(email: string): Promise<UserEntity | undefined> {
-    return this.knex<UserEntity>('users').where({ email: email.toLowerCase() }).first();
+    return this.knex<UserEntity>('users')
+      .where({ email: email.toLowerCase() })
+      .first();
   }
 
   findById(id: string): Promise<UserEntity | undefined> {
     return this.knex<UserEntity>('users').where({ id }).first();
   }
 
-  async validateCredentials(email: string, password: string): Promise<UserEntity | null> {
+  async validateCredentials(
+    email: string,
+    password: string,
+  ): Promise<UserEntity | null> {
     const user = await this.findByEmail(email);
     if (!user || !user.is_active) {
       return null;
@@ -69,7 +79,8 @@ export class UsersService {
   }
 
   async recordLogin(userId: string): Promise<void> {
-    await this.knex('users').where({ id: userId }).update({ last_login_at: this.knex.fn.now() });
+    await this.knex('users')
+      .where({ id: userId })
+      .update({ last_login_at: this.knex.fn.now() });
   }
 }
-

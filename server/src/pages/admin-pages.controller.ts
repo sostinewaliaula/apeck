@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CreatePageDto } from './dto/create-page.dto';
@@ -43,7 +53,10 @@ export class AdminPagesController {
   }
 
   @Patch('sections/:sectionId')
-  updateSection(@Param('sectionId') sectionId: string, @Body() dto: UpdateSectionDto) {
+  updateSection(
+    @Param('sectionId') sectionId: string,
+    @Body() dto: UpdateSectionDto,
+  ) {
     return this.pagesService.updateSection(sectionId, dto);
   }
 
@@ -52,4 +65,3 @@ export class AdminPagesController {
     return this.pagesService.deleteSection(sectionId);
   }
 }
-
