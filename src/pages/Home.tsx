@@ -1,6 +1,12 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, ChevronLeftIcon, ChevronRightIcon, PlayIcon, QuoteIcon, StarIcon, AwardIcon, TrendingUpIcon } from 'lucide-react';
+const STAT_ICON_MAP: Record<string, typeof UsersIcon> = {
+  users: UsersIcon,
+  trend: TrendingUpIcon,
+  book: BookOpenIcon,
+  award: AwardIcon,
+};
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 
@@ -18,6 +24,39 @@ type HeroSlide = {
   subtitle?: string;
   description?: string;
   buttons?: HeroButton[];
+};
+
+type WhoWeAreSectionContent = {
+  badgeLabel?: string;
+  highlightWord?: string;
+  title?: string;
+  intro?: string;
+  mission?: string;
+  cta?: { label?: string; href?: string };
+  stats?: Array<{ value?: string; label?: string }>;
+  image?: string;
+  imageAlt?: string;
+  floatingBadgeTitle?: string;
+  floatingBadgeSubtitle?: string;
+};
+
+type ImpactStatInput = {
+  value?: string;
+  label?: string;
+  suffix?: string;
+  icon?: string;
+};
+
+type ImpactStat = {
+  value: string;
+  label: string;
+  suffix?: string;
+  baseNum?: number;
+  icon: typeof UsersIcon;
+};
+
+type ImpactStatsSectionContent = {
+  stats?: ImpactStatInput[];
 };
 
 type HeroSectionContent = {
@@ -102,6 +141,38 @@ export function Home() {
     description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth',
     buttons: defaultHeroButtons.map((button) => ({ ...button })),
   }];
+
+  const defaultWhoWeAre = {
+    badgeLabel: 'WELCOME TO APECK',
+    highlightWord: 'APECK',
+    title: 'Who We Are',
+    intro:
+      'is the premier association uniting Pentecostal and Evangelical clergy across Kenya. We are dedicated to empowering spiritual leaders through comprehensive training, mentorship, and resources that enable them to fulfill their calling with excellence.',
+    mission:
+      'Our mission is to strengthen the body of Christ by equipping clergy with the tools, knowledge, and support they need to lead transformative ministries that impact communities and advance the Kingdom of God.',
+    cta: {
+      label: 'Read Our Full Story',
+      href: '/about',
+    },
+    stats: [
+      { value: '15+', label: 'Years Experience' },
+      { value: '1,500+', label: 'Active Members' },
+    ],
+    image: '/assets/image1.jpg',
+    imageAlt: 'Clergy gathering',
+    floatingBadgeTitle: 'Since 2009',
+    floatingBadgeSubtitle: 'Serving Kenya',
+  };
+
+  const defaultImpactStats = useMemo<ImpactStat[]>(
+    () => [
+      { value: '1,500+', label: 'Members', suffix: '+', baseNum: 1500, icon: UsersIcon },
+      { value: '47', label: 'Counties Reached', suffix: '', baseNum: 47, icon: TrendingUpIcon },
+      { value: '250+', label: 'Training Programs', suffix: '+', baseNum: 250, icon: BookOpenIcon },
+      { value: '15', label: 'Years of Impact', suffix: '', baseNum: 15, icon: AwardIcon },
+    ],
+    [],
+  );
 
   const defaultTestimonials = [
     {
@@ -188,6 +259,60 @@ export function Home() {
     return defaultHeroButtons;
   };
 
+  const whoWeAreSection = sectionContent['who_we_are'] as WhoWeAreSectionContent | undefined;
+  const whoWeAreStats =
+    whoWeAreSection?.stats
+      ?.filter((stat) => stat?.value && stat?.label)
+      .map((stat) => ({ value: stat.value as string, label: stat.label as string })) ?? [];
+  const resolvedWhoWeAreStats = whoWeAreStats.length > 0 ? whoWeAreStats : defaultWhoWeAre.stats;
+  const whoWeAreImage = whoWeAreSection?.image
+    ? resolveMediaUrl(whoWeAreSection.image)
+    : defaultWhoWeAre.image;
+  const whoWeAreCta =
+    whoWeAreSection?.cta?.label
+      ? {
+          label: whoWeAreSection.cta.label,
+          href: whoWeAreSection.cta.href || defaultWhoWeAre.cta.href,
+        }
+      : defaultWhoWeAre.cta;
+  const whoWeAreContent = {
+    badgeLabel: whoWeAreSection?.badgeLabel?.trim() || defaultWhoWeAre.badgeLabel,
+    highlightWord: whoWeAreSection?.highlightWord?.trim() || defaultWhoWeAre.highlightWord,
+    title: whoWeAreSection?.title?.trim() || defaultWhoWeAre.title,
+    intro: whoWeAreSection?.intro?.trim() || defaultWhoWeAre.intro,
+    mission: whoWeAreSection?.mission?.trim() || defaultWhoWeAre.mission,
+    stats: resolvedWhoWeAreStats,
+    image: whoWeAreImage,
+    imageAlt: whoWeAreSection?.imageAlt?.trim() || defaultWhoWeAre.imageAlt,
+    floatingBadgeTitle:
+      whoWeAreSection?.floatingBadgeTitle?.trim() || defaultWhoWeAre.floatingBadgeTitle,
+    floatingBadgeSubtitle:
+      whoWeAreSection?.floatingBadgeSubtitle?.trim() || defaultWhoWeAre.floatingBadgeSubtitle,
+    cta: whoWeAreCta,
+  };
+
+  const impactStatsSection = sectionContent['impact_stats'] as ImpactStatsSectionContent | undefined;
+
+  const resolvedImpactStats = useMemo<ImpactStat[]>(() => {
+    const fromCms =
+      impactStatsSection?.stats
+        ?.filter((stat) => stat?.value && stat?.label)
+        .map((stat) => {
+          const iconKey = (stat?.icon ?? '').toLowerCase();
+          const icon = STAT_ICON_MAP[iconKey] ?? UsersIcon;
+          const numeric = Number((stat?.value ?? '').replace(/[^0-9.]/g, ''));
+          return {
+            value: stat?.value ?? '',
+            label: stat?.label ?? '',
+            suffix: stat?.suffix ?? '',
+            baseNum: Number.isFinite(numeric) ? Math.round(numeric) : undefined,
+            icon,
+          };
+        }) ?? [];
+
+    return fromCms.length > 0 ? fromCms : defaultImpactStats;
+  }, [impactStatsSection, defaultImpactStats]);
+
   const heroIconMap: Record<string, JSX.Element> = {
     arrow: <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />,
     heart: <HeartIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />,
@@ -243,6 +368,9 @@ export function Home() {
       </button>
     );
   };
+
+  const isInternalLink = (href?: string) =>
+    !!href && (href.startsWith('/') || href.startsWith('#'));
   const ctaContent = sectionContent['cta'] as CtaSectionContent | undefined;
   const finalCtaTitle = ctaContent?.title ?? 'Ready to Make an Impact?';
   const finalCtaDescription =
@@ -389,15 +517,9 @@ export function Home() {
               // Trigger counter animation for stats
               if (id.startsWith('stat-')) {
                 const index = parseInt(id.split('-')[1]);
-                const statValues = [
-                  { num: 1500, suffix: '+' },
-                  { num: 47, suffix: '' },
-                  { num: 250, suffix: '+' },
-                  { num: 15, suffix: '' }
-                ];
-                
-                if (statValues[index] && !countedValues[index]) {
-                  animateCounter(index, statValues[index].num);
+                const target = resolvedImpactStats[index]?.baseNum;
+                if (typeof target === 'number' && countedValues[index] === undefined) {
+                  animateCounter(index, target);
                 }
               }
               
@@ -423,7 +545,7 @@ export function Home() {
         observerRef.current.disconnect();
       }
     };
-  }, [isVisible, countedValues]); // Keep dependencies but optimize inside
+  }, [isVisible, countedValues, resolvedImpactStats]); // Keep dependencies but optimize inside
 
   const nextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % heroSlides.length);
@@ -696,51 +818,59 @@ export function Home() {
                 {/* Modern badge */}
                 <div className="inline-block">
                   <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg">
-                    WELCOME TO APECK
+                    {whoWeAreContent.badgeLabel}
                   </span>
                 </div>
                 
                 {/* Main heading with gradient effect */}
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] leading-tight">
-                  Who We Are
+                  {whoWeAreContent.title}
                 </h2>
                 
                 {/* Content paragraphs with better styling */}
                 <div className="space-y-6">
                   <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed">
-                    <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">APECK</span> is the premier association uniting Pentecostal and
-                    Evangelical clergy across Kenya. We are dedicated to empowering
-                    spiritual leaders through comprehensive training, mentorship,
-                    and resources that enable them to fulfill their calling with
-                    excellence.
+                    {whoWeAreContent.highlightWord && (
+                      <span className="font-semibold text-[#8B2332] dark:text-[#B85C6D]">
+                        {whoWeAreContent.highlightWord}{' '}
+                      </span>
+                    )}
+                    {whoWeAreContent.intro}
                   </p>
                   <p className="text-gray-700 dark:text-gray-300 text-sm md:text-base leading-relaxed">
-                    Our mission is to strengthen the body of Christ by equipping
-                    clergy with the tools, knowledge, and support they need to lead
-                    transformative ministries that impact communities and advance
-                    the Kingdom of God.
+                    {whoWeAreContent.mission}
                   </p>
                 </div>
 
                 {/* Enhanced CTA button */}
-                <Link 
-                  to="/about" 
-                  className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-gray-800 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] font-semibold rounded-full hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
-                >
-                  <span>Read Our Full Story</span>
-                  <ArrowRightIcon size={18} className="transform group-hover:translate-x-1 transition-transform" />
-                </Link>
+                {isInternalLink(whoWeAreContent.cta.href) ? (
+                  <Link 
+                    to={whoWeAreContent.cta.href ?? '#'} 
+                    className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-gray-800 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] font-semibold rounded-full hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
+                  >
+                    <span>{whoWeAreContent.cta.label}</span>
+                    <ArrowRightIcon size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                ) : (
+                  <a 
+                    href={whoWeAreContent.cta.href ?? '#'} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="group inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-gray-800 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] font-semibold rounded-full hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 transform text-sm"
+                  >
+                    <span>{whoWeAreContent.cta.label}</span>
+                    <ArrowRightIcon size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                  </a>
+                )}
 
                 {/* Decorative stats or highlights */}
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <div>
-                    <div className="text-2xl md:text-3xl font-bold text-[#8B2332] dark:text-[#B85C6D]">15+</div>
-                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl md:text-3xl font-bold text-[#7A7A3F] dark:text-[#9B9B5F]">1,500+</div>
-                    <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Active Members</div>
-                  </div>
+                  {whoWeAreContent.stats.map((stat, index) => (
+                    <div key={`${stat.label}-${index}`}>
+                      <div className="text-2xl md:text-3xl font-bold text-[#8B2332] dark:text-[#B85C6D]">{stat.value}</div>
+                      <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -794,8 +924,8 @@ export function Home() {
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-gray-800 p-1 transition-colors duration-300">
                     <div className="relative overflow-hidden rounded-3xl">
                       <img 
-                        src="/assets/image1.jpg" 
-                        alt="Clergy gathering" 
+                        src={whoWeAreContent.image} 
+                        alt={whoWeAreContent.imageAlt} 
                         loading="lazy"
                         className="w-full h-auto transform group-hover:scale-110 transition-transform duration-700" 
                         style={{ willChange: 'transform' }}
@@ -820,10 +950,20 @@ export function Home() {
                   <div className="absolute bottom-4 left-4 w-20 h-20 border-b-4 border-l-4 border-white/50 rounded-bl-3xl shadow-lg backdrop-blur-sm"></div>
 
                   {/* Floating badge element */}
-                  <div className="absolute -bottom-4 right-8 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-xl border-2 border-[#8B2332]/20 dark:border-[#B85C6D]/20 transform rotate-3 hover:rotate-0 transition-all duration-300">
-                    <div className="text-sm font-bold text-[#8B2332] dark:text-[#B85C6D]">Since 2009</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">Serving Kenya</div>
-                  </div>
+                  {(whoWeAreContent.floatingBadgeTitle || whoWeAreContent.floatingBadgeSubtitle) && (
+                    <div className="absolute -bottom-4 right-8 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-xl border-2 border-[#8B2332]/20 dark:border-[#B85C6D]/20 transform rotate-3 hover:rotate-0 transition-all duration-300">
+                      {whoWeAreContent.floatingBadgeTitle && (
+                        <div className="text-sm font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                          {whoWeAreContent.floatingBadgeTitle}
+                        </div>
+                      )}
+                      {whoWeAreContent.floatingBadgeSubtitle && (
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          {whoWeAreContent.floatingBadgeSubtitle}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -885,15 +1025,12 @@ export function Home() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
-            {[
-              { value: '1,500+', label: 'Members', icon: UsersIcon, suffix: '+', baseNum: 1500 },
-              { value: '47', label: 'Counties Reached', icon: TrendingUpIcon, suffix: '', baseNum: 47 },
-              { value: '250+', label: 'Training Programs', icon: BookOpenIcon, suffix: '+', baseNum: 250 },
-              { value: '15', label: 'Years of Impact', icon: AwardIcon, suffix: '', baseNum: 15 }
-            ].map((stat, index) => {
-              const displayedValue = countedValues[index] !== undefined 
-                ? `${countedValues[index].toLocaleString()}${stat.suffix}` 
-                : '0';
+            {resolvedImpactStats.map((stat, index) => {
+              const shouldAnimate = typeof stat.baseNum === 'number';
+              const displayedValue =
+                shouldAnimate && countedValues[index] !== undefined
+                  ? `${countedValues[index].toLocaleString()}${stat.suffix ?? ''}`
+                  : stat.value;
               const isAnimated = isVisible[`stat-${index}`];
               const delay = index * 150; // Staggered animation delay
               
@@ -940,13 +1077,18 @@ export function Home() {
                         }`}
                         style={{ transitionDelay: `${delay + 300}ms` }}
                       >
-                        <stat.icon 
+                        {(() => {
+                          const Icon = stat.icon;
+                          return (
+                            <Icon 
                           size={44} 
                           className={`text-[#8B2332] dark:text-[#B85C6D] md:w-12 md:h-12 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 ${
                             isAnimated ? 'scale-100 rotate-0' : 'scale-0 -rotate-180'
                           }`}
                           style={{ transitionDelay: `${delay + 400}ms` }}
                         />
+                          );
+                        })()}
                       </div>
                       
                       {/* Decorative dots around icon with entrance animation */}

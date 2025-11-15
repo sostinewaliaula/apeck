@@ -101,6 +101,71 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  {
+    key: 'who_we_are',
+    title: 'Who We Are',
+    description: 'Homepage about section content.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'WELCOME TO APECK' },
+      { type: 'text', label: 'Highlight Word', name: 'highlightWord', placeholder: 'APECK' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Who We Are' },
+      {
+        type: 'textarea',
+        label: 'Intro Paragraph',
+        name: 'intro',
+        placeholder: 'is the premier association uniting Pentecostal and Evangelical clergy...',
+      },
+      {
+        type: 'textarea',
+        label: 'Mission Paragraph',
+        name: 'mission',
+        placeholder: 'Our mission is to strengthen the body of Christ...',
+      },
+      { type: 'image', label: 'Primary Image', name: 'image' },
+      { type: 'text', label: 'Image Alt Text', name: 'imageAlt', placeholder: 'Clergy gathering' },
+      {
+        type: 'link',
+        label: 'CTA Button',
+        name: 'cta',
+        fields: [
+          { name: 'label', label: 'Button Label' },
+          { name: 'href', label: 'Link URL' },
+        ],
+      },
+      {
+        type: 'repeatable',
+        label: 'Stats',
+        name: 'stats',
+        maxItems: 4,
+        itemFields: [
+          { type: 'text', label: 'Value', name: 'value', placeholder: '15+' },
+          { type: 'text', label: 'Label', name: 'label', placeholder: 'Years Experience' },
+        ],
+      },
+      { type: 'text', label: 'Floating Badge Title', name: 'floatingBadgeTitle', placeholder: 'Since 2009' },
+      { type: 'text', label: 'Floating Badge Subtitle', name: 'floatingBadgeSubtitle', placeholder: 'Serving Kenya' },
+    ],
+  },
+  {
+    key: 'impact_stats',
+    title: 'Impact Stats',
+    description: 'Homepage stats row (members, counties, programs, etc.).',
+    fields: [
+      {
+        type: 'repeatable',
+        label: 'Stats',
+        name: 'stats',
+        minItems: 1,
+        maxItems: 6,
+        itemFields: [
+          { type: 'text', label: 'Value', name: 'value', placeholder: '1,500+' },
+          { type: 'text', label: 'Label', name: 'label', placeholder: 'Members' },
+          { type: 'text', label: 'Suffix', name: 'suffix', placeholder: '+' },
+          { type: 'text', label: 'Icon (users | trend | book | award)', name: 'icon', placeholder: 'users' },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getSectionSchema(key: string): SectionSchema | undefined {
