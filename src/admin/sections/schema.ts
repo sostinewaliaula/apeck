@@ -53,6 +53,18 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
           { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Short paragraph for slide.' },
           { type: 'image', label: 'Desktop Image', name: 'image' },
           { type: 'image', label: 'Mobile Image', name: 'imageMobile' },
+          {
+            type: 'repeatable',
+            label: 'Buttons',
+            name: 'buttons',
+            maxItems: 4,
+            itemFields: [
+              { type: 'text', label: 'Label', name: 'label', placeholder: 'Join APECK' },
+              { type: 'text', label: 'Link / URL', name: 'href', placeholder: '/membership' },
+              { type: 'text', label: 'Style (primary | secondary | outline | ghost)', name: 'style', placeholder: 'primary' },
+              { type: 'text', label: 'Icon (arrow | heart | play)', name: 'icon', placeholder: 'arrow' },
+            ],
+          },
         ],
       },
     ],

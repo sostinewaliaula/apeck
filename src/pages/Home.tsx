@@ -4,12 +4,20 @@ import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, Chevr
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 
+type HeroButton = {
+  label: string;
+  href?: string;
+  style?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  icon?: 'arrow' | 'heart' | 'play';
+};
+
 type HeroSlide = {
   image: string;
   imageMobile?: string;
   title: string;
   subtitle?: string;
   description?: string;
+  buttons?: HeroButton[];
 };
 
 type HeroSectionContent = {
@@ -57,31 +65,42 @@ export function Home() {
     };
   }, []);
 
+  const defaultHeroButtons: HeroButton[] = [
+    { label: 'Join APECK', href: '/membership', style: 'primary', icon: 'arrow' },
+    { label: 'Learn More', href: '/about', style: 'secondary' },
+    { label: 'Partner With Us', href: '#donate', style: 'outline', icon: 'heart' },
+    { label: 'Watch Video', href: '#hero-video', style: 'ghost', icon: 'play' },
+  ];
+
   // Optimized image sizes - use smaller widths and add quality parameter
-  const defaultHeroSlides = [{
+  const defaultHeroSlides: HeroSlide[] = [{
     image: '/assets/image9.jpg',
     imageMobile: '/assets/image9.jpg',
     title: 'Empowering the Clergy',
     subtitle: 'for Kingdom Impact',
-    description: 'Uniting Pentecostal and Evangelical clergy across Kenya through training, leadership development, and spiritual empowerment'
+    description: 'Uniting Pentecostal and Evangelical clergy across Kenya through training, leadership development, and spiritual empowerment',
+    buttons: defaultHeroButtons.map((button) => ({ ...button })),
   }, {
     image: '/assets/image4.jpg',
     imageMobile: '/assets/image4.jpg',
     title: 'Comprehensive Training',
     subtitle: 'Programs',
-    description: 'Over 250+ training programs designed to equip clergy for effective ministry and leadership excellence'
+    description: 'Over 250+ training programs designed to equip clergy for effective ministry and leadership excellence',
+    buttons: defaultHeroButtons.map((button) => ({ ...button })),
   }, {
     image: '/assets/image5.jpg',
     imageMobile: '/assets/image5.jpg',
     title: 'Community Impact',
     subtitle: 'Across Kenya',
-    description: 'Reaching all 47 counties with transformative ministry initiatives and humanitarian outreach programs'
+    description: 'Reaching all 47 counties with transformative ministry initiatives and humanitarian outreach programs',
+    buttons: defaultHeroButtons.map((button) => ({ ...button })),
   }, {
     image: '/assets/image7.jpg',
     imageMobile: '/assets/image7.jpg',
     title: 'Join 1,500+ Clergy',
     subtitle: 'Members',
-    description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth'
+    description: 'Be part of a vibrant community of passionate ministry leaders committed to excellence and Kingdom growth',
+    buttons: defaultHeroButtons.map((button) => ({ ...button })),
   }];
 
   const defaultTestimonials = [
@@ -145,12 +164,85 @@ export function Home() {
     ...slide,
     image: resolveMediaUrl(slide.image) || slide.image,
     imageMobile: slide.imageMobile ? resolveMediaUrl(slide.imageMobile) : undefined,
+    buttons: Array.isArray(slide.buttons)
+      ? slide.buttons
+          .filter((button) => Boolean(button?.label))
+          .map((button) => ({
+            label: button.label ?? '',
+            href: button.href ?? undefined,
+            style: button.style ?? undefined,
+            icon: button.icon ?? undefined,
+          }))
+      : undefined,
   });
 
   const heroSection = sectionContent['hero_slides'] as HeroSectionContent | undefined;
   const heroSlides: HeroSlide[] = heroSection?.slides?.length
     ? (heroSection.slides as HeroSlide[]).map(normalizeSlide)
     : defaultHeroSlides.map(normalizeSlide);
+
+  const getHeroButtons = (slide?: HeroSlide) => {
+    if (slide?.buttons && slide.buttons.length > 0) {
+      return slide.buttons;
+    }
+    return defaultHeroButtons;
+  };
+
+  const heroIconMap: Record<string, JSX.Element> = {
+    arrow: <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />,
+    heart: <HeartIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />,
+    play: <PlayIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />,
+  };
+
+  const buttonStyleClasses: Record<string, string> = {
+    primary:
+      'group px-5 md:px-7 py-2.5 md:py-3 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-xs md:text-sm',
+    secondary:
+      'group px-5 md:px-7 py-2.5 md:py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform shadow-xl hover:shadow-2xl text-xs md:text-sm',
+    outline:
+      'group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#8B2332] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform text-xs md:text-sm',
+    ghost:
+      'group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white/70 text-white rounded-full font-semibold hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform backdrop-blur-sm text-xs md:text-sm shadow-lg',
+  };
+
+  const renderHeroButton = (button: HeroButton, index: number) => {
+    const styleKey = button.style ?? 'primary';
+    const classes = buttonStyleClasses[styleKey] ?? buttonStyleClasses.primary;
+    const iconElement = button.icon ? heroIconMap[button.icon] : null;
+    const content = (
+      <>
+        {iconElement}
+        <span>{button.label}</span>
+      </>
+    );
+
+    if (button.href) {
+      const isInternal = button.href.startsWith('/') || button.href.startsWith('#');
+      if (isInternal) {
+        return (
+          <Link key={`${button.label}-${index}`} to={button.href} className={classes}>
+            {content}
+          </Link>
+        );
+      }
+      return (
+        <a
+          key={`${button.label}-${index}`}
+          href={button.href}
+          className={classes}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {content}
+        </a>
+      );
+    }
+    return (
+      <button key={`${button.label}-${index}`} className={classes} type="button">
+        {content}
+      </button>
+    );
+  };
   const ctaContent = sectionContent['cta'] as CtaSectionContent | undefined;
   const finalCtaTitle = ctaContent?.title ?? 'Ready to Make an Impact?';
   const finalCtaDescription =
@@ -500,32 +592,7 @@ export function Home() {
             className={`flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center flex-wrap transform transition-all duration-700 delay-300 ${isVisible['cta'] ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
             data-animate-id="cta"
           >
-            <Link 
-              to="/membership" 
-              className="group px-5 md:px-7 py-2.5 md:py-3 bg-white dark:bg-gray-800 text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all inline-flex items-center justify-center space-x-2 shadow-xl hover:shadow-2xl hover:scale-105 transform text-xs md:text-sm"
-            >
-              <span>Join APECK</span>
-              <ArrowRightIcon size={16} className="md:w-4 md:h-4 transform group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link 
-              to="/about" 
-              className="px-5 md:px-7 py-2.5 md:py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform shadow-xl hover:shadow-2xl text-xs md:text-sm"
-            >
-              <span>Learn More</span>
-            </Link>
-            <a 
-              href="#donate" 
-              className="group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-[#8B2332] transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform text-xs md:text-sm"
-            >
-              <HeartIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />
-              <span className="hidden sm:inline">Partner With Us</span>
-              <span className="sm:hidden">Partner</span>
-            </a>
-            <button className="group px-5 md:px-7 py-2.5 md:py-3 border-2 border-white/70 text-white rounded-full font-semibold hover:bg-white/10 hover:border-white transition-all inline-flex items-center justify-center space-x-2 hover:scale-105 transform backdrop-blur-sm text-xs md:text-sm shadow-lg">
-              <PlayIcon size={16} className="md:w-4 md:h-4 transform group-hover:scale-110 transition-transform" />
-              <span className="hidden sm:inline">Watch Video</span>
-              <span className="sm:hidden">Video</span>
-            </button>
+            {getHeroButtons(heroSlides[currentSlide]).map((button, index) => renderHeroButton(button, index))}
           </div>
         </div>
 
