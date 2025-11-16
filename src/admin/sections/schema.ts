@@ -205,7 +205,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   },
   {
     key: 'programs_hero',
-    title: 'Programs Hero',
+    title: 'Programs - Hero',
     description: 'Top hero banner for the programs page.',
     fields: [
       { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'OUR PROGRAMS' },
@@ -221,7 +221,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   },
   {
     key: 'programs_intro',
-    title: 'Programs Introduction',
+    title: 'Programs - Introduction',
     description: 'Executive summary and highlight bullets for the programs page.',
     fields: [
       { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'INTRODUCTION' },
@@ -263,7 +263,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   },
   {
     key: 'programs_cbr',
-    title: 'Community-Based Rehabilitation',
+    title: 'Programs - Community-Based Rehabilitation',
     description: 'CBR spotlight section content.',
     fields: [
       { type: 'text', label: 'Title', name: 'title', placeholder: 'Community-Based Rehabilitation (CBR)' },
@@ -310,7 +310,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   },
   {
     key: 'programs_aftercare',
-    title: 'Critical Care & Aftercare',
+    title: 'Programs - Critical Care & Aftercare',
     description: 'Registration, rehabilitation, and aftercare pillars.',
     fields: [
       { type: 'text', label: 'Title', name: 'title', placeholder: 'Critical Care & Aftercare Pathways' },
@@ -340,7 +340,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   },
   {
     key: 'programs_initiatives',
-    title: 'Complementary Initiatives',
+    title: 'Programs - Complementary Initiatives',
     description: 'Additional program cards such as CPM training, youth empowerment, housing, etc.',
     fields: [
       { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'EXPANDING IMPACT' },
@@ -367,6 +367,57 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
             name: 'bullets',
             itemFields: [{ type: 'text', label: 'Bullet Text', name: 'text' }],
           },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'programs_features',
+    title: 'Programs - Features',
+    description: 'Feature bullets for why the programs stand out.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'PROGRAM FEATURES' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Program Features' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'What makes our programs exceptional' },
+      {
+        type: 'repeatable',
+        label: 'Features',
+        name: 'items',
+        minItems: 1,
+        maxItems: 8,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title', placeholder: 'Expert Instructors' },
+          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Learn from experienced leaders' },
+          { type: 'text', label: 'Icon (graduation|book|award|users|trend|sparkles|heart|home)', name: 'icon', placeholder: 'graduation' },
+          { type: 'text', label: 'Color (hex)', name: 'color', placeholder: '#8B2332' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'programs_cta',
+    title: 'Programs - CTA',
+    description: 'Final call-to-action section content.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'GET STARTED' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Ready to Grow in Your Ministry?' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Invite users to engage' },
+      {
+        type: 'link',
+        label: 'Primary Button',
+        name: 'primary',
+        fields: [
+          { name: 'label', label: 'Label' },
+          { name: 'href', label: 'Link URL' },
+        ],
+      },
+      {
+        type: 'link',
+        label: 'Secondary Button',
+        name: 'secondary',
+        fields: [
+          { name: 'label', label: 'Label' },
+          { name: 'href', label: 'Link URL' },
         ],
       },
     ],

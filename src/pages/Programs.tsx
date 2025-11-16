@@ -68,6 +68,26 @@ type ProgramsInitiativesContent = {
   }>;
 };
 
+type ProgramsFeaturesContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  items?: Array<{
+    title?: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+  }>;
+};
+
+type ProgramsCtaContent = {
+  badgeLabel?: string;
+  title?: string;
+  description?: string;
+  primary?: { label?: string; href?: string };
+  secondary?: { label?: string; href?: string };
+};
+
 const ICON_MAP = {
   book: BookOpenIcon,
   users: UsersIcon,
@@ -212,6 +232,26 @@ const defaultProgramsInitiatives = {
   ],
 };
 
+const defaultProgramsFeatures: Required<ProgramsFeaturesContent> = {
+  badgeLabel: 'PROGRAM FEATURES',
+  title: 'Program Features',
+  description: 'What makes our programs exceptional',
+  items: [
+    { title: 'Expert Instructors', description: 'Learn from experienced ministry leaders and theologians', icon: 'graduation', color: '#8B2332' },
+    { title: 'Practical Training', description: 'Hands-on experience and real-world ministry applications', icon: 'book', color: '#7A7A3F' },
+    { title: 'Certification', description: 'Receive recognized certificates upon program completion', icon: 'award', color: '#8B2332' },
+    { title: 'Community', description: 'Connect with fellow clergy and build lasting relationships', icon: 'users', color: '#7A7A3F' },
+  ]
+};
+
+const defaultProgramsCta: Required<ProgramsCtaContent> = {
+  badgeLabel: 'GET STARTED',
+  title: 'Ready to Grow in Your Ministry?',
+  description: 'Enroll in one of our programs and take your ministry to the next level',
+  primary: { label: 'Enroll Now', href: '/membership' },
+  secondary: { label: 'Contact Us', href: '/contact' }
+};
+
 export function Programs() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
@@ -222,13 +262,20 @@ export function Programs() {
     fetchPageContent('programs')
       .then((page) => {
         if (!isMounted) return;
+        // Debug: surface what we received from CMS so issues don't silently fall back to defaults
+        try {
+          // eslint-disable-next-line no-console
+          console.debug('[Programs] fetched page', { slug: page.slug, title: page.title, sections: page.sections?.map(s => s.key) });
+        } catch {}
         const map: Record<string, unknown> = {};
         page.sections?.forEach((section) => {
           map[section.key] = section.content;
         });
         setSectionContent(map);
       })
-      .catch(() => {
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('[Programs] Failed to fetch CMS content for "programs":', err);
         /* fall back to defaults */
       });
     return () => {
@@ -407,6 +454,37 @@ export function Programs() {
             .filter((text): text is string => Boolean(text)) ?? [],
       }))
       .filter((item) => item.title && item.description),
+  };
+
+  const featuresContent = sectionContent['programs_features'] as ProgramsFeaturesContent | undefined;
+  const featuresItemsSource = featuresContent?.items ?? defaultProgramsFeatures.items;
+  const features = {
+    badgeLabel: featuresContent?.badgeLabel?.trim() || defaultProgramsFeatures.badgeLabel,
+    title: featuresContent?.title?.trim() || defaultProgramsFeatures.title,
+    description: featuresContent?.description?.trim() || defaultProgramsFeatures.description,
+    items: featuresItemsSource
+      .map((item) => ({
+        title: item.title?.trim() || '',
+        description: item.description?.trim() || '',
+        icon: (item.icon?.trim()?.toLowerCase() || 'book') as keyof typeof ICON_MAP,
+        color: item.color?.trim() || '#8B2332',
+      }))
+      .filter((i) => i.title && i.description),
+  };
+
+  const ctaContent = sectionContent['programs_cta'] as ProgramsCtaContent | undefined;
+  const cta = {
+    badgeLabel: ctaContent?.badgeLabel?.trim() || defaultProgramsCta.badgeLabel,
+    title: ctaContent?.title?.trim() || defaultProgramsCta.title,
+    description: ctaContent?.description?.trim() || defaultProgramsCta.description,
+    primary: {
+      label: ctaContent?.primary?.label?.trim() || defaultProgramsCta.primary.label,
+      href: ctaContent?.primary?.href?.trim() || defaultProgramsCta.primary.href,
+    },
+    secondary: {
+      label: ctaContent?.secondary?.label?.trim() || defaultProgramsCta.secondary.label,
+      href: ctaContent?.secondary?.href?.trim() || defaultProgramsCta.secondary.href,
+    },
   };
 
   return (
@@ -1237,34 +1315,29 @@ export function Programs() {
             <div className={`${isVisible['features-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  PROGRAM FEATURES
+                  {features.badgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
-                Program Features
+                {features.title}
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                What makes our programs exceptional
+                {features.description}
               </p>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-            {[
-              { icon: GraduationCapIcon, title: 'Expert Instructors', description: 'Learn from experienced ministry leaders and theologians', color: '#8B2332', index: 0 },
-              { icon: BookOpenIcon, title: 'Practical Training', description: 'Hands-on experience and real-world ministry applications', color: '#7A7A3F', index: 1 },
-              { icon: AwardIcon, title: 'Certification', description: 'Receive recognized certificates upon program completion', color: '#8B2332', index: 2 },
-              { icon: UsersIcon, title: 'Community', description: 'Connect with fellow clergy and build lasting relationships', color: '#7A7A3F', index: 3 }
-            ].map((feature) => {
-              const Icon = feature.icon;
-              const isMaroon = feature.color === '#8B2332';
+            {features.items.map((feature, index) => {
+              const Icon = ICON_MAP[feature.icon] ?? BookOpenIcon;
+              const isMaroon = (feature.color || '#8B2332') === '#8B2332';
               return (
                 <div 
-                  key={feature.index}
+                  key={`${feature.title}-${index}`}
                   className="transform transition-all duration-700"
-                  data-animate-id={`feature-${feature.index}`}
+                  data-animate-id={`feature-${index}`}
                 >
                   <div className={`text-center bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group h-full ${
-                    isVisible[`feature-${feature.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                    isVisible[`feature-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                   }`}>
                     {/* Dotted pattern overlay */}
                     <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
@@ -1286,7 +1359,7 @@ export function Programs() {
                     
                     {/* Decorative corner */}
                     <div className={`absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} style={{
-                      borderColor: `${feature.color}33`
+                      borderColor: `${feature.color || '#8B2332'}33`
                     }}></div>
                   </div>
                 </div>
@@ -1377,29 +1450,28 @@ export function Programs() {
             <div className={`${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  GET STARTED
+                  {cta.badgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
-                Ready to Grow in Your Ministry?
+                {cta.title}
               </h2>
               <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
-                Enroll in one of our programs and take your ministry to the next
-                level
+                {cta.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link 
-                  to="/membership"
+                  to={cta.primary.href}
                   className="group/btn px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-xl hover:shadow-2xl text-xs md:text-sm"
                 >
-                  <span>Enroll Now</span>
+                  <span>{cta.primary.label}</span>
                   <ArrowRightIcon size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
-                  to="/contact"
+                  to={cta.secondary.href}
                   className="px-6 py-3 border-2 border-[#8B2332] dark:border-[#B85C6D] text-[#8B2332] dark:text-[#B85C6D] rounded-full font-semibold hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-lg hover:shadow-xl text-xs md:text-sm"
                 >
-                  <span>Contact Us</span>
+                  <span>{cta.secondary.label}</span>
                 </Link>
               </div>
             </div>
