@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, StarIcon, ArrowRightIcon, XIcon } from 'lucide-react';
 import { EnrollForm } from '../components/EnrollForm';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
 
 declare global {
   interface Window {
@@ -48,6 +50,7 @@ export function Membership() {
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [individualForm, setIndividualForm] = useState<IndividualFormState>(initialIndividualForm);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -241,6 +244,219 @@ export function Membership() {
     setShowIndividualModal(true);
   };
 
+  // --- CMS-backed content placeholders (fallbacks) ---
+  // These provide data for the JSX below and prevent reference errors while CMS is being wired.
+  const ICONS = {
+    award: AwardIcon,
+    users: UsersIcon,
+    heart: HeartIcon,
+    book: BookOpenIcon,
+    shield: ShieldIcon,
+    star: StarIcon,
+  } as const;
+
+  const defaultHero = {
+    badgeLabel: 'JOIN APECK',
+    title: 'Membership',
+    description:
+      'Join a community of passionate clergy committed to excellence in ministry and Kingdom impact',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1600&q=75',
+    primary: { label: 'Start Your Application', href: '' },
+  };
+  const hero = useMemo(() => {
+    const raw = sectionContent['membership_hero'] as
+      | {
+          badgeLabel?: string;
+          title?: string;
+          description?: string;
+          backgroundImage?: string;
+          primary?: { label?: string; href?: string };
+        }
+      | undefined;
+    return {
+      badgeLabel: raw?.badgeLabel?.trim() || defaultHero.badgeLabel,
+      title: raw?.title?.trim() || defaultHero.title,
+      description: raw?.description?.trim() || defaultHero.description,
+      backgroundImage: raw?.backgroundImage
+        ? resolveMediaUrl(String(raw.backgroundImage).trim())
+        : defaultHero.backgroundImage,
+      primary: {
+        label: raw?.primary?.label?.trim() || defaultHero.primary.label,
+        href: raw?.primary?.href?.trim() || defaultHero.primary.href,
+      },
+    };
+  }, [sectionContent]);
+
+  const benefits = {
+    badgeLabel: 'MEMBERSHIP BENEFITS',
+    title: 'Membership Benefits',
+    description: 'Why join APECK?',
+    items: [
+      {
+        icon: 'award',
+        title: 'Professional Development',
+        description:
+          'Access to comprehensive training programs, workshops, and seminars for continuous growth',
+        color: '#8B2332',
+      },
+      {
+        icon: 'users',
+        title: 'Networking Opportunities',
+        description:
+          'Connect with fellow clergy across Kenya and build meaningful ministry partnerships',
+        color: '#7A7A3F',
+      },
+      {
+        icon: 'heart',
+        title: 'Pastoral Care',
+        description:
+          'Receive support, counseling, and mentorship from experienced ministry leaders',
+        color: '#8B2332',
+      },
+      {
+        icon: 'shield',
+        title: 'Certification',
+        description:
+          'Official recognition and certification as a member of APECK',
+        color: '#7A7A3F',
+      },
+      {
+        icon: 'book',
+        title: 'Resource Library',
+        description:
+          'Access to extensive library of books, materials, and digital resources',
+        color: '#8B2332',
+      },
+      {
+        icon: 'star',
+        title: 'Annual Conference',
+        description:
+          'Exclusive access to our annual leadership conference and special events',
+        color: '#7A7A3F',
+      },
+    ] as Array<{ icon: keyof typeof ICONS; title: string; description: string; color: string }>,
+  };
+
+  const tiers = {
+    badgeLabel: 'MEMBERSHIP CATEGORIES',
+    title: 'Membership Categories',
+    description: 'Choose the membership level that fits your ministry',
+    items: [
+      {
+        name: 'Individual Member',
+        priceLabel: 'KSh 1,050',
+        subtitle: 'For clergy seeking personal support',
+        featured: false,
+        bullets: [
+          'Access to core training programs & webinars',
+          'Quarterly ministry insights newsletter',
+          'Digital resource library & templates',
+          'Access to national clergy networking forum',
+        ],
+        applyLabel: 'Apply Now',
+      },
+      {
+        name: 'Corporate Membership',
+        priceLabel: 'KSh 10,000',
+        subtitle: 'For churches & ministry organizations',
+        featured: true,
+        bullets: [
+          'Covers up to 5 designated clergy leaders',
+          'Priority booking for onsite training & audits',
+          'Custom leadership retreats & mentorship tracks',
+          'Discounted exhibition & conference booths',
+          'Voting rights & policy participation',
+        ],
+        applyLabel: 'Apply Now',
+      },
+      {
+        name: 'Housing Corporations',
+        priceLabel: 'KSh 5,050',
+        subtitle: 'Strategic partners for clergy housing',
+        featured: false,
+        bullets: [
+          'Co-branding on APECK housing initiatives',
+          'Direct access to clergy housing cooperative',
+          'Pipeline of pre-qualified ministry clients',
+          'Invitation to investment forums & expos',
+          'Dedicated partnership & compliance support',
+        ],
+        applyLabel: 'Apply Now',
+      },
+    ] as Array<{
+      name: string;
+      priceLabel: string;
+      subtitle?: string;
+      featured?: boolean;
+      bullets: string[];
+      applyLabel?: string;
+    }>,
+  };
+
+  const requirements = {
+    badgeLabel: 'MEMBERSHIP REQUIREMENTS',
+    title: 'Membership Requirements',
+    description: 'What you need to become a member',
+    items: [
+      {
+        icon: 'heart',
+        title: 'Calling to Ministry',
+        description: 'Clear evidence of a calling to full-time Christian ministry',
+      },
+      {
+        icon: 'book',
+        title: "Doctrinal Statement",
+        description: "Agreement with APECK's statement of faith and core beliefs",
+      },
+      {
+        icon: 'award',
+        title: 'Ministry Experience',
+        description:
+          'Active involvement in ministry (requirements vary by membership level)',
+      },
+      {
+        icon: 'users',
+        title: 'References',
+        description: 'Two pastoral references from recognized ministry leaders',
+      },
+      {
+        icon: 'shield',
+        title: 'Application Fee',
+        description: 'One-time non-refundable application fee of KSh 1,000',
+      },
+    ] as Array<{ icon: keyof typeof ICONS; title: string; description: string }>,
+  };
+
+  const cta = {
+    badgeLabel: 'GET STARTED',
+    title: 'Ready to Join APECK?',
+    description:
+      'Take the next step in your ministry journey and become part of our community',
+    primaryLabel: 'Start Your Application',
+  };
+  // --- end placeholders ---
+
+  // Fetch CMS content for membership page
+  useEffect(() => {
+    let mounted = true;
+    fetchPageContent('membership')
+      .then((page) => {
+        if (!mounted) return;
+        const map: Record<string, unknown> = {};
+        page.sections?.forEach((s) => {
+          map[s.key] = s.content;
+        });
+        setSectionContent(map);
+      })
+      .catch(() => {
+        // fall back to defaults silently
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 pt-20 overflow-hidden transition-colors duration-300">
       <div
@@ -258,7 +474,7 @@ export function Membership() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1600&q=75)',
+            backgroundImage: `url(${hero.backgroundImage})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -303,21 +519,20 @@ export function Membership() {
             <div className={`${isVisible['membership-hero'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg border border-white/20">
-                  JOIN APECK
+                  {hero.badgeLabel}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
-                Membership
+                {hero.title}
               </h1>
               <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed mb-8">
-                Join a community of passionate clergy committed to excellence in
-                ministry and Kingdom impact
+                {hero.description}
               </p>
               <button
                 onClick={() => setIsEnrollFormOpen(true)}
                 className="inline-flex items-center space-x-2 px-8 py-4 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
               >
-                <span>Start Your Application</span>
+                <span>{hero.primary.label}</span>
                 <ArrowRightIcon size={20} className="transform group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -515,36 +730,29 @@ export function Membership() {
             <div className={`${isVisible['benefits-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  MEMBERSHIP BENEFITS
+                  {benefits.badgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
-                Membership Benefits
+                {benefits.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                Why join APECK?
+                {benefits.description}
               </p>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {[
-              { icon: AwardIcon, title: 'Professional Development', description: 'Access to comprehensive training programs, workshops, and seminars for continuous growth', color: '#8B2332', index: 0 },
-              { icon: UsersIcon, title: 'Networking Opportunities', description: 'Connect with fellow clergy across Kenya and build meaningful ministry partnerships', color: '#7A7A3F', index: 1 },
-              { icon: HeartIcon, title: 'Pastoral Care', description: 'Receive support, counseling, and mentorship from experienced ministry leaders', color: '#8B2332', index: 2 },
-              { icon: ShieldIcon, title: 'Certification', description: 'Official recognition and certification as a member of APECK', color: '#7A7A3F', index: 3 },
-              { icon: BookOpenIcon, title: 'Resource Library', description: 'Access to extensive library of books, materials, and digital resources', color: '#8B2332', index: 4 },
-              { icon: StarIcon, title: 'Annual Conference', description: 'Exclusive access to our annual leadership conference and special events', color: '#7A7A3F', index: 5 }
-            ].map((benefit) => {
-              const Icon = benefit.icon;
+            {benefits.items.map((benefit, idx) => {
+              const Icon = ICONS[benefit.icon] ?? AwardIcon;
               const isMaroon = benefit.color === '#8B2332';
               return (
                 <div 
-                  key={benefit.index}
+                  key={`${benefit.title}-${idx}`}
                   className="transform transition-all duration-700"
-                  data-animate-id={`benefit-${benefit.index}`}
+                  data-animate-id={`benefit-${idx}`}
                 >
                   <div className={`bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group h-full ${
-                    isVisible[`benefit-${benefit.index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                    isVisible[`benefit-${idx}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                   }`}>
                     {/* Dotted pattern overlay */}
                     <div className="absolute inset-0 rounded-3xl opacity-[0.02]" style={{
@@ -774,14 +982,14 @@ export function Membership() {
             <div className={`${isVisible['tiers-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  MEMBERSHIP CATEGORIES
+                  {tiers.badgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
-                Membership Categories
+                {tiers.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                Choose the membership level that fits your ministry
+                {tiers.description}
               </p>
             </div>
           </div>
@@ -1034,14 +1242,14 @@ export function Membership() {
             <div className={`${isVisible['requirements-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  MEMBERSHIP REQUIREMENTS
+                  {requirements.badgeLabel}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
-                Membership Requirements
+                {requirements.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                What you need to become a member
+                {requirements.description}
               </p>
             </div>
           </div>
@@ -1165,17 +1373,16 @@ export function Membership() {
                 </span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-[#8B2332] dark:text-[#B85C6D]">
-                Ready to Join APECK?
+                {cta.title}
               </h2>
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
-                Take the next step in your ministry journey and become part of our
-                community
+                {cta.description}
               </p>
               <button
                 onClick={() => setIsEnrollFormOpen(true)}
                 className="group/btn px-8 py-4 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all inline-flex items-center space-x-2 hover:scale-105 shadow-xl hover:shadow-2xl"
               >
-                <span>Start Your Application</span>
+                <span>{cta.primaryLabel}</span>
                 <ArrowRightIcon size={20} className="transform group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>

@@ -422,6 +422,113 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  // Membership Page Sections
+  {
+    key: 'membership_hero',
+    title: 'Membership - Hero',
+    description: 'Hero banner for the Membership page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'JOIN APECK' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Membership' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Join a community of passionate clergy...' },
+      { type: 'image', label: 'Background Image', name: 'backgroundImage' },
+      {
+        type: 'link',
+        label: 'Primary Button',
+        name: 'primary',
+        fields: [
+          { name: 'label', label: 'Label', placeholder: 'Start Your Application' },
+          { name: 'href', label: 'Link URL', helperText: 'Optional: leave empty to keep modal button' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'membership_benefits',
+    title: 'Membership - Benefits',
+    description: 'List of membership benefits.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'MEMBERSHIP BENEFITS' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Membership Benefits' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Why join APECK?' },
+      {
+        type: 'repeatable',
+        label: 'Benefits',
+        name: 'items',
+        minItems: 1,
+        maxItems: 12,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title' },
+          { type: 'textarea', label: 'Description', name: 'description' },
+          { type: 'text', label: 'Icon (award|users|heart|book|shield|star)', name: 'icon', placeholder: 'award' },
+          { type: 'text', label: 'Color (hex)', name: 'color', placeholder: '#8B2332' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'membership_tiers',
+    title: 'Membership - Tiers',
+    description: 'Configurable membership tiers (title, price, bullets, highlight).',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'MEMBERSHIP CATEGORIES' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Membership Categories' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Choose the membership level that fits your ministry' },
+      {
+        type: 'repeatable',
+        label: 'Tiers',
+        name: 'items',
+        minItems: 1,
+        maxItems: 6,
+        itemFields: [
+          { type: 'text', label: 'Name', name: 'name', placeholder: 'Individual Member' },
+          { type: 'text', label: 'Price Label', name: 'priceLabel', placeholder: 'KSh 1,050' },
+          { type: 'textarea', label: 'Subtitle', name: 'subtitle', placeholder: 'For clergy seeking personal support' },
+          { type: 'checkbox', label: 'Featured?', name: 'featured' },
+          {
+            type: 'repeatable',
+            label: 'Bullets',
+            name: 'bullets',
+            itemFields: [{ type: 'text', label: 'Text', name: 'text' }],
+          },
+          { type: 'text', label: 'Apply Button Label', name: 'applyLabel', placeholder: 'Apply Now' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'membership_requirements',
+    title: 'Membership - Requirements',
+    description: 'List the requirements to become a member.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'MEMBERSHIP REQUIREMENTS' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Membership Requirements' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'What you need to become a member' },
+      {
+        type: 'repeatable',
+        label: 'Requirements',
+        name: 'items',
+        minItems: 1,
+        maxItems: 12,
+        itemFields: [
+          { type: 'text', label: 'Title', name: 'title' },
+          { type: 'textarea', label: 'Description', name: 'description' },
+          { type: 'text', label: 'Icon (heart|book|award|users|shield)', name: 'icon', placeholder: 'heart' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'membership_cta',
+    title: 'Membership - CTA',
+    description: 'Final call-to-action section content for Membership page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'GET STARTED' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Ready to Join APECK?' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Take the next step...' },
+      { type: 'text', label: 'Primary Button Label', name: 'primaryLabel', placeholder: 'Start Your Application' },
+    ],
+  },
   {
     key: 'testimonials',
     title: 'Testimonials Section',
