@@ -1,6 +1,19 @@
 import { Link } from 'react-router-dom';
 import { FacebookIcon, InstagramIcon, YoutubeIcon, MailIcon, PhoneIcon, MapPinIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
 export function Footer() {
+  const [content, setContent] = useState<Record<string, unknown>>({});
+  useEffect(() => {
+    fetchPageContent('footer')
+      .then((page) => {
+        const map: Record<string, unknown> = {};
+        page.sections?.forEach((s) => (map[s.key] = s.content));
+        setContent(map);
+      })
+      .catch(() => {});
+  }, []);
   return <footer className="relative bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/80 to-[#EFE4D7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 overflow-hidden transition-colors duration-300">
       {/* Enhanced background patterns */}
       <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]">
@@ -89,36 +102,36 @@ export function Footer() {
           <div className="lg:col-span-1">
             <div className="mb-6 w-full">
               <img 
-                src="/assets/logo3.png" 
+                src={(content['footer_main'] as any)?.logo ? resolveMediaUrl((content['footer_main'] as any).logo) : '/assets/logo3.png'} 
                 alt="APECK Logo" 
                 className="w-full max-w-[280px] md:max-w-[320px] h-auto object-contain transition-all duration-300 hover:scale-105 hover:drop-shadow-2xl drop-shadow-lg filter brightness-110" 
               />
             </div>
             <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm mb-6 leading-relaxed max-w-xs">
-              Empowering the Clergy for Kingdom Impact across Kenya
+              {((content['footer_main'] as any)?.about || 'Empowering the Clergy for Kingdom Impact across Kenya')}
             </p>
             <div className="flex space-x-3">
               <a 
-                href="#" 
+                href={((content['footer_main'] as any)?.facebook || '#')} 
                 className="group w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-[#8B2332] dark:hover:border-[#B85C6D]"
               >
                 <FacebookIcon size={20} className="group-hover:scale-110 transition-transform" />
               </a>
               <a 
-                href="#" 
+                href={((content['footer_main'] as any)?.x || '#')} 
                 className="group w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-[#8B2332] dark:hover:border-[#B85C6D]"
                 aria-label="X"
               >
                 <img src="https://img.icons8.com/?size=100&id=fJp7hepMryiw&format=png&color=000000" alt="X" className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </a>
               <a 
-                href="#" 
+                href={((content['footer_main'] as any)?.instagram || '#')} 
                 className="group w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-[#8B2332] dark:hover:border-[#B85C6D]"
               >
                 <InstagramIcon size={20} className="group-hover:scale-110 transition-transform" />
               </a>
               <a 
-                href="#" 
+                href={((content['footer_main'] as any)?.youtube || '#')} 
                 className="group w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B2332] dark:hover:bg-[#B85C6D] hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-[#8B2332] dark:hover:border-[#B85C6D]"
               >
                 <YoutubeIcon size={20} className="group-hover:scale-110 transition-transform" />
@@ -133,38 +146,21 @@ export function Footer() {
               <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#7A7A3F] dark:from-[#9B9B5F] to-transparent"></span>
             </h3>
             <ul className="space-y-3">
-              <li>
-                <Link 
-                  to="/about" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-[#8B2332]/30 dark:border-[#B85C6D]/30">About Us</span>
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/programs" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Programs</span>
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/membership" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Membership</span>
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/news" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">News & Events</span>
-                </Link>
-              </li>
+              {(((content['footer_main'] as any)?.quickLinks) || [
+                { label: 'About Us', href: '/about' },
+                { label: 'Programs', href: '/programs' },
+                { label: 'Membership', href: '/membership' },
+                { label: 'News & Events', href: '/news' },
+              ]).map((lnk: any, idx: number) => (
+                <li key={idx}>
+                  <Link 
+                    to={lnk.href || '#'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
+                  >
+                    <span className="group-hover:border-b border-[#8B2332]/30 dark:border-[#B85C6D]/30">{lnk.label}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
@@ -175,38 +171,21 @@ export function Footer() {
               <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-gradient-to-r from-[#7A7A3F] dark:from-[#9B9B5F] to-transparent"></span>
             </h3>
             <ul className="space-y-3">
-              <li>
-                <a 
-                  href="#" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Training Materials</span>
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Publications</span>
-                </a>
-              </li>
-              <li>
-                <Link 
-                  to="/gallery" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Gallery</span>
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/contact" 
-                  className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
-                >
-                  <span className="group-hover:border-b border-white/30">Contact</span>
-                </Link>
-              </li>
+              {(((content['footer_main'] as any)?.resources) || [
+                { label: 'Training Materials', href: '#' },
+                { label: 'Publications', href: '#' },
+                { label: 'Gallery', href: '/gallery' },
+                { label: 'Contact', href: '/contact' },
+              ]).map((lnk: any, idx: number) => (
+                <li key={idx}>
+                  <Link 
+                    to={lnk.href || '#'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-all duration-300 inline-block hover:translate-x-2 group text-xs md:text-sm"
+                  >
+                    <span className="group-hover:border-b border-white/30">{lnk.label}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
@@ -221,22 +200,22 @@ export function Footer() {
                 <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 flex items-center justify-center group-hover:bg-[#8B2332]/20 dark:group-hover:bg-[#B85C6D]/20 transition-all">
                   <MapPinIcon size={12} className="text-[#8B2332] dark:text-[#B85C6D] group-hover:scale-110 transition-transform" />
                 </div>
-                <span className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">Nairobi, Kenya</span>
+                <span className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">{((content['footer_main'] as any)?.address || 'Nairobi, Kenya')}</span>
               </li>
               <li className="flex items-center space-x-3 group">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 flex items-center justify-center group-hover:bg-[#8B2332]/20 dark:group-hover:bg-[#B85C6D]/20 transition-all">
                 <PhoneIcon size={12} className="text-[#8B2332] dark:text-[#B85C6D] group-hover:scale-110 transition-transform" />
                 </div>
-                <a href="tel:+254700000000" className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">
-                  +254 700 000 000
+                <a href={`tel:${((content['footer_main'] as any)?.phone || '+254700000000')}`} className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">
+                  {((content['footer_main'] as any)?.phone || '+254 700 000 000')}
                 </a>
               </li>
               <li className="flex items-center space-x-3 group">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#8B2332]/10 dark:bg-[#B85C6D]/10 flex items-center justify-center group-hover:bg-[#8B2332]/20 dark:group-hover:bg-[#B85C6D]/20 transition-all">
                 <MailIcon size={12} className="text-[#8B2332] dark:text-[#B85C6D] group-hover:scale-110 transition-transform" />
                 </div>
-                <a href="mailto:info@apeck.or.ke" className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">
-                  info@apeck.or.ke
+                <a href={`mailto:${((content['footer_main'] as any)?.email || 'info@apeck.or.ke')}`} className="text-gray-600 dark:text-gray-400 hover:text-[#8B2332] dark:hover:text-[#B85C6D] transition-colors text-xs md:text-sm">
+                  {((content['footer_main'] as any)?.email || 'info@apeck.or.ke')}
                 </a>
               </li>
             </ul>
@@ -247,8 +226,7 @@ export function Footer() {
         <div className="border-t border-gray-200 dark:border-gray-700 mt-12 md:mt-16 pt-8 md:pt-10">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm text-center md:text-left">
-              &copy; {new Date().getFullYear()} APECK - Association of Pentecostal
-              & Evangelical Clergy of Kenya. All rights reserved.
+              {(((content['footer_main'] as any)?.copyright) || `© ${new Date().getFullYear()} APECK - Association of Pentecostal & Evangelical Clergy of Kenya. All rights reserved.`)}
             </p>
             <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 text-xs md:text-sm">
               <span>Made with</span>

@@ -706,6 +706,42 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       { type: 'text', label: 'Popup HTML', name: 'popup', placeholder: '<b>APECK Headquarters</b><br>Nairobi, Kenya' },
     ],
   },
+  // Footer
+  {
+    key: 'footer_main',
+    title: 'Footer',
+    description: 'Global footer content and links.',
+    fields: [
+      { type: 'image', label: 'Logo', name: 'logo', helperText: 'Footer logo (optional)' },
+      { type: 'textarea', label: 'About Text', name: 'about', placeholder: 'Empowering the Clergy for Kingdom Impact across Kenya' },
+      { type: 'text', label: 'Facebook URL', name: 'facebook', placeholder: 'https://facebook.com/...' },
+      { type: 'text', label: 'X / Twitter URL', name: 'x', placeholder: 'https://x.com/...' },
+      { type: 'text', label: 'Instagram URL', name: 'instagram', placeholder: 'https://instagram.com/...' },
+      { type: 'text', label: 'YouTube URL', name: 'youtube', placeholder: 'https://youtube.com/...' },
+      {
+        type: 'repeatable',
+        label: 'Quick Links',
+        name: 'quickLinks',
+        itemFields: [
+          { type: 'text', label: 'Label', name: 'label', placeholder: 'About Us' },
+          { type: 'text', label: 'Href', name: 'href', placeholder: '/about' },
+        ],
+      },
+      {
+        type: 'repeatable',
+        label: 'Resources Links',
+        name: 'resources',
+        itemFields: [
+          { type: 'text', label: 'Label', name: 'label', placeholder: 'Training Materials' },
+          { type: 'text', label: 'Href', name: 'href', placeholder: '#' },
+        ],
+      },
+      { type: 'text', label: 'Address Line', name: 'address', placeholder: 'Nairobi, Kenya' },
+      { type: 'text', label: 'Phone', name: 'phone', placeholder: '+254 700 000 000' },
+      { type: 'text', label: 'Email', name: 'email', placeholder: 'info@apeck.or.ke' },
+      { type: 'textarea', label: 'Copyright Text', name: 'copyright', placeholder: '© YEAR APECK. All rights reserved.' },
+    ],
+  },
   {
     key: 'about_hero',
     title: 'About Hero',
