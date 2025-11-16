@@ -288,7 +288,7 @@ export function Membership() {
     };
   }, [sectionContent]);
 
-  const benefits = {
+  const defaultBenefits = {
     badgeLabel: 'MEMBERSHIP BENEFITS',
     title: 'Membership Benefits',
     description: 'Why join APECK?',
@@ -338,7 +338,35 @@ export function Membership() {
     ] as Array<{ icon: keyof typeof ICONS; title: string; description: string; color: string }>,
   };
 
-  const tiers = {
+  const benefits = useMemo(() => {
+    const raw = sectionContent['membership_benefits'] as
+      | {
+          badgeLabel?: string;
+          title?: string;
+          description?: string;
+          items?: Array<{ title?: string; description?: string; icon?: string; color?: string }>;
+        }
+      | undefined;
+
+    const items: Array<{ icon: keyof typeof ICONS; title: string; description: string; color: string }> =
+      (raw?.items ?? defaultBenefits.items).map((item) => {
+        const title = (item?.title ?? '').trim();
+        const description = (item?.description ?? '').trim();
+        const iconKey = (item?.icon ?? '').toLowerCase().trim();
+        const icon = (ICONS[iconKey as keyof typeof ICONS] ? (iconKey as keyof typeof ICONS) : ('award' as keyof typeof ICONS));
+        const color = (item?.color ?? '').trim() || '#8B2332';
+        return { icon, title, description, color };
+      }).filter((i) => i.title && i.description);
+
+    return {
+      badgeLabel: raw?.badgeLabel?.trim() || defaultBenefits.badgeLabel,
+      title: raw?.title?.trim() || defaultBenefits.title,
+      description: raw?.description?.trim() || defaultBenefits.description,
+      items: items.length ? items : defaultBenefits.items,
+    };
+  }, [sectionContent]);
+
+  const defaultTiers = {
     badgeLabel: 'MEMBERSHIP CATEGORIES',
     title: 'Membership Categories',
     description: 'Choose the membership level that fits your ministry',
@@ -394,7 +422,45 @@ export function Membership() {
     }>,
   };
 
-  const requirements = {
+  const tiers = useMemo(() => {
+    const raw = sectionContent['membership_tiers'] as
+      | {
+          badgeLabel?: string;
+          title?: string;
+          description?: string;
+          items?: Array<{
+            name?: string;
+            priceLabel?: string;
+            subtitle?: string;
+            featured?: boolean;
+            bullets?: Array<string | { text?: string }>;
+            applyLabel?: string;
+          }>;
+        }
+      | undefined;
+
+    const items =
+      (raw?.items ?? defaultTiers.items).map((t) => ({
+        name: (t.name ?? '').trim(),
+        priceLabel: (t.priceLabel ?? '').trim(),
+        subtitle: (t.subtitle ?? '').trim(),
+        featured: Boolean(t.featured),
+        bullets:
+          (t.bullets ?? [])
+            .map((b) => (typeof b === 'string' ? b.trim() : (b.text ?? '').trim()))
+            .filter(Boolean) || [],
+        applyLabel: (t.applyLabel ?? 'Apply Now').trim(),
+      })).filter((t) => t.name && t.priceLabel);
+
+    return {
+      badgeLabel: raw?.badgeLabel?.trim() || defaultTiers.badgeLabel,
+      title: raw?.title?.trim() || defaultTiers.title,
+      description: raw?.description?.trim() || defaultTiers.description,
+      items: items.length ? items : defaultTiers.items,
+    };
+  }, [sectionContent]);
+
+  const defaultRequirements = {
     badgeLabel: 'MEMBERSHIP REQUIREMENTS',
     title: 'Membership Requirements',
     description: 'What you need to become a member',
@@ -428,13 +494,64 @@ export function Membership() {
     ] as Array<{ icon: keyof typeof ICONS; title: string; description: string }>,
   };
 
-  const cta = {
+  const requirements = useMemo(() => {
+    const raw = sectionContent['membership_requirements'] as
+      | {
+          badgeLabel?: string;
+          title?: string;
+          description?: string;
+          items?: Array<{ title?: string; description?: string; icon?: string }>;
+        }
+      | undefined;
+
+    const items: Array<{ icon: keyof typeof ICONS; title: string; description: string }> =
+      (raw?.items ?? defaultRequirements.items).map((it) => {
+        const title = (it?.title ?? '').trim();
+        const description = (it?.description ?? '').trim();
+        const iconKey = (it?.icon ?? '').toLowerCase().trim();
+        const icon = (ICONS[iconKey as keyof typeof ICONS] ? (iconKey as keyof typeof ICONS) : ('heart' as keyof typeof ICONS));
+        return { icon, title, description };
+      }).filter((r) => r.title && r.description);
+
+    return {
+      badgeLabel: raw?.badgeLabel?.trim() || defaultRequirements.badgeLabel,
+      title: raw?.title?.trim() || defaultRequirements.title,
+      description: raw?.description?.trim() || defaultRequirements.description,
+      items: items.length ? items : defaultRequirements.items,
+    };
+  }, [sectionContent]);
+
+  const defaultCta = {
     badgeLabel: 'GET STARTED',
     title: 'Ready to Join APECK?',
     description:
       'Take the next step in your ministry journey and become part of our community',
     primaryLabel: 'Start Your Application',
   };
+
+  const cta = useMemo(() => {
+    const raw = sectionContent['membership_cta'] as
+      | {
+          badgeLabel?: string;
+          title?: string;
+          description?: string;
+          primaryLabel?: string;
+          primary?: { label?: string; href?: string };
+        }
+      | undefined;
+
+    const primaryLabel =
+      raw?.primaryLabel?.trim() ||
+      raw?.primary?.label?.trim() ||
+      defaultCta.primaryLabel;
+
+    return {
+      badgeLabel: raw?.badgeLabel?.trim() || defaultCta.badgeLabel,
+      title: raw?.title?.trim() || defaultCta.title,
+      description: raw?.description?.trim() || defaultCta.description,
+      primaryLabel,
+    };
+  }, [sectionContent]);
   // --- end placeholders ---
 
   // Fetch CMS content for membership page
@@ -994,174 +1111,62 @@ export function Membership() {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
-            {/* Individual Member */}
-            <div 
-              className="transform transition-all duration-700"
-              data-animate-id="tier-1"
-            >
-              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
-                isVisible['tier-1'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-              }`}>
-                <div className="bg-gradient-to-br from-gray-600 to-gray-700 text-white p-8 text-center relative overflow-hidden">
-                  {/* Decorative pattern */}
-                  <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                    backgroundSize: '20px 20px',
-                  }}></div>
-                  <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Individual Member</h3>
-                    <p className="text-white/80 mb-4">For clergy seeking personal support</p>
-                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 1,050</div>
-                    <p className="text-white/80 text-sm">registration fee</p>
+            {tiers.items.map((tier, index) => {
+              const isFeatured = !!tier.featured;
+              const headerClasses = isFeatured
+                ? 'bg-gradient-to-br from-[#8B2332] to-[#6B1A28]'
+                : index % 2 === 0
+                ? 'bg-gradient-to-br from-gray-600 to-gray-700'
+                : 'bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35]';
+              const accentColor = isFeatured ? '#8B2332' : index % 2 === 0 ? '#7A7A3F' : '#7A7A3F';
+              return (
+                <div 
+                  key={`${tier.name}-${index}`}
+                  className="transform transition-all duration-700"
+                  data-animate-id={`tier-${index+1}`}
+                >
+                  <div className={`bg-white dark:bg-gray-800 rounded-3xl ${isFeatured ? 'shadow-2xl hover:shadow-3xl border-4 border-[#8B2332] dark:border-[#B85C6D]' : 'shadow-xl hover:shadow-2xl border border-gray-100 dark:border-gray-700'} group transition-all duration-500 transform hover:-translate-y-2 h-full ${isVisible[`tier-${index+1}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}>
+                    {isFeatured && (
+                      <div className="absolute top-6 right-6 bg-gradient-to-r from-[#7A7A3F] to-[#8B2332] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg z-20">
+                        POPULAR
+                      </div>
+                    )}
+                    <div className={`${headerClasses} text-white p-8 text-center relative overflow-hidden`}>
+                      <div className="absolute inset-0 opacity-10" style={{
+                        backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+                        backgroundSize: '20px 20px',
+                      }}></div>
+                      <div className="relative z-10">
+                        <h3 className="text-2xl md:text-3xl font-bold mb-2">{tier.name}</h3>
+                        {tier.subtitle ? <p className="text-white/80 mb-4">{tier.subtitle}</p> : null}
+                        <div className="text-2xl md:text-3xl font-bold mb-1">{tier.priceLabel}</div>
+                      </div>
+                    </div>
+                    <div className="p-8">
+                      {tier.bullets?.length ? (
+                        <ul className="space-y-4 mb-8">
+                          {tier.bullets.map((b, i) => (
+                            <li key={i} className="flex items-start space-x-3">
+                              <CheckIcon size={20} className={`${isFeatured ? 'text-[#8B2332] dark:text-[#B85C6D]' : 'text-[#7A7A3F] dark:text-[#9B9B5F]'} mt-0.5 flex-shrink-0`} strokeWidth={2.5} />
+                              <span className="text-gray-700 dark:text-gray-300">{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                      <button 
+                        onClick={() => {
+                          setSelectedTier(tier.name);
+                          setIsEnrollFormOpen(true);
+                        }}
+                        className={`w-full px-6 py-3 ${isFeatured ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-gray-600 hover:bg-gray-700'} text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:scale-105`}
+                      >
+                        {tier.applyLabel || 'Apply Now'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="p-8">
-                  <ul className="space-y-4 mb-8">
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Access to core training programs & webinars</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Quarterly ministry insights newsletter</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Digital resource library & templates</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Access to national clergy networking forum</span>
-                    </li>
-                  </ul>
-                  <button 
-                    onClick={triggerIndividualApplication}
-                    className="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Corporate Membership - Featured */}
-            <div 
-              className="transform transition-all duration-700"
-              data-animate-id="tier-2"
-            >
-              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-2xl hover:shadow-3xl overflow-hidden border-4 border-[#8B2332] dark:border-[#B85C6D] group transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.03] h-full relative ${
-                isVisible['tier-2'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-              }`}>
-                {/* Popular Badge */}
-                <div className="absolute top-6 right-6 bg-gradient-to-r from-[#7A7A3F] to-[#8B2332] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg z-20">
-                  POPULAR
-                </div>
-                
-                <div className="bg-gradient-to-br from-[#8B2332] to-[#6B1A28] text-white p-8 text-center relative overflow-hidden">
-                  {/* Decorative pattern */}
-                  <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                    backgroundSize: '20px 20px',
-                  }}></div>
-                  <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Corporate Membership</h3>
-                    <p className="text-white/80 mb-4">For churches & ministry organizations</p>
-                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 10,000</div>
-                    <p className="text-white/80 text-sm">corporate registration</p>
-                  </div>
-                </div>
-                <div className="p-8">
-                  <ul className="space-y-4 mb-8">
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Covers up to 5 designated clergy leaders</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Priority booking for onsite training & audits</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Custom leadership retreats & mentorship tracks</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Discounted exhibition & conference booths</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#8B2332] dark:text-[#B85C6D] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Voting rights & policy participation</span>
-                    </li>
-                  </ul>
-                  <button 
-                    onClick={() => {
-                      setSelectedTier('Corporate Membership');
-                      setIsEnrollFormOpen(true);
-                    }}
-                    className="w-full px-6 py-3 bg-[#8B2332] text-white rounded-full font-semibold hover:bg-[#6B1A28] transition-all shadow-xl hover:shadow-2xl hover:scale-105"
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Housing Corporations */}
-            <div 
-              className="transform transition-all duration-700"
-              data-animate-id="tier-3"
-            >
-              <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 group transition-all duration-500 transform hover:-translate-y-2 h-full ${
-                isVisible['tier-3'] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
-              }`}>
-                <div className="bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] text-white p-8 text-center relative overflow-hidden">
-                  {/* Decorative pattern */}
-                  <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                    backgroundSize: '20px 20px',
-                  }}></div>
-                  <div className="relative z-10">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">Housing Corporations</h3>
-                    <p className="text-white/80 mb-4">Strategic partners for clergy housing</p>
-                    <div className="text-2xl md:text-3xl font-bold mb-1">KSh 5,050</div>
-                    <p className="text-white/80 text-sm">housing co-op registration</p>
-                  </div>
-                </div>
-                <div className="p-8">
-                  <ul className="space-y-4 mb-8">
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Co-branding on APECK housing initiatives</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Direct access to clergy housing cooperative</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Pipeline of pre-qualified ministry clients</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Invitation to investment forums & expos</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <CheckIcon size={20} className="text-[#7A7A3F] dark:text-[#9B9B5F] mt-0.5 flex-shrink-0" strokeWidth={2.5} />
-                      <span className="text-gray-700 dark:text-gray-300">Dedicated partnership & compliance support</span>
-                    </li>
-                  </ul>
-                  <button 
-                    onClick={() => {
-                      setSelectedTier('Housing Corporations');
-                      setIsEnrollFormOpen(true);
-                    }}
-                    className="w-full px-6 py-3 bg-[#7A7A3F] text-white rounded-full font-semibold hover:bg-[#6A6A35] transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1267,16 +1272,10 @@ export function Membership() {
               }}></div>
               
               <ul className="space-y-6 relative z-10">
-                {[
-                  { title: 'Calling to Ministry', description: 'Clear evidence of a calling to full-time Christian ministry', icon: HeartIcon },
-                  { title: 'Doctrinal Statement', description: 'Agreement with APECK\'s statement of faith and core beliefs', icon: BookOpenIcon },
-                  { title: 'Ministry Experience', description: 'Active involvement in ministry (requirements vary by membership level)', icon: AwardIcon },
-                  { title: 'References', description: 'Two pastoral references from recognized ministry leaders', icon: UsersIcon },
-                  { title: 'Application Fee', description: 'One-time non-refundable application fee of KSh 1,000', icon: ShieldIcon }
-                ].map((req, index) => {
-                  const Icon = req.icon;
+                {requirements.items.map((req, index) => {
+                  const Icon = ICONS[req.icon] ?? HeartIcon;
                   return (
-                    <li key={index} className="flex items-start space-x-4 group">
+                    <li key={`${req.title}-${index}`} className="flex items-start space-x-4 group">
                       <div className="w-14 h-14 bg-gradient-to-br from-[#8B2332]/20 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:to-[#B85C6D]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
                         <Icon size={24} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                       </div>
@@ -1369,7 +1368,7 @@ export function Membership() {
             <div className={`${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  GET STARTED
+                  {cta.badgeLabel}
                 </span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight text-[#8B2332] dark:text-[#B85C6D]">

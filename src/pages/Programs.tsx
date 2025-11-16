@@ -535,15 +535,15 @@ export function Programs() {
                 <span className="inline-block px-4 py-2 bg-[#8B2332]/10 text-[#8B2332] dark:text-[#FAD2D9] rounded-full text-xs font-bold tracking-wide">
                   {introBadge}
                 </span>
-              </div>
+        </div>
               <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
                 {introTitle}
               </h2>
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
                 {introSummary}
               </p>
-            </div>
-          </div>
+        </div>
+        </div>
           <div className="mt-12 grid lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2 space-y-6">
               {introParagraphs.map((paragraph, index) => (
@@ -553,11 +553,11 @@ export function Programs() {
                 >
                   <div className="w-10 h-10 rounded-full bg-[#8B2332]/10 flex items-center justify-center flex-shrink-0">
                     <CheckIcon size={20} className="text-[#8B2332]" />
-                  </div>
+        </div>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{paragraph}</p>
-                </div>
+        </div>
               ))}
-            </div>
+        </div>
             <div className="space-y-6">
               {introHighlights.map((highlight, index) => (
                 <div
@@ -573,16 +573,16 @@ export function Programs() {
                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                     {highlight.description}
                   </p>
-                </div>
+        </div>
               ))}
-            </div>
-          </div>
+        </div>
+        </div>
           {introPartnerNote && (
             <div className="mt-12 p-6 md:p-8 bg-gradient-to-r from-[#8B2332]/10 to-[#7A7A3F]/10 dark:from-[#8B2332]/20 dark:to-[#7A7A3F]/20 border border-[#8B2332]/15 dark:border-[#7A7A3F]/30 rounded-3xl shadow-lg">
               <p className="text-base md:text-lg font-semibold text-[#8B2332] dark:text-[#FAD2D9] italic leading-relaxed">
                 {introPartnerNote}
               </p>
-            </div>
+        </div>
           )}
         </div>
       </section>
@@ -680,7 +680,7 @@ export function Programs() {
           <svg viewBox="0 0 200 100" className="w-full h-full" preserveAspectRatio="none">
             <path d="M0,60 Q40,40 80,60 T160,60 T200,60" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.1"/>
           </svg>
-        </div>
+              </div>
         {/* Floating dots */}
         <div className="absolute top-16 left-12 w-2 h-2 bg-[#8B2332]/20 rounded-full hidden lg:block"></div>
         <div className="absolute top-24 right-12 w-2 h-2 bg-[#7A7A3F]/20 rounded-full hidden lg:block"></div>
@@ -696,12 +696,12 @@ export function Programs() {
                   </span>
                   <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
                     {cbr.title}
-                  </h2>
+              </h2>
                   <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-6">
                     {cbr.subtitle}
-                  </p>
-                </div>
-              </div>
+              </p>
+            </div>
+          </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-xl">
                   <p className="text-xs font-semibold text-[#7A7A3F] uppercase tracking-widest mb-2">
@@ -710,7 +710,7 @@ export function Programs() {
                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                     {cbr.originDescription}
                   </p>
-                </div>
+                      </div>
                 <div className="p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-xl">
                   <p className="text-xs font-semibold text-[#8B2332] uppercase tracking-widest mb-2">
                     {cbr.expansionTitle}
@@ -718,8 +718,8 @@ export function Programs() {
                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                     {cbr.expansionDescription}
                   </p>
-                </div>
-              </div>
+                    </div>
+                  </div>
               <div className="grid sm:grid-cols-3 gap-4">
                 {cbr.metrics.map((metric, index) => (
                   <div
@@ -730,7 +730,7 @@ export function Programs() {
                     <p className="text-xs uppercase tracking-widest text-[#7A7A3F] dark:text-[#D7D2B4]">{metric.label}</p>
                   </div>
                 ))}
-              </div>
+                      </div>
               <div className="p-6 rounded-3xl bg-white/90 dark:bg-gray-900/70 border border-[#8B2332]/15 dark:border-[#8B2332]/30 shadow-lg">
                 <p className="text-xs font-semibold text-[#8B2332] uppercase tracking-widest mb-2">
                   {cbr.partnershipTitle}
@@ -738,8 +738,8 @@ export function Programs() {
                 <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                   {cbr.partnershipDescription}
                 </p>
-              </div>
-            </div>
+                    </div>
+                  </div>
             <div
               className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/60 dark:border-gray-800/60"
               data-animate-id="programs-cbr-visual"
@@ -749,7 +749,7 @@ export function Programs() {
                   src={cbr.image}
                   alt={cbr.title}
                   className="w-full h-[520px] object-cover"
-                  loading="lazy"
+                      loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 right-6 p-6 rounded-3xl bg-white/90 dark:bg-gray-900/90 border border-white/60 dark:border-gray-800/70 shadow-xl">
@@ -842,8 +842,8 @@ export function Programs() {
               <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg max-w-3xl mx-auto">
                 {aftercare.description}
               </p>
-            </div>
-          </div>
+        </div>
+        </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {aftercare.pillars.map((pillar, index) => {
               const animateId = `programs-aftercare-pillar-${index}`;
@@ -862,11 +862,11 @@ export function Programs() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-12 h-12 rounded-full bg-[#8B2332]/10 text-[#8B2332] flex items-center justify-center font-bold">
                         {String(index + 1).padStart(2, '0')}
-                      </div>
+        </div>
                       <h3 className="text-lg md:text-xl font-semibold text-[#8B2332] dark:text-[#FAD2D9]">
                         {pillar.title}
                       </h3>
-                    </div>
+        </div>
                     <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                       {pillar.summary}
                     </p>
@@ -880,7 +880,7 @@ export function Programs() {
                         ))}
                       </ul>
                     )}
-                  </div>
+        </div>
                 </div>
               );
             })}
@@ -973,7 +973,7 @@ export function Programs() {
             <polygon points="50,5 95,50 50,95 5,50" fill="#8B2332" opacity="0.12"/>
             <polygon points="50,20 80,50 50,80 20,50" fill="#7A7A3F" opacity="0.1"/>
           </svg>
-        </div>
+              </div>
         <div
           className={`absolute bottom-10 left-1/5 w-32 h-32 opacity-4 hidden lg:block animate-pulse-slow transition-all duration-700 ${
             isVisible['pi-bg-circles-left'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
@@ -984,7 +984,7 @@ export function Programs() {
             <circle cx="50" cy="50" r="45" fill="none" stroke="#8B2332" strokeWidth="1.2" opacity="0.15"/>
             <circle cx="50" cy="50" r="30" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.12"/>
           </svg>
-        </div>
+                  </div>
         {/* Grid overlay */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.02] hidden xl:block" style={{
           backgroundImage: `linear-gradient(to right, #8B2332 1px, transparent 1px), linear-gradient(to bottom, #7A7A3F 1px, transparent 1px)`,
@@ -1026,16 +1026,16 @@ export function Programs() {
               </h2>
               <p className="text-gray-700 dark:text-gray-200 text-base md:text-lg max-w-3xl mx-auto">
                 {initiatives.description}
-              </p>
+                  </p>
+                </div>
             </div>
-          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {initiatives.items.map((item, index) => {
               const animateId = `programs-initiative-${index}`;
               const iconKey = ((item.icon as keyof typeof ICON_MAP) || 'book') as keyof typeof ICON_MAP;
               const Icon = ICON_MAP[iconKey] ?? BookOpenIcon;
               return (
-                <div
+                <div 
                   key={`${item.title}-${index}`}
                   className="transform transition-all duration-700"
                   data-animate-id={animateId}
@@ -1058,7 +1058,7 @@ export function Programs() {
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                       {item.title}
-                    </h3>
+                      </h3>
                     <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                       {item.description}
                     </p>
