@@ -488,7 +488,7 @@ export function Programs() {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
+    <div className="w-full bg-white dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] pt-20 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 text-white overflow-hidden">
         <div
@@ -524,10 +524,54 @@ export function Programs() {
 
       {/* Programs Introduction */}
       <section className="relative py-16 md:py-24 bg-white dark:bg-gray-950 overflow-hidden transition-colors duration-300">
+        {/* Background textures for visual depth */}
         <DottedPattern opacity={0.05} size="40px" />
         <DottedPattern opacity={0.03} size="80px" className="mix-blend-multiply" />
+        <GeometricPattern opacity={0.02} />
+        {/* Soft radial accents */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-[#8B2332]/5 dark:bg-[#8B2332]/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#7A7A3F]/5 dark:bg-[#7A7A3F]/10 rounded-full blur-3xl"></div>
+        {/* Abstract corner ornaments */}
+        <AbstractShape position="top" color="#8B2332" />
+        <AbstractShape position="bottom" color="#7A7A3F" />
+        {/* Subtle vector shapes for “National Impact” */}
+        <div className="absolute -top-8 left-8 w-40 h-40 opacity-5 hidden lg:block">
+          <svg viewBox="0 0 120 120" className="w-full h-full">
+            <circle cx="60" cy="60" r="48" fill="none" stroke="#8B2332" strokeWidth="1" opacity="0.18" />
+            <circle cx="60" cy="60" r="34" fill="none" stroke="#7A7A3F" strokeWidth="0.9" opacity="0.14" />
+          </svg>
+        </div>
+        <div className="absolute -bottom-10 right-10 w-32 h-32 opacity-5 hidden lg:block">
+          <svg viewBox="0 0 120 120" className="w-full h-full">
+            <polygon points="60,5 115,60 60,115 5,60" fill="#8B2332" opacity="0.08" />
+            <polygon points="60,20 100,60 60,100 20,60" fill="#7A7A3F" opacity="0.06" />
+          </svg>
+        </div>
+        {/* Additional floating accents */}
+        <div className="absolute top-10 left-1/3 w-20 h-20 opacity-5 hidden xl:block animate-float">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <polygon points="50,0 65,25 50,50 35,25" fill="#8B2332" opacity="0.10" />
+          </svg>
+        </div>
+        <div className="absolute bottom-6 left-1/5 w-24 h-24 opacity-5 hidden md:block animate-pulse-slow">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <circle cx="50" cy="50" r="22" fill="none" stroke="#7A7A3F" strokeWidth="1" opacity="0.12" />
+            <circle cx="50" cy="50" r="14" fill="none" stroke="#8B2332" strokeWidth="0.8" opacity="0.10" />
+          </svg>
+        </div>
+        <div className="absolute top-1/4 right-1/4 w-28 h-28 opacity-5 hidden lg:block">
+          <svg viewBox="0 0 120 120" className="w-full h-full">
+            <rect x="20" y="20" width="80" height="80" rx="14" fill="#7A7A3F" opacity="0.07" />
+            <rect x="32" y="32" width="56" height="56" rx="10" fill="#8B2332" opacity="0.06" />
+          </svg>
+        </div>
+        {/* Diagonal glow band with dark-mode variant */}
+        <div className="pointer-events-none absolute inset-x-0 -top-6 h-24 bg-gradient-to-b from-white/40 to-transparent dark:from-[#0f0f10]/40 dark:to-transparent"></div>
+        {/* Tiny scattered dots */}
+        <span className="absolute top-14 left-16 w-2 h-2 rounded-full bg-[#8B2332]/20 dark:bg-[#B85C6D]/25"></span>
+        <span className="absolute top-24 right-20 w-1.5 h-1.5 rounded-full bg-[#7A7A3F]/25"></span>
+        <span className="absolute bottom-24 left-8 w-1.5 h-1.5 rounded-full bg-[#8B2332]/25"></span>
+        <span className="absolute bottom-10 right-1/3 w-2 h-2 rounded-full bg-[#7A7A3F]/25"></span>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="transform transition-all duration-700" data-animate-id="programs-intro">
             <div className={`${isVisible['programs-intro'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -588,10 +632,10 @@ export function Programs() {
       </section>
 
       {/* Community-Based Rehabilitation */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FDF4F4] via-[#F8ECE4] to-[#F4E6DC] dark:from-gray-900 dark:via-gray-900/80 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FDF4F4] via-[#F8ECE4] to-[#F4E6DC] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] overflow-hidden transition-colors duration-300">
         <DottedPattern opacity={0.05} size="48px" />
         <GeometricPattern opacity={0.02} />
-        <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/40 to-transparent dark:from-gray-900/40 pointer-events-none"></div>
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/40 to-transparent dark:from-[#0f0f10]/40 pointer-events-none"></div>
         {/* Decorative graphics & animations for CBR */}
         <div
           className={`absolute top-1/5 left-1/6 w-56 h-56 opacity-4 hidden lg:block animate-float transition-all duration-700 ${
@@ -889,10 +933,10 @@ export function Programs() {
       </section>
 
       {/* Complementary Initiatives */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FEF6F6] via-[#FDF0F3] to-[#F7E5EC] dark:from-gray-900 dark:via-gray-900/80 dark:to-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FEF6F6] via-[#FDF0F3] to-[#F7E5EC] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] overflow-hidden transition-colors duration-300">
         <DottedPattern opacity={0.04} size="32px" />
         <GeometricPattern opacity={0.02} />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/70 to-transparent pointer-events-none"></div>
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/70 to-transparent dark:from-[#0f0f10]/70 dark:to-transparent pointer-events-none"></div>
         <div
           className={`absolute -bottom-10 right-0 w-72 h-72 bg-[#8B2332]/10 rounded-full blur-3xl transition-all duration-700 ${
             isVisible['pi-bg-blob-right'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
@@ -1081,7 +1125,7 @@ export function Programs() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 transition-colors duration-300">
+      <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
             <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-white dark:text-gray-800"/>
@@ -1090,7 +1134,7 @@ export function Programs() {
       </div>
 
       {/* Program Features */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[#FEFAF4] via-[#F6F0E8]/70 to-[#F1E5D9] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] overflow-hidden transition-colors duration-300">
         {/* Enhanced background graphics - multiple layers */}
         <DottedPattern opacity={0.04} size="32px" />
         <DottedPattern opacity={0.02} size="48px" className="mix-blend-multiply" />
@@ -1370,7 +1414,7 @@ export function Programs() {
       </section>
 
       {/* Section Divider */}
-      <div className="relative w-full overflow-hidden bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="relative w-full overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] transition-colors duration-300">
         <div className="absolute top-0 left-0 w-full">
           <svg viewBox="0 0 1200 100" preserveAspectRatio="none" className="w-full h-16">
             <path d="M0,0 Q400,60 600,50 T1200,60 L1200,100 L0,100 Z" fill="currentColor" className="text-gray-50 dark:text-gray-800"/>

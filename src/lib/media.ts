@@ -1,4 +1,5 @@
-const CMS_API_URL = import.meta.env.VITE_CMS_API_URL ?? 'http://localhost:4000/api';
+import { getApiBaseUrl } from './config';
+const CMS_API_URL = getApiBaseUrl();
 
 function getCmsOrigin() {
   return CMS_API_URL.replace(/\/api$/, '');

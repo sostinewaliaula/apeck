@@ -942,12 +942,20 @@ export function Home() {
   );
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
+    <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] overflow-hidden transition-colors duration-300">
       <div
         className="absolute inset-0 opacity-[0.08] dark:hidden pointer-events-none"
         style={{
           backgroundImage:
             'radial-gradient(circle at 20% 20%, rgba(139,35,50,0.25) 0, transparent 45%), radial-gradient(circle at 80% 0%, rgba(122,122,63,0.15) 0, transparent 40%), radial-gradient(circle at 50% 80%, rgba(139,35,50,0.12) 0, transparent 50%)',
+        }}
+      ></div>
+      {/* Dark mode background accents */}
+      <div
+        className="absolute inset-0 hidden dark:block pointer-events-none opacity-[0.12]"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 15% 15%, rgba(184,92,109,0.22) 0, transparent 45%), radial-gradient(circle at 85% 10%, rgba(155,155,95,0.16) 0, transparent 40%), radial-gradient(circle at 50% 85%, rgba(184,92,109,0.14) 0, transparent 50%)',
         }}
       ></div>
 
