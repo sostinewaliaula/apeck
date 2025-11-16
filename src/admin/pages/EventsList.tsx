@@ -5,6 +5,7 @@ import { Calendar, Loader2, MapPin, Plus } from 'lucide-react';
 import { AdminLayout } from '../components/AdminLayout';
 import { useAuth } from '../auth-context';
 import { AdminEvent, createEvent, deleteEvent, fetchAdminEvents, publishEvent, updateEvent, EventPayload } from '../api';
+import { ImageFieldEditor } from '../components/ImageField';
 
 const initialForm: EventPayload = {
   title: '',
@@ -267,15 +268,12 @@ export function AdminEventsList() {
                 />
               </label>
             </div>
-            <label className="text-xs text-[#6B4E3D] block">
-              Cover Image URL
-              <input
-                className="mt-1 w-full rounded-md border border-[#E7DED1] px-3 py-2 text-sm"
-                value={createForm.coverImageUrl}
-                onChange={(e) => setCreateForm((f) => ({ ...f, coverImageUrl: e.target.value }))}
-                placeholder="/uploads/your-image.jpg"
-              />
-            </label>
+            <ImageFieldEditor
+              label="Cover Image"
+              value={createForm.coverImageUrl}
+              onChange={(url) => setCreateForm((f) => ({ ...f, coverImageUrl: url }))}
+              accessToken={accessToken}
+            />
             <div className="flex items-center justify-end">
               <button
                 type="submit"

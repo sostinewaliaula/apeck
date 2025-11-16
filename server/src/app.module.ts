@@ -12,6 +12,7 @@ import { PagesModule } from './pages/pages.module';
 import { RoutesModule } from './routes/routes.module';
 import { MediaModule } from './media/media.module';
 import { NewsModule } from './news/news.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { NewsModule } from './news/news.module';
     RoutesModule,
     MediaModule,
     NewsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
