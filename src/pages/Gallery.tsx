@@ -1,11 +1,14 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { CameraIcon, FilterIcon, XIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
 
 export function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -90,15 +93,56 @@ export function Gallery() {
     };
   }, []);
 
-  const categories = [
-    { id: 'all', label: 'All Photos', icon: CameraIcon },
-    { id: 'conferences', label: 'Conferences', icon: CameraIcon },
-    { id: 'training', label: 'Training', icon: CameraIcon },
-    { id: 'outreach', label: 'Outreach', icon: CameraIcon },
-    { id: 'leadership', label: 'Leadership', icon: CameraIcon }
-  ];
+  // Load CMS content for gallery
+  useEffect(() => {
+    let mounted = true;
+    fetchPageContent('gallery')
+      .then((page) => {
+        if (!mounted) return;
+        const map: Record<string, unknown> = {};
+        page.sections?.forEach((s) => {
+          map[s.key] = s.content;
+        });
+        setSectionContent(map);
+      })
+      .catch(() => {
+        // fall back to defaults
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  const photos = [
+  // CMS-driven hero (optional)
+  const galleryHero = (() => {
+    const content = sectionContent['gallery_hero'] as
+      | { title?: string; badgeLabel?: string; description?: string; backgroundImage?: string }
+      | undefined;
+    return {
+      title: content?.title?.trim() || 'Gallery',
+      badgeLabel: content?.badgeLabel?.trim() || 'MEMORY LANE',
+      description:
+        content?.description?.trim() || 'Capturing moments of faith, fellowship, and transformation across our ministry',
+      backgroundImage: content?.backgroundImage ? resolveMediaUrl(content.backgroundImage) : '/assets/image9.jpg',
+    };
+  })();
+
+  // CMS-driven items
+  const cmsItemsRaw = (sectionContent['gallery_items'] as
+    | { items?: Array<{ url?: string; title?: string; category?: string }> }
+    | undefined)?.items;
+  const cmsPhotos =
+    cmsItemsRaw
+      ?.map((item, idx) => {
+        const url = resolveMediaUrl(item.url || '');
+        const title = (item.title || '').trim();
+        const category = (item.category || '').trim().toLowerCase() || 'uncategorized';
+        if (!url) return null;
+        return { id: idx + 1, url, title: title || 'Photo', category };
+      })
+      .filter(Boolean) as Array<{ id: number; url: string; title: string; category: string }> | undefined;
+
+  const defaultPhotos = [
     { id: 4, url: '/assets/image4.jpg', category: 'leadership', title: 'Leadership Development Workshop' },
     { id: 5, url: '/assets/image5.jpg', category: 'training', title: 'Theological Studies Program' },
     { id: 6, url: '/assets/image6.jpg', category: 'conferences', title: 'Youth Ministry Conference' },
@@ -106,6 +150,20 @@ export function Gallery() {
     { id: 8, url: '/assets/image8.jpg', category: 'conferences', title: 'National Clergy Gathering' },
     { id: 9, url: '/assets/image9.jpg', category: 'outreach', title: 'Humanitarian Initiative' }
   ];
+
+  const photos = (cmsPhotos && cmsPhotos.length ? cmsPhotos : defaultPhotos).map((p, i) => ({
+    ...p,
+    id: i + 1,
+  }));
+
+  const derivedCategories = useMemo(() => {
+    const base = new Set<string>(photos.map((p) => p.category));
+    const items = Array.from(base).sort();
+    return [
+      { id: 'all', label: 'All Photos', icon: CameraIcon },
+      ...items.map((id) => ({ id, label: id.charAt(0).toUpperCase() + id.slice(1), icon: CameraIcon })),
+    ];
+  }, [photos]);
 
   const filteredPhotos = selectedCategory === 'all' ? photos : photos.filter(photo => photo.category === selectedCategory);
 
@@ -153,7 +211,7 @@ export function Gallery() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/assets/image9.jpg)',
+            backgroundImage: `url(${galleryHero.backgroundImage})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -203,14 +261,14 @@ export function Gallery() {
             <div className={`${isVisible['gallery-hero'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg border border-white/20">
-                  MEMORY LANE
+                  {galleryHero.badgeLabel}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
-                Gallery
+                {galleryHero.title}
               </h1>
               <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
-                Capturing moments of faith, fellowship, and transformation across our ministry
+                {galleryHero.description}
               </p>
             </div>
           </div>
@@ -276,7 +334,7 @@ export function Gallery() {
             data-animate-id="filter-section"
           >
             <div className={`${isVisible['filter-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} transition-all duration-700`}>
-              {categories.map((category) => {
+              {derivedCategories.map((category) => {
                 const IconComponent = category.icon;
                 const isSelected = selectedCategory === category.id;
                 return (
@@ -706,25 +764,25 @@ export function Gallery() {
           >
             <div className={`${isVisible['stats-header'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
-            <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
-                  OUR IMPACT
-                </span>
+              <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-[#8B2332]/15 via-[#8B2332]/20 to-[#8B2332]/15 dark:from-[#B85C6D]/15 dark:via-[#B85C6D]/20 dark:to-[#B85C6D]/15 text-[#8B2332] dark:text-[#B85C6D] rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-md border border-[#8B2332]/20 dark:border-[#B85C6D]/20">
+                {(sectionContent['gallery_impact'] as { badgeLabel?: string } | undefined)?.badgeLabel?.trim() || 'OUR IMPACT'}
+              </span>
               </div>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
-              Our Impact in Pictures
-            </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
-              Documenting our journey of faith and service
-            </p>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#8B2332] dark:text-[#B85C6D] mb-4 leading-tight">
+                {(sectionContent['gallery_impact'] as { title?: string } | undefined)?.title?.trim() || 'Our Impact in Pictures'}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
+                {(sectionContent['gallery_impact'] as { description?: string } | undefined)?.description?.trim() || 'Documenting our journey of faith and service'}
+              </p>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
+            {((sectionContent['gallery_impact'] as { stats?: Array<{ value?: string; label?: string; color?: string }> } | undefined)?.stats ?? [
               { value: '500+', label: 'Events Documented', color: '#8B2332' },
               { value: '10,000+', label: 'Photos Captured', color: '#7A7A3F' },
               { value: '47', label: 'Counties Covered', color: '#8B2332' },
               { value: '15', label: 'Years of Memories', color: '#7A7A3F' }
-            ].map((stat, index) => (
+            ]).map((stat, index) => (
               <div
                 key={index}
                 className="text-center transform transition-all duration-700"
@@ -734,11 +792,11 @@ export function Gallery() {
                   <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#8B2332]/10 to-[#7A7A3F]/10 dark:from-[#B85C6D]/15 dark:to-[#9B9B5F]/15 rounded-full mb-6 shadow-lg">
                     <CameraIcon size={32} className="text-[#8B2332] dark:text-[#B85C6D]" strokeWidth={2.5} />
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold mb-3" style={{ color: stat.color }}>
-                    {stat.value}
+                  <div className="text-3xl md:text-4xl font-bold mb-3" style={{ color: stat.color || '#8B2332' }}>
+                    {stat.value || ''}
                   </div>
                   <div className="text-gray-600 dark:text-gray-400 font-semibold text-sm md:text-base">
-                    {stat.label}
+                    {stat.label || ''}
                   </div>
             </div>
               </div>

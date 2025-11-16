@@ -584,6 +584,68 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  // Gallery Page Sections
+  {
+    key: 'gallery_hero',
+    title: 'Gallery - Hero',
+    description: 'Top hero banner for the gallery page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'MEMORY LANE' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Gallery' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Capturing moments of faith, fellowship, and transformation across our ministry',
+      },
+      { type: 'image', label: 'Background Image', name: 'backgroundImage', helperText: 'Hero background visual' },
+    ],
+  },
+  {
+    key: 'gallery_items',
+    title: 'Gallery - Items',
+    description: 'List of gallery photos (URL, title, category).',
+    fields: [
+      {
+        type: 'repeatable',
+        label: 'Photos',
+        name: 'items',
+        minItems: 1,
+        itemFields: [
+          { type: 'image', label: 'Image', name: 'url' },
+          { type: 'text', label: 'Title', name: 'title', placeholder: 'Leadership Development Workshop' },
+          { type: 'text', label: 'Category', name: 'category', placeholder: 'conferences, training, outreach...' },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'gallery_impact',
+    title: 'Gallery - Impact Stats',
+    description: 'Impact header and statistics shown on the Gallery page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'OUR IMPACT' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Our Impact in Pictures' },
+      {
+        type: 'textarea',
+        label: 'Description',
+        name: 'description',
+        placeholder: 'Documenting our journey of faith and service',
+      },
+      {
+        type: 'repeatable',
+        label: 'Stats',
+        name: 'stats',
+        minItems: 1,
+        maxItems: 6,
+        itemFields: [
+          { type: 'text', label: 'Value', name: 'value', placeholder: '500+' },
+          { type: 'text', label: 'Label', name: 'label', placeholder: 'Events Documented' },
+          { type: 'text', label: 'Color (hex)', name: 'color', placeholder: '#8B2332' },
+        ],
+      },
+    ],
+  },
   {
     key: 'about_hero',
     title: 'About Hero',
