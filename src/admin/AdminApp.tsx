@@ -8,6 +8,7 @@ import { AdminPageDetail } from './pages/PageDetail';
 import { AdminMediaLibrary } from './pages/MediaLibrary';
 import { AdminNewsList } from './pages/NewsList';
 import { AdminNewsDetail } from './pages/NewsDetail';
+import { AdminEventsList } from './pages/EventsList';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -66,6 +67,14 @@ function AdminRouter() {
         element={
           <ProtectedRoute>
             <AdminNewsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/events"
+        element={
+          <ProtectedRoute>
+            <AdminEventsList />
           </ProtectedRoute>
         }
       />

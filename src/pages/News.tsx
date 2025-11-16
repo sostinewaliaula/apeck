@@ -3,6 +3,7 @@ import { CalendarIcon, MapPinIcon, ClockIcon, ArrowRightIcon, BellIcon, Loader2 
 import { Link } from 'react-router-dom';
 import { EnrollForm } from '../components/EnrollForm';
 import { fetchNewsList, PublicNewsSummary } from '../lib/news';
+import { fetchEventsList, PublicEventSummary } from '../lib/events';
 import { resolveMediaUrl } from '../lib/media';
 
 const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -31,6 +32,8 @@ export function News() {
   const [newsData, setNewsData] = useState<PublicNewsSummary[]>([]);
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsError, setNewsError] = useState<string | null>(null);
+  const [eventsData, setEventsData] = useState<PublicEventSummary[]>([]);
+  const [eventsError, setEventsError] = useState<string | null>(null);
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -115,23 +118,44 @@ export function News() {
     };
   }, []);
 
+  // Re-observe dynamically added items when data loads (news/events cards)
+  useEffect(() => {
+    if (!observerRef.current) return;
+    const elements = document.querySelectorAll('[data-animate-id]');
+    elements.forEach((el) => observerRef.current?.observe(el));
+  }, [newsData, eventsData]);
+
   useEffect(() => {
     let isMounted = true;
     setNewsLoading(true);
-    fetchNewsList({ limit: 9 })
+    fetchNewsList()
       .then((items) => {
         if (!isMounted) return;
+        console.log('[News] loaded items:', items);
         setNewsData(items);
         setNewsError(null);
       })
       .catch(() => {
         if (!isMounted) return;
         setNewsError('Failed to load the latest articles. Showing highlights instead.');
+        console.error('[News] failed to load items');
       })
       .finally(() => {
         if (isMounted) {
           setNewsLoading(false);
         }
+      });
+
+    // Load events (no limit: show all available)
+    fetchEventsList()
+      .then((items) => {
+        if (!isMounted) return;
+        setEventsData(items);
+        setEventsError(null);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setEventsError('Failed to load events. Showing examples instead.');
       });
     return () => {
       isMounted = false;
@@ -216,7 +240,26 @@ export function News() {
         }))
       : defaultNewsItems;
 
-  const events = [
+  const events = eventsData.length
+    ? eventsData.map((e) => {
+        // Derive date parts from startDate
+        const dateObj = new Date(e.startDate);
+        const day = Number.isNaN(dateObj.getTime()) ? '' : String(dateObj.getDate()).padStart(2, '0');
+        const month = Number.isNaN(dateObj.getTime()) ? '' : dateObj.toLocaleString(undefined, { month: 'short' }).toUpperCase();
+        const year = Number.isNaN(dateObj.getTime()) ? '' : String(dateObj.getFullYear());
+        return {
+          id: e.id,
+          date: day || '',
+          month: month || '',
+          year: year || '',
+          title: e.title,
+          time: e.endDate ? '' : '', // can be enhanced if backend provides times
+          location: e.location || '',
+          description: e.description || '',
+          color: '#8B2332',
+        };
+      })
+    : [
     {
       id: 1,
       date: '15',
@@ -818,7 +861,7 @@ export function News() {
                   data-animate-id={`news-${index}`}
                 >
                   <div className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100 dark:border-gray-700 group ${
-                    isVisible[`news-${index}`] ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
+                    (isVisible[`news-${index}`] ?? true) ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'
                   }`}>
                     {/* Image Container */}
                     <div className="relative h-64 md:h-72 overflow-hidden">

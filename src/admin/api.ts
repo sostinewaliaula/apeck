@@ -459,3 +459,95 @@ export function deleteNews(accessToken: string, id: string) {
   });
 }
 
+// ------- Events Admin API -------
+export type AdminEvent = {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  status: 'draft' | 'published';
+  startDate: string;
+  endDate?: string;
+  location?: string;
+  category?: string;
+  coverImageUrl?: string;
+  updatedAt?: string;
+};
+
+type EventResponse = {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string | null;
+  status: 'draft' | 'published';
+  start_date: string;
+  end_date?: string | null;
+  location?: string | null;
+  category?: string | null;
+  cover_image_url?: string | null;
+  updated_at?: string | null;
+};
+
+const normalizeEvent = (e: EventResponse): AdminEvent => ({
+  id: e.id,
+  slug: e.slug,
+  title: e.title,
+  description: e.description ?? undefined,
+  status: e.status,
+  startDate: e.start_date,
+  endDate: e.end_date ?? undefined,
+  location: e.location ?? undefined,
+  category: e.category ?? undefined,
+  coverImageUrl: e.cover_image_url ?? undefined,
+  updatedAt: e.updated_at ?? undefined,
+});
+
+export type EventPayload = {
+  title: string;
+  slug?: string;
+  description?: string;
+  status?: 'draft' | 'published';
+  startDate: string;
+  endDate?: string;
+  location?: string;
+  category?: string;
+  coverImageUrl?: string;
+};
+
+export function fetchAdminEvents(accessToken: string) {
+  return request<EventResponse[]>('/admin/events', {
+    method: 'GET',
+    accessToken,
+  }).then((rows) => rows.map(normalizeEvent));
+}
+
+export function createEvent(accessToken: string, payload: EventPayload) {
+  return request<EventResponse>('/admin/events', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeEvent);
+}
+
+export function updateEvent(accessToken: string, id: string, payload: Partial<EventPayload>) {
+  return request<EventResponse>(`/admin/events/${id}`, {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeEvent);
+}
+
+export function publishEvent(accessToken: string, id: string) {
+  return request<EventResponse>(`/admin/events/${id}/publish`, {
+    method: 'POST',
+    accessToken,
+  }).then(normalizeEvent);
+}
+
+export function deleteEvent(accessToken: string, id: string) {
+  return request<void>(`/admin/events/${id}`, {
+    method: 'DELETE',
+    accessToken,
+  });
+}
+
