@@ -646,6 +646,66 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
     ],
   },
+  // Contact Page Sections
+  {
+    key: 'contact_hero',
+    title: 'Contact - Hero',
+    description: 'Top hero banner for the contact page.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'GET IN TOUCH' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Contact Us' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'We are here to answer your questions and support your ministry' },
+      { type: 'image', label: 'Background Image', name: 'backgroundImage', helperText: 'Hero background visual' },
+    ],
+  },
+  {
+    key: 'contact_info',
+    title: 'Contact - Info',
+    description: 'Office address, phones, emails and hours.',
+    fields: [
+      { type: 'text', label: 'Office Title', name: 'officeTitle', placeholder: 'Office Address' },
+      { type: 'textarea', label: 'Office Address', name: 'officeAddress', placeholder: 'APECK Headquarters\nNairobi, Kenya\nP.O. Box 12345-00100' },
+      {
+        type: 'repeatable',
+        label: 'Phone Lines',
+        name: 'phones',
+        itemFields: [{ type: 'text', label: 'Phone Text', name: 'text', placeholder: '+254 700 000 000' }],
+      },
+      {
+        type: 'repeatable',
+        label: 'Email Addresses',
+        name: 'emails',
+        itemFields: [{ type: 'text', label: 'Email Text', name: 'text', placeholder: 'info@apeck.or.ke' }],
+      },
+      { type: 'text', label: 'Hours Title', name: 'hoursTitle', placeholder: 'Office Hours' },
+      { type: 'textarea', label: 'Hours', name: 'hours', placeholder: 'Mon-Fri: 8:00 AM - 5:00 PM\nSaturday: 9:00 AM - 1:00 PM\nSunday: Closed' },
+    ],
+  },
+  {
+    key: 'contact_social',
+    title: 'Contact - Social',
+    description: 'Social links rendered as buttons.',
+    fields: [
+      { type: 'text', label: 'Section Title', name: 'title', placeholder: 'Connect With Us' },
+      { type: 'text', label: 'Facebook URL', name: 'facebook', placeholder: 'https://facebook.com/...' },
+      { type: 'text', label: 'X / Twitter URL', name: 'x', placeholder: 'https://x.com/...' },
+      { type: 'text', label: 'Instagram URL', name: 'instagram', placeholder: 'https://instagram.com/...' },
+      { type: 'text', label: 'YouTube URL', name: 'youtube', placeholder: 'https://youtube.com/...' },
+    ],
+  },
+  {
+    key: 'contact_map',
+    title: 'Contact - Map',
+    description: 'Map header content and coordinates.',
+    fields: [
+      { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'LOCATION' },
+      { type: 'text', label: 'Title', name: 'title', placeholder: 'Find Us' },
+      { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Visit our office in Nairobi' },
+      { type: 'text', label: 'Latitude', name: 'lat', placeholder: '-1.2921' },
+      { type: 'text', label: 'Longitude', name: 'lng', placeholder: '36.8219' },
+      { type: 'text', label: 'Popup HTML', name: 'popup', placeholder: '<b>APECK Headquarters</b><br>Nairobi, Kenya' },
+    ],
+  },
   {
     key: 'about_hero',
     title: 'About Hero',

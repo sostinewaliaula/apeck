@@ -2,6 +2,8 @@ import { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon, FacebookIcon, InstagramIcon, YoutubeIcon, SendIcon } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { fetchPageContent } from '../lib/pageContent';
+import { resolveMediaUrl } from '../lib/media';
 
 // Fix for default marker icon in React/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -32,6 +34,7 @@ export function Contact() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -116,42 +119,58 @@ export function Contact() {
     };
   }, []);
 
-  // Initialize map
+  // Load CMS content
+  useEffect(() => {
+    let mounted = true;
+    fetchPageContent('contact')
+      .then((page) => {
+        if (!mounted) return;
+        const map: Record<string, unknown> = {};
+        page.sections?.forEach((s) => {
+          map[s.key] = s.content;
+        });
+        setSectionContent(map);
+      })
+      .catch(() => {
+        // fallback to defaults
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Initialize map with CMS coordinates
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
+    const mapCfg = sectionContent['contact_map'] as
+      | { lat?: string; lng?: string; popup?: string }
+      | undefined;
+    const lat = Number((mapCfg?.lat ?? '-1.2921').toString());
+    const lng = Number((mapCfg?.lng ?? '36.8219').toString());
+    const coords: [number, number] = [Number.isFinite(lat) ? lat : -1.2921, Number.isFinite(lng) ? lng : 36.8219];
 
-    // Map coordinates for Nairobi, Kenya
-    const nairobiCoords: [number, number] = [-1.2921, 36.8219];
-
-    // Initialize map
     const map = L.map(mapContainerRef.current, {
-      center: nairobiCoords,
+      center: coords,
       zoom: 15,
       zoomControl: true,
       scrollWheelZoom: true,
       attributionControl: true,
     });
-
-    // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(map);
-
-    // Add marker
-    const marker = L.marker(nairobiCoords).addTo(map);
-    marker.bindPopup('<b>APECK Headquarters</b><br>Nairobi, Kenya').openPopup();
-
+    const marker = L.marker(coords).addTo(map);
+    const popupHtml = mapCfg?.popup || '<b>APECK Headquarters</b><br>Nairobi, Kenya';
+    marker.bindPopup(popupHtml).openPopup();
     mapRef.current = map;
-
-    // Cleanup function
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [sectionContent]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,7 +210,7 @@ export function Contact() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&q=75)',
+            backgroundImage: `url(${(sectionContent['contact_hero'] as { backgroundImage?: string } | undefined)?.backgroundImage ? resolveMediaUrl((sectionContent['contact_hero'] as any).backgroundImage) : 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&q=75'})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -241,14 +260,14 @@ export function Contact() {
             <div className={`${isVisible['contact-hero'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg border border-white/20">
-                  GET IN TOUCH
+                  {(sectionContent['contact_hero'] as { badgeLabel?: string } | undefined)?.badgeLabel?.trim() || 'GET IN TOUCH'}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
-                Contact Us
+                {(sectionContent['contact_hero'] as { title?: string } | undefined)?.title?.trim() || 'Contact Us'}
               </h1>
               <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
-                Get in touch with us. We are here to answer your questions and support your ministry
+                {(sectionContent['contact_hero'] as { description?: string } | undefined)?.description?.trim() || 'Get in touch with us. We are here to answer your questions and support your ministry'}
               </p>
             </div>
           </div>
@@ -571,12 +590,17 @@ export function Contact() {
                         </div>
                         <div className="flex-1">
                           <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
-                            Office Address
+                            {(sectionContent['contact_info'] as { officeTitle?: string } | undefined)?.officeTitle?.trim() || 'Office Address'}
                           </h3>
                           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            APECK Headquarters<br />
-                            Nairobi, Kenya<br />
-                            P.O. Box 12345-00100
+                            {((sectionContent['contact_info'] as { officeAddress?: string } | undefined)?.officeAddress || 'APECK Headquarters\nNairobi, Kenya\nP.O. Box 12345-00100')
+                              .split('\n')
+                              .map((line, i) => (
+                                <span key={i}>
+                                  {line}
+                                  <br />
+                                </span>
+                              ))}
                           </p>
                         </div>
                       </div>
@@ -597,9 +621,16 @@ export function Contact() {
                             Phone Numbers
                           </h3>
                           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Main Office: +254 700 000 000<br />
-                            Training Dept: +254 700 000 001<br />
-                            Membership: +254 700 000 002
+                            {(((sectionContent['contact_info'] as { phones?: Array<{ text?: string }> } | undefined)?.phones) ?? [
+                              { text: 'Main Office: +254 700 000 000' },
+                              { text: 'Training Dept: +254 700 000 001' },
+                              { text: 'Membership: +254 700 000 002' },
+                            ]).map((p, i) => (
+                              <span key={i}>
+                                {p.text}
+                                <br />
+                              </span>
+                            ))}
                           </p>
                         </div>
                       </div>
@@ -620,9 +651,16 @@ export function Contact() {
                             Email Addresses
                           </h3>
                           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            General: info@apeck.or.ke<br />
-                            Programs: programs@apeck.or.ke<br />
-                            Membership: membership@apeck.or.ke
+                            {(((sectionContent['contact_info'] as { emails?: Array<{ text?: string }> } | undefined)?.emails) ?? [
+                              { text: 'General: info@apeck.or.ke' },
+                              { text: 'Programs: programs@apeck.or.ke' },
+                              { text: 'Membership: membership@apeck.or.ke' },
+                            ]).map((e, i) => (
+                              <span key={i}>
+                                {e.text}
+                                <br />
+                              </span>
+                            ))}
                           </p>
                         </div>
                       </div>
@@ -640,12 +678,16 @@ export function Contact() {
                         </div>
                         <div className="flex-1">
                           <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-lg">
-                            Office Hours
+                            {(sectionContent['contact_info'] as { hoursTitle?: string } | undefined)?.hoursTitle?.trim() || 'Office Hours'}
                           </h3>
                           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Monday - Friday: 8:00 AM - 5:00 PM<br />
-                            Saturday: 9:00 AM - 1:00 PM<br />
-                            Sunday: Closed
+                            {(((sectionContent['contact_info'] as { hours?: string } | undefined)?.hours || 'Monday - Friday: 8:00 AM - 5:00 PM\nSaturday: 9:00 AM - 1:00 PM\nSunday: Closed')
+                              .split('\n')).map((line, i) => (
+                              <span key={i}>
+                                {line}
+                                <br />
+                              </span>
+                            ))}
                           </p>
                         </div>
                       </div>
@@ -661,32 +703,32 @@ export function Contact() {
                 >
                   <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
                     <h3 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D] mb-6">
-                      Connect With Us
+                      {((sectionContent['contact_social'] as { title?: string } | undefined)?.title?.trim() || 'Connect With Us')}
                     </h3>
                     <div className="flex flex-wrap gap-4">
                       <a
-                        href="#"
+                        href={((sectionContent['contact_social'] as { facebook?: string } | undefined)?.facebook || '#')}
                         className="w-14 h-14 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] rounded-full flex items-center justify-center text-white hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
                         aria-label="Facebook"
                       >
                         <FacebookIcon size={22} strokeWidth={2.5} />
                       </a>
                       <a
-                        href="#"
+                        href={((sectionContent['contact_social'] as { x?: string } | undefined)?.x || '#')}
                         className="w-14 h-14 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full flex items-center justify-center text-white hover:from-[#6A6A35] hover:to-[#7A7A3F] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
                         aria-label="X"
                       >
                         <img src="https://img.icons8.com/?size=100&id=fJp7hepMryiw&format=png&color=000000" alt="X" className="w-5 h-5" />
                       </a>
                       <a
-                        href="#"
+                        href={((sectionContent['contact_social'] as { instagram?: string } | undefined)?.instagram || '#')}
                         className="w-14 h-14 bg-gradient-to-br from-[#8B2332] to-[#6B1A28] rounded-full flex items-center justify-center text-white hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
                         aria-label="Instagram"
                       >
                         <InstagramIcon size={22} strokeWidth={2.5} />
                       </a>
                       <a
-                        href="#"
+                        href={((sectionContent['contact_social'] as { youtube?: string } | undefined)?.youtube || '#')}
                         className="w-14 h-14 bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35] rounded-full flex items-center justify-center text-white hover:from-[#6A6A35] hover:to-[#7A7A3F] transition-all shadow-lg hover:shadow-xl hover:scale-110 transform duration-300"
                         aria-label="YouTube"
                       >
