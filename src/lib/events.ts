@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_CMS_API_URL ?? 'http://localhost:4000/api';
+import { getApiBaseUrl } from './config';
+
+const API_BASE_URL = getApiBaseUrl();
 
 export type EventsResponse = {
   id: string;

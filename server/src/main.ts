@@ -18,12 +18,32 @@ async function bootstrap() {
   });
   const defaultOrigins = ['http://localhost:5173', 'http://localhost:4173'];
   const appUrl = configService.get<string>('app.url');
-  const corsOrigins = appUrl
-    ? Array.from(new Set([...defaultOrigins, appUrl]))
-    : defaultOrigins;
+  const frontendUrl = configService.get<string>('app.frontendUrl');
+  
+  // Build allowed origins list
+  const corsOrigins: string[] = [...defaultOrigins];
+  if (appUrl) {
+    corsOrigins.push(appUrl);
+    // Also add HTTPS version if URL is HTTP
+    if (appUrl.startsWith('http://')) {
+      corsOrigins.push(appUrl.replace('http://', 'https://'));
+    }
+  }
+  if (frontendUrl) {
+    corsOrigins.push(frontendUrl);
+  }
+  
+  // Remove duplicates
+  const uniqueOrigins = Array.from(new Set(corsOrigins));
+  
+  // Log allowed origins for debugging
+  console.log('[CORS] Allowed origins:', uniqueOrigins);
+  
   app.enableCors({
-    origin: corsOrigins,
+    origin: uniqueOrigins,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
   app.useGlobalPipes(
     new ValidationPipe({

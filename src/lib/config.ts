@@ -10,7 +10,20 @@ export function getApiBaseUrl(): string {
   const fromEnv = import.meta.env.VITE_CMS_API_URL as string | undefined;
 
   const base = fromWindow || fromMeta || fromStorage || fromEnv || 'http://localhost:4000/api';
-  return base.replace(/\/+$/, '');
+  const final = base.replace(/\/+$/, '');
+  
+  // Debug logging (remove in production)
+  if (import.meta.env.DEV) {
+    console.log('[APECK API Config]', {
+      fromWindow,
+      fromMeta,
+      fromStorage,
+      fromEnv,
+      final,
+    });
+  }
+  
+  return final;
 }
 
 

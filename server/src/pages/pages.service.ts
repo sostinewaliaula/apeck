@@ -35,26 +35,40 @@ export class PagesService {
   ) {
     if (!section) return section;
     const content = section.content;
-    return {
-      ...section,
-      content: typeof content === 'string' ? JSON.parse(content) : content,
-    };
+    try {
+      return {
+        ...section,
+        content: typeof content === 'string' ? JSON.parse(content) : content,
+      };
+    } catch (error) {
+      console.error('[PagesService] Error parsing section content:', error, section);
+      // Return as-is if parsing fails
+      return {
+        ...section,
+        content: content ?? {},
+      };
+    }
   }
 
   async findPublishedPage(slug: string) {
-    const page = await this.knex('pages')
-      .where({ slug, status: 'published' })
-      .first();
-    if (!page) {
-      throw new NotFoundException('Page not found');
+    try {
+      const page = await this.knex('pages')
+        .where({ slug, status: 'published' })
+        .first();
+      if (!page) {
+        throw new NotFoundException('Page not found');
+      }
+      const sections = await this.knex('page_sections')
+        .where({ page_id: page.id, status: 'published' })
+        .orderBy('display_order', 'asc');
+      return {
+        ...page,
+        sections: sections.map((section) => this.mapSection(section)),
+      };
+    } catch (error) {
+      console.error('[PagesService] Error in findPublishedPage:', error);
+      throw error;
     }
-    const sections = await this.knex('page_sections')
-      .where({ page_id: page.id, status: 'published' })
-      .orderBy('display_order', 'asc');
-    return {
-      ...page,
-      sections: sections.map((section) => this.mapSection(section)),
-    };
   }
 
   async listRoutes() {
