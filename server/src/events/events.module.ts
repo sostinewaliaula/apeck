@@ -11,5 +11,3 @@ import { AdminEventsController } from './admin-events.controller';
   exports: [EventsService],
 })
 export class EventsModule {}
-
-

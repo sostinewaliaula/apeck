@@ -12,4 +12,3 @@ import { NewsService } from './news.service';
   exports: [NewsService],
 })
 export class NewsModule {}
-

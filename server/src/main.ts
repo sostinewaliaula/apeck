@@ -19,7 +19,7 @@ async function bootstrap() {
   const defaultOrigins = ['http://localhost:5173', 'http://localhost:4173'];
   const appUrl = configService.get<string>('app.url');
   const frontendUrl = configService.get<string>('app.frontendUrl');
-  
+
   // Build allowed origins list
   const corsOrigins: string[] = [...defaultOrigins];
   if (appUrl) {
@@ -32,13 +32,13 @@ async function bootstrap() {
   if (frontendUrl) {
     corsOrigins.push(frontendUrl);
   }
-  
+
   // Remove duplicates
   const uniqueOrigins = Array.from(new Set(corsOrigins));
-  
+
   // Log allowed origins for debugging
   console.log('[CORS] Allowed origins:', uniqueOrigins);
-  
+
   app.enableCors({
     origin: uniqueOrigins,
     credentials: true,

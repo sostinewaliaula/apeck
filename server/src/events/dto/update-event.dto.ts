@@ -1,4 +1,10 @@
-import { IsDateString, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { EVENT_STATUS_VALUES } from './create-event.dto';
 
 export class UpdateEventDto {
@@ -46,5 +52,3 @@ export class UpdateEventDto {
   @IsOptional()
   coverImageUrl?: string;
 }
-
-

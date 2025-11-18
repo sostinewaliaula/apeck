@@ -44,5 +44,3 @@ export class AdminEventsController {
     return this.eventsService.remove(id);
   }
 }
-
-

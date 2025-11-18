@@ -4,12 +4,6 @@ import { EnrollForm } from '../components/EnrollForm';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 
-declare global {
-  interface Window {
-    PaystackPop?: any;
-  }
-}
-
 type IndividualFormState = {
   fullName: string;
   phone: string;
@@ -22,7 +16,14 @@ type IndividualFormState = {
   mpesaCode: string;
 };
 
-const PAYSTACK_PUBLIC_KEY = 'pk_test_97fb3d0e02556d5237fe7c44543d50a4c7b86ca3';
+declare global {
+  interface Window {
+    PaystackPop?: any;
+  }
+}
+
+const PAYSTACK_PUBLIC_KEY =
+  ((import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined) ?? '').trim();
 const APPLICATION_EMAIL = 'membership@apeck.org'; // TODO: Replace with official intake email
 const INDIVIDUAL_REG_FEE = 1050;
 const GOOGLE_FORM_URL =
@@ -141,6 +142,7 @@ export function Membership() {
     if (document.getElementById(scriptId)) return;
     const script = document.createElement('script');
     script.id = scriptId;
+
     script.src = 'https://js.paystack.co/v1/inline.js';
     script.async = true;
     document.body.appendChild(script);
@@ -164,6 +166,10 @@ export function Membership() {
   const handlePaystackPayment = () => {
     if (!individualForm.email || !individualForm.phone || !individualForm.fullName) {
       setPaymentMessage('Please fill in your name, phone, and email before initiating payment.');
+      return;
+    }
+    if (!PAYSTACK_PUBLIC_KEY) {
+      setPaymentMessage('Payment gateway is not configured. Please contact support.');
       return;
     }
     if (!window.PaystackPop) {
@@ -204,6 +210,7 @@ export function Membership() {
 
   const closeIndividualModal = () => {
     setShowIndividualModal(false);
+    setSelectedTier(null);
     resetIndividualForm();
   };
 
@@ -219,6 +226,7 @@ export function Membership() {
       'New Individual Membership Application',
       '',
       `Payment Reference: ${paymentReference}`,
+      `Selected Tier: ${selectedTier ?? 'Individual Member'}`,
       `Full Name: ${individualForm.fullName}`,
       `Phone Number: ${individualForm.phone}`,
       `ID Number: ${individualForm.idNumber}`,
@@ -240,6 +248,7 @@ export function Membership() {
   };
 
   const triggerIndividualApplication = () => {
+    resetIndividualForm();
     setSelectedTier('Individual Member');
     setShowIndividualModal(true);
   };
@@ -646,7 +655,7 @@ export function Membership() {
                 {hero.description}
               </p>
               <button
-                onClick={() => setIsEnrollFormOpen(true)}
+                onClick={triggerIndividualApplication}
                 className="inline-flex items-center space-x-2 px-8 py-4 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
               >
                 <span>{hero.primary.label}</span>
@@ -1113,12 +1122,12 @@ export function Membership() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
             {tiers.items.map((tier, index) => {
               const isFeatured = !!tier.featured;
+              const isIndividualTier = tier.name.toLowerCase().includes('individual');
               const headerClasses = isFeatured
                 ? 'bg-gradient-to-br from-[#8B2332] to-[#6B1A28]'
                 : index % 2 === 0
                 ? 'bg-gradient-to-br from-gray-600 to-gray-700'
                 : 'bg-gradient-to-br from-[#7A7A3F] to-[#6A6A35]';
-              const accentColor = isFeatured ? '#8B2332' : index % 2 === 0 ? '#7A7A3F' : '#7A7A3F';
               return (
                 <div 
                   key={`${tier.name}-${index}`}
@@ -1155,12 +1164,16 @@ export function Membership() {
                       ) : null}
                       <button 
                         onClick={() => {
+                          if (isIndividualTier) {
+                            triggerIndividualApplication();
+                            return;
+                          }
                           setSelectedTier(tier.name);
                           setIsEnrollFormOpen(true);
                         }}
                         className={`w-full px-6 py-3 ${isFeatured ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-gray-600 hover:bg-gray-700'} text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:scale-105`}
                       >
-                        {tier.applyLabel || 'Apply Now'}
+                        {isIndividualTier ? 'Apply & Pay' : tier.applyLabel || 'Apply Now'}
                       </button>
                     </div>
                   </div>

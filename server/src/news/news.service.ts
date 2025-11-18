@@ -228,12 +228,10 @@ export class NewsService {
   }
 
   async publishNews(id: string) {
-    const updated = await this.table()
-      .where({ id })
-      .update({
-        status: 'published',
-        published_at: this.knex.fn.now(),
-      });
+    const updated = await this.table().where({ id }).update({
+      status: 'published',
+      published_at: this.knex.fn.now(),
+    });
     if (!updated) {
       throw new NotFoundException('News article not found');
     }

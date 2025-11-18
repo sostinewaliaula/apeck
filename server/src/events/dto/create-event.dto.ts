@@ -1,7 +1,14 @@
-import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export const EVENT_STATUS_VALUES = ['draft', 'published'] as const;
-export type EventStatus = typeof EVENT_STATUS_VALUES[number];
+export type EventStatus = (typeof EVENT_STATUS_VALUES)[number];
 
 export class CreateEventDto {
   @IsString()
@@ -48,5 +55,3 @@ export class CreateEventDto {
   @IsOptional()
   coverImageUrl?: string;
 }
-
-

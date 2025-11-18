@@ -66,10 +66,9 @@ export class EventsService {
   }
 
   async listAdmin() {
-    const rows = await this.withCoverUrl(this.table().select('events.*')).orderBy(
-      'events.created_at',
-      'desc',
-    );
+    const rows = await this.withCoverUrl(
+      this.table().select('events.*'),
+    ).orderBy('events.created_at', 'desc');
     return rows;
   }
 
@@ -110,8 +109,10 @@ export class EventsService {
     if (dto.location !== undefined) updates.location = dto.location;
     if (dto.category !== undefined) updates.category = dto.category;
     if (dto.status !== undefined) updates.status = dto.status;
-    if (dto.slug !== undefined) updates.slug = await this.ensureUniqueSlug(dto.slug, id);
-    if (dto.coverMediaId !== undefined) updates.cover_media_id = dto.coverMediaId;
+    if (dto.slug !== undefined)
+      updates.slug = await this.ensureUniqueSlug(dto.slug, id);
+    if (dto.coverMediaId !== undefined)
+      updates.cover_media_id = dto.coverMediaId;
     if (dto.coverImageUrl !== undefined) {
       const mediaId = randomUUID();
       await this.knex('media_assets').insert({
@@ -127,7 +128,9 @@ export class EventsService {
   }
 
   async publish(id: string) {
-    const res = await this.table().where({ id }).update({ status: 'published' });
+    const res = await this.table()
+      .where({ id })
+      .update({ status: 'published' });
     if (!res) throw new NotFoundException('Event not found');
     return this.findById(id);
   }
@@ -144,5 +147,3 @@ export class EventsService {
     return row;
   }
 }
-
-

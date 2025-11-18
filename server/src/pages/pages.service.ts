@@ -41,7 +41,11 @@ export class PagesService {
         content: typeof content === 'string' ? JSON.parse(content) : content,
       };
     } catch (error) {
-      console.error('[PagesService] Error parsing section content:', error, section);
+      console.error(
+        '[PagesService] Error parsing section content:',
+        error,
+        section,
+      );
       // Return as-is if parsing fails
       return {
         ...section,

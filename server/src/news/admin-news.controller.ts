@@ -32,9 +32,7 @@ export class AdminNewsController {
     @Query('showOnHome') showOnHome?: string,
     @Query('search') search?: string,
   ) {
-    const statusFilter = NEWS_STATUS_VALUES.includes(
-      status as NewsStatus,
-    )
+    const statusFilter = NEWS_STATUS_VALUES.includes(status as NewsStatus)
       ? (status as NewsStatus)
       : undefined;
 
@@ -71,4 +69,3 @@ export class AdminNewsController {
     return this.newsService.deleteNews(id);
   }
 }
-

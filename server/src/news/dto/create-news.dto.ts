@@ -63,4 +63,3 @@ export class CreateNewsDto {
   @IsString()
   readingTime?: string;
 }
-
