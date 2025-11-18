@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { TargetIcon, EyeIcon, HeartIcon, AwardIcon } from 'lucide-react';
+import { TargetIcon, EyeIcon, HeartIcon, AwardIcon, XIcon } from 'lucide-react';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 
@@ -47,6 +47,7 @@ type LeadershipSectionContent = {
     role?: string;
     description?: string;
     image?: string;
+    detailedBio?: string;
   }>;
 };
 
@@ -122,21 +123,30 @@ const defaultLeadershipSection = {
   description: 'Experienced leaders committed to serving the clergy community',
   leaders: [
     {
+      name: 'Apostle Peter Chacha',
+      role: 'Founder and Lead Minister',
+      description: 'Founder and Lead Minister of The Anointed of God Ministries, National Treasurer Church and clergy Association of Kenya',
+      image: '/assets/image1.jpg',
+      detailedBio: `Apostle Peter Chacha is the Founder and Lead Minister of The Anointed of God Ministries, National Treasurer Church and clergy Association of Kenya, Director of a consultancy firm "Paradigm Signature" and Director Christway School of Missions" in Kenya East Africa. Apostle Peter is also a trained professional mediator and a Life coach. His Apostolic ministry has touched many lives in Kenya, other African countries, Jamaica, Canada and the United States of America.
+
+He teaches and ministers in conferences, seminars, crusades and miracle services. His ministry has been a great blessing to the body of Christ.
+
+He holds a Diploma in public Relations & personnel Administration, Diploma in Advanced pastoral studies, Bachelor of Arts in Biblical studies, masters in Biblical studies and PhD in Leadership, Administration & Management and Honorary Doctorate degree in Divinity. He is also a registered and licensed counselor and psychologist by ministry of Health in Kenya.
+
+Apostle Chacha has a passion for missions and has been in the frontline in spiritual warfare. God uses him to minister to the sick and the spiritually oppressed. He pastors a local church in nakuru, and oversees several branches across kenya.
+
+He's married to his lovely wife Anne and together are blessed with three sons. Apostle Chacha and his family live and minister in Nakuru Kenya, East Africa.`,
+    },
+    {
       name: 'Bishop David Kimani',
       role: 'National Chairman',
       description: 'Leading APECK with vision and passion for clergy empowerment',
-      image: '/assets/image1.jpg',
+      image: '/assets/image2.jpg',
     },
     {
       name: 'Rev. Peter Omondi',
       role: 'General Secretary',
       description: 'Coordinating programs and member services across Kenya',
-      image: '/assets/image2.jpg',
-    },
-    {
-      name: 'Pastor James Mwangi',
-      role: 'Training Director',
-      description: 'Overseeing all training and development initiatives',
       image: '/assets/image3.jpg',
     },
   ],
@@ -173,6 +183,13 @@ export function About() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
+  const [selectedLeader, setSelectedLeader] = useState<{
+    name: string;
+    role: string;
+    description: string;
+    image: string;
+    detailedBio?: string;
+  } | null>(null);
 
   // Memoized Dotted pattern background component
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -351,6 +368,7 @@ export function About() {
       color: item.color?.trim() || '#8B2332',
     })).filter((item) => item.title && item.description) ?? defaultValuesSection.items;
 
+  // Leadership section - fully CMS-controlled including detailedBio
   const leadershipSection = sectionContent['about_leadership'] as LeadershipSectionContent | undefined;
   const leadershipBadge =
     leadershipSection?.badgeLabel?.trim() || defaultLeadershipSection.badgeLabel;
@@ -358,13 +376,18 @@ export function About() {
     leadershipSection?.title?.trim() || defaultLeadershipSection.title;
   const leadershipDescription =
     leadershipSection?.description?.trim() || defaultLeadershipSection.description;
+  // Leaders with detailedBio will be clickable and show a modal
   const leaders =
     leadershipSection?.leaders?.map((leader) => ({
       name: leader.name?.trim() || '',
       role: leader.role?.trim() || '',
       description: leader.description?.trim() || '',
       image: leader.image?.trim() ? toMediaUrl(leader.image.trim()) : '',
-    })).filter((leader) => leader.name && leader.role) ?? defaultLeadershipSection.leaders;
+      detailedBio: leader.detailedBio?.trim() || '', // CMS-controlled: if provided, card becomes clickable
+    })).filter((leader) => leader.name && leader.role) ?? defaultLeadershipSection.leaders.map((leader) => ({
+      ...leader,
+      detailedBio: leader.detailedBio || '',
+    }));
 
   return <div className="w-full bg-white dark:bg-gray-900 pt-20 transition-colors duration-300">
       {/* Hero Section */}
@@ -1110,9 +1133,14 @@ export function About() {
                   data-animate-id={`leader-${index}`}
                   style={{ transitionDelay: isVisible[`leader-${index}`] ? `${delay}ms` : '0ms' }}
                 >
-                  <div className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 dark:border-gray-700 group ${
-                    isVisible[`leader-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
-                  }`}>
+                  <div 
+                    className={`bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-[1.03] relative border border-gray-100 dark:border-gray-700 group ${
+                      leader.detailedBio ? 'cursor-pointer' : ''
+                    } ${
+                      isVisible[`leader-${index}`] ? 'opacity-100 translate-y-0 scale-100 rotate-0' : 'opacity-0 translate-y-12 scale-90 rotate-2'
+                    }`}
+                    onClick={() => leader.detailedBio && setSelectedLeader(leader)}
+                  >
                     {/* Enhanced dotted pattern overlay */}
                     <div className="absolute inset-0 rounded-3xl opacity-[0.03]" style={{
                       backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
@@ -1145,6 +1173,11 @@ export function About() {
                       <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-[#8B2332]/90 backdrop-blur-sm rounded-full text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-lg">
                         Leader
                       </div>
+                      {leader.detailedBio && (
+                        <div className="absolute bottom-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-[#8B2332] text-xs font-semibold shadow-lg">
+                          View Details
+                        </div>
+                      )}
                     </div>
                     
                     {/* Content with enhanced styling */}
@@ -1193,6 +1226,70 @@ export function About() {
           </div>
         </div>
       </section>
+
+      {/* Leader Detail Modal */}
+      {selectedLeader && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10" onClick={() => setSelectedLeader(null)}>
+          <div 
+            className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
+              <div>
+                <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                  {selectedLeader.name}
+                </h3>
+                <p className="text-sm text-[#7A7A3F] dark:text-[#9B9B5F] mt-2 font-semibold">
+                  {selectedLeader.role}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedLeader(null)}
+                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Close leader details"
+              >
+                <XIcon size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {selectedLeader.image && (
+                <div className="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden">
+                  <img
+                    src={selectedLeader.image}
+                    alt={selectedLeader.name}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+              )}
+
+              {selectedLeader.description && (
+                <div className="bg-gray-50 dark:bg-gray-800/40 rounded-2xl p-4 border border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {selectedLeader.description}
+                  </p>
+                </div>
+              )}
+
+              {selectedLeader.detailedBio && (
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D]">
+                    Biography
+                  </h4>
+                  <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line space-y-4">
+                    {selectedLeader.detailedBio.split('\n\n').map((paragraph, idx) => (
+                      <p key={idx} className="text-sm md:text-base">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>;
 }

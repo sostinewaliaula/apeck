@@ -828,7 +828,7 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
   {
     key: 'about_leadership',
     title: 'Leadership Section',
-    description: 'Leadership cards for the About page.',
+    description: 'Leadership cards for the About page. Cards with detailed biographies are clickable.',
     fields: [
       { type: 'text', label: 'Badge Label', name: 'badgeLabel', placeholder: 'LEADERSHIP' },
       { type: 'text', label: 'Title', name: 'title', placeholder: 'Our Leadership' },
@@ -846,8 +846,14 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
         itemFields: [
           { type: 'text', label: 'Name', name: 'name', placeholder: 'Bishop David Kimani' },
           { type: 'text', label: 'Role', name: 'role', placeholder: 'National Chairman' },
-          { type: 'textarea', label: 'Description', name: 'description', placeholder: 'Leading APECK with vision...' },
+          { type: 'textarea', label: 'Short Description', name: 'description', placeholder: 'Leading APECK with vision...' },
           { type: 'image', label: 'Photo', name: 'image' },
+          {
+            type: 'textarea',
+            label: 'Detailed Biography (Optional)',
+            name: 'detailedBio',
+            placeholder: 'Full biography text. Leave empty if you don\'t want this card to be clickable. Use double line breaks to separate paragraphs.',
+          },
         ],
       },
     ],
