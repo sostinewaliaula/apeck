@@ -71,6 +71,90 @@ export class CreateMembershipApplicationDto {
 
   @IsString()
   @IsOptional()
+  organizationName?: string;
+
+  @IsString()
+  @IsOptional()
+  organizationRegistrationNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  organizationKraPin?: string;
+
+  @IsString()
+  @IsOptional()
+  headquartersLocation?: string;
+
+  @IsEmail()
+  @IsOptional()
+  organizationEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  organizationPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  chairpersonName?: string;
+
+  @IsString()
+  @IsOptional()
+  chairpersonIdNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  chairpersonKraPin?: string;
+
+  @IsString()
+  @IsOptional()
+  chairpersonPhone?: string;
+
+  @IsEmail()
+  @IsOptional()
+  chairpersonEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  secretaryName?: string;
+
+  @IsString()
+  @IsOptional()
+  secretaryIdNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  secretaryKraPin?: string;
+
+  @IsString()
+  @IsOptional()
+  secretaryPhone?: string;
+
+  @IsEmail()
+  @IsOptional()
+  secretaryEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  treasurerName?: string;
+
+  @IsString()
+  @IsOptional()
+  treasurerIdNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  treasurerKraPin?: string;
+
+  @IsString()
+  @IsOptional()
+  treasurerPhone?: string;
+
+  @IsEmail()
+  @IsOptional()
+  treasurerEmail?: string;
+
+  @IsString()
+  @IsOptional()
   paymentReference?: string;
 
   @IsString()

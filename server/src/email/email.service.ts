@@ -132,6 +132,27 @@ export class EmailService {
       referralPhone?: string;
       signature?: string;
       declarationDate?: string;
+      organizationName?: string;
+      organizationRegistrationNumber?: string;
+      organizationKraPin?: string;
+      headquartersLocation?: string;
+      organizationEmail?: string;
+      organizationPhone?: string;
+      chairpersonName?: string;
+      chairpersonIdNumber?: string;
+      chairpersonKraPin?: string;
+      chairpersonPhone?: string;
+      chairpersonEmail?: string;
+      secretaryName?: string;
+      secretaryIdNumber?: string;
+      secretaryKraPin?: string;
+      secretaryPhone?: string;
+      secretaryEmail?: string;
+      treasurerName?: string;
+      treasurerIdNumber?: string;
+      treasurerKraPin?: string;
+      treasurerPhone?: string;
+      treasurerEmail?: string;
     };
   }): Promise<boolean> {
     const recipientEmails = data.recipientEmails;
@@ -208,11 +229,100 @@ export class EmailService {
               <div class="value">${data.formData.subCounty}</div>
             </div>
             ` : ''}
+
+            ${data.formData.organizationName || data.formData.organizationRegistrationNumber || data.formData.organizationKraPin || data.formData.headquartersLocation || data.formData.organizationEmail || data.formData.organizationPhone ? `
+            <h3 style="color: #8B2332; margin-top: 30px;">Organization Details</h3>
+            ` : ''}
+
+            ${data.formData.organizationName ? `
+            <div class="field">
+              <div class="label">Organization Name:</div>
+              <div class="value">${data.formData.organizationName}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.organizationRegistrationNumber ? `
+            <div class="field">
+              <div class="label">Registration Certificate No.:</div>
+              <div class="value">${data.formData.organizationRegistrationNumber}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.organizationKraPin ? `
+            <div class="field">
+              <div class="label">Organization KRA PIN:</div>
+              <div class="value">${data.formData.organizationKraPin}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.headquartersLocation ? `
+            <div class="field">
+              <div class="label">Headquarters Location:</div>
+              <div class="value">${data.formData.headquartersLocation}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.organizationEmail ? `
+            <div class="field">
+              <div class="label">Organization Email:</div>
+              <div class="value">${data.formData.organizationEmail}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.organizationPhone ? `
+            <div class="field">
+              <div class="label">Organization Phone:</div>
+              <div class="value">${data.formData.organizationPhone}</div>
+            </div>
+            ` : ''}
             
             ${data.formData.ward ? `
             <div class="field">
               <div class="label">Ward:</div>
               <div class="value">${data.formData.ward}</div>
+            </div>
+            ` : ''}
+
+            ${data.formData.chairpersonName || data.formData.secretaryName || data.formData.treasurerName ? `
+            <h3 style="color: #8B2332; margin-top: 30px;">Officials</h3>
+            ` : ''}
+
+            ${data.formData.chairpersonName ? `
+            <div class="field">
+              <div class="label">Chairperson:</div>
+              <div class="value">
+                <div><strong>Name:</strong> ${data.formData.chairpersonName}</div>
+                ${data.formData.chairpersonIdNumber ? `<div><strong>ID:</strong> ${data.formData.chairpersonIdNumber}</div>` : ''}
+                ${data.formData.chairpersonKraPin ? `<div><strong>KRA PIN:</strong> ${data.formData.chairpersonKraPin}</div>` : ''}
+                ${data.formData.chairpersonPhone ? `<div><strong>Phone:</strong> ${data.formData.chairpersonPhone}</div>` : ''}
+                ${data.formData.chairpersonEmail ? `<div><strong>Email:</strong> ${data.formData.chairpersonEmail}</div>` : ''}
+              </div>
+            </div>
+            ` : ''}
+
+            ${data.formData.secretaryName ? `
+            <div class="field">
+              <div class="label">Secretary:</div>
+              <div class="value">
+                <div><strong>Name:</strong> ${data.formData.secretaryName}</div>
+                ${data.formData.secretaryIdNumber ? `<div><strong>ID:</strong> ${data.formData.secretaryIdNumber}</div>` : ''}
+                ${data.formData.secretaryKraPin ? `<div><strong>KRA PIN:</strong> ${data.formData.secretaryKraPin}</div>` : ''}
+                ${data.formData.secretaryPhone ? `<div><strong>Phone:</strong> ${data.formData.secretaryPhone}</div>` : ''}
+                ${data.formData.secretaryEmail ? `<div><strong>Email:</strong> ${data.formData.secretaryEmail}</div>` : ''}
+              </div>
+            </div>
+            ` : ''}
+
+            ${data.formData.treasurerName ? `
+            <div class="field">
+              <div class="label">Treasurer:</div>
+              <div class="value">
+                <div><strong>Name:</strong> ${data.formData.treasurerName}</div>
+                ${data.formData.treasurerIdNumber ? `<div><strong>ID:</strong> ${data.formData.treasurerIdNumber}</div>` : ''}
+                ${data.formData.treasurerKraPin ? `<div><strong>KRA PIN:</strong> ${data.formData.treasurerKraPin}</div>` : ''}
+                ${data.formData.treasurerPhone ? `<div><strong>Phone:</strong> ${data.formData.treasurerPhone}</div>` : ''}
+                ${data.formData.treasurerEmail ? `<div><strong>Email:</strong> ${data.formData.treasurerEmail}</div>` : ''}
+              </div>
             </div>
             ` : ''}
             
@@ -318,6 +428,14 @@ ${data.formData.ward ? `- Ward: ${data.formData.ward}` : ''}
 ${data.formData.diasporaCountry ? `- Diaspora / Country: ${data.formData.diasporaCountry}` : ''}
 ${data.formData.mpesaCode ? `- M-Pesa Code: ${data.formData.mpesaCode}` : ''}
 
+Organization Details:
+${data.formData.organizationName ? `- Organization Name: ${data.formData.organizationName}` : ''}
+${data.formData.organizationRegistrationNumber ? `- Registration Certificate No.: ${data.formData.organizationRegistrationNumber}` : ''}
+${data.formData.organizationKraPin ? `- KRA PIN: ${data.formData.organizationKraPin}` : ''}
+${data.formData.headquartersLocation ? `- Headquarters: ${data.formData.headquartersLocation}` : ''}
+${data.formData.organizationEmail ? `- Organization Email: ${data.formData.organizationEmail}` : ''}
+${data.formData.organizationPhone ? `- Organization Phone: ${data.formData.organizationPhone}` : ''}
+
 Ministry/Church Details:
 ${data.formData.churchName ? `- Church/Ministry Name: ${data.formData.churchName}` : ''}
 ${data.formData.title ? `- Title: ${data.formData.title}${data.formData.titleOther ? ` - ${data.formData.titleOther}` : ''}` : ''}
@@ -326,6 +444,11 @@ Referral Details:
 ${data.formData.referralName ? `- Referral Name: ${data.formData.referralName}` : ''}
 ${data.formData.referralApeckNumber ? `- Referral APECK Number: ${data.formData.referralApeckNumber}` : ''}
 ${data.formData.referralPhone ? `- Referral Phone: ${data.formData.referralPhone}` : ''}
+
+Officials:
+${data.formData.chairpersonName ? `- Chairperson: ${data.formData.chairpersonName}${data.formData.chairpersonPhone ? `, Phone: ${data.formData.chairpersonPhone}` : ''}${data.formData.chairpersonEmail ? `, Email: ${data.formData.chairpersonEmail}` : ''}` : ''}
+${data.formData.secretaryName ? `- Secretary: ${data.formData.secretaryName}${data.formData.secretaryPhone ? `, Phone: ${data.formData.secretaryPhone}` : ''}${data.formData.secretaryEmail ? `, Email: ${data.formData.secretaryEmail}` : ''}` : ''}
+${data.formData.treasurerName ? `- Treasurer: ${data.formData.treasurerName}${data.formData.treasurerPhone ? `, Phone: ${data.formData.treasurerPhone}` : ''}${data.formData.treasurerEmail ? `, Email: ${data.formData.treasurerEmail}` : ''}` : ''}
 
 Declaration:
 ${data.formData.signature ? `- Signature: ${data.formData.signature}` : ''}

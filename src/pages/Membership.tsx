@@ -34,6 +34,22 @@ type IndividualFormState = {
   declarationDate: string;
 };
 
+type HousingFormState = {
+  fullName: string;
+  idNumber: string;
+  phone: string;
+  email: string;
+  county: string;
+  subCounty: string;
+  ward: string;
+  diasporaCountry: string;
+  referralName: string;
+  referralIdNumber: string;
+  referralPhone: string;
+  signature: string;
+  declarationDate: string;
+};
+
 declare global {
   interface Window {
     PaystackPop?: any;
@@ -81,6 +97,85 @@ const initialIndividualForm: IndividualFormState = {
   signature: '',
   declarationDate: new Date().toISOString().split('T')[0], // Today's date as default
 };
+
+const initialHousingForm: HousingFormState = {
+  fullName: '',
+  idNumber: '',
+  phone: '',
+  email: '',
+  county: '',
+  subCounty: '',
+  ward: '',
+  diasporaCountry: '',
+  referralName: '',
+  referralIdNumber: '',
+  referralPhone: '',
+  signature: '',
+  declarationDate: new Date().toISOString().split('T')[0],
+};
+
+type CorporateOfficial = {
+  fullName: string;
+  idNumber: string;
+  kraPin: string;
+  phone: string;
+  email: string;
+};
+
+type CorporateFormState = {
+  organizationName: string;
+  registrationCertificateNumber: string;
+  organizationKraPin: string;
+  headquartersLocation: string;
+  county: string;
+  subCounty: string;
+  organizationEmail: string;
+  organizationPhone: string;
+  chairperson: CorporateOfficial;
+  secretary: CorporateOfficial;
+  treasurer: CorporateOfficial;
+  amountPaid: number;
+};
+
+const initialCorporateOfficial: CorporateOfficial = {
+  fullName: '',
+  idNumber: '',
+  kraPin: '',
+  phone: '',
+  email: '',
+};
+
+const initialCorporateForm: CorporateFormState = {
+  organizationName: '',
+  registrationCertificateNumber: '',
+  organizationKraPin: '',
+  headquartersLocation: '',
+  county: '',
+  subCounty: '',
+  organizationEmail: '',
+  organizationPhone: '',
+  chairperson: { ...initialCorporateOfficial },
+  secretary: { ...initialCorporateOfficial },
+  treasurer: { ...initialCorporateOfficial },
+  amountPaid: 0,
+};
+
+const createCorporateFormState = (overrides?: Partial<CorporateFormState>): CorporateFormState => ({
+  ...initialCorporateForm,
+  ...overrides,
+  chairperson: {
+    ...initialCorporateForm.chairperson,
+    ...(overrides?.chairperson ?? {}),
+  },
+  secretary: {
+    ...initialCorporateForm.secretary,
+    ...(overrides?.secretary ?? {}),
+  },
+  treasurer: {
+    ...initialCorporateForm.treasurer,
+    ...(overrides?.treasurer ?? {}),
+  },
+});
 
 const KENYAN_COUNTIES = [
   'Baringo',
@@ -439,24 +534,56 @@ export function Membership() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [selectedTierAmount, setSelectedTierAmount] = useState<number>(0);
   const [showIndividualModal, setShowIndividualModal] = useState(false);
+  const [showCorporateModal, setShowCorporateModal] = useState(false);
+  const [showHousingModal, setShowHousingModal] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentReference, setPaymentReference] = useState<string | null>(null);
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [individualForm, setIndividualForm] = useState<IndividualFormState>(initialIndividualForm);
+  const [housingForm, setHousingForm] = useState<HousingFormState>(initialHousingForm);
+  const [corporateForm, setCorporateForm] = useState<CorporateFormState>(() =>
+    createCorporateFormState(),
+  );
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-const [countrySearchTerm, setCountrySearchTerm] = useState('');
-const [isCountyDropdownOpen, setIsCountyDropdownOpen] = useState(false);
-const [countySearchTerm, setCountySearchTerm] = useState('');
-const [isSubCountyDropdownOpen, setIsSubCountyDropdownOpen] = useState(false);
-const [subCountySearchTerm, setSubCountySearchTerm] = useState('');
-const [isWardDropdownOpen, setIsWardDropdownOpen] = useState(false);
-const [wardSearchTerm, setWardSearchTerm] = useState('');
+  const [countrySearchTerm, setCountrySearchTerm] = useState('');
+  const [isCountyDropdownOpen, setIsCountyDropdownOpen] = useState(false);
+  const [countySearchTerm, setCountySearchTerm] = useState('');
+  const [isSubCountyDropdownOpen, setIsSubCountyDropdownOpen] = useState(false);
+  const [subCountySearchTerm, setSubCountySearchTerm] = useState('');
+  const [isWardDropdownOpen, setIsWardDropdownOpen] = useState(false);
+  const [wardSearchTerm, setWardSearchTerm] = useState('');
+  const [isHousingCountryDropdownOpen, setIsHousingCountryDropdownOpen] = useState(false);
+  const [housingCountrySearchTerm, setHousingCountrySearchTerm] = useState('');
+  const [isHousingCountyDropdownOpen, setIsHousingCountyDropdownOpen] = useState(false);
+  const [housingCountySearchTerm, setHousingCountySearchTerm] = useState('');
+  const [isHousingSubCountyDropdownOpen, setIsHousingSubCountyDropdownOpen] = useState(false);
+  const [housingSubCountySearchTerm, setHousingSubCountySearchTerm] = useState('');
+  const [isHousingWardDropdownOpen, setIsHousingWardDropdownOpen] = useState(false);
+  const [housingWardSearchTerm, setHousingWardSearchTerm] = useState('');
+  const [isCorporatePaying, setIsCorporatePaying] = useState(false);
+  const [corporatePaymentReference, setCorporatePaymentReference] = useState<string | null>(null);
+  const [corporatePaymentMessage, setCorporatePaymentMessage] = useState<string | null>(null);
+  const [isSubmittingCorporateApplication, setIsSubmittingCorporateApplication] = useState(false);
+  const [housingPaymentMessage, setHousingPaymentMessage] = useState<string | null>(null);
+  const [isHousingPaying, setIsHousingPaying] = useState(false);
+  const [housingPaymentReference, setHousingPaymentReference] = useState<string | null>(null);
+  const [isSubmittingHousingApplication, setIsSubmittingHousingApplication] = useState(false);
+  const [isCorporateCountyDropdownOpen, setIsCorporateCountyDropdownOpen] = useState(false);
+  const [corporateCountySearchTerm, setCorporateCountySearchTerm] = useState('');
+  const [isCorporateSubCountyDropdownOpen, setIsCorporateSubCountyDropdownOpen] = useState(false);
+  const [corporateSubCountySearchTerm, setCorporateSubCountySearchTerm] = useState('');
   const observerRef = useRef<IntersectionObserver | null>(null);
-const countryDropdownRef = useRef<HTMLDivElement | null>(null);
-const countyDropdownRef = useRef<HTMLDivElement | null>(null);
-const subCountyDropdownRef = useRef<HTMLDivElement | null>(null);
-const wardDropdownRef = useRef<HTMLDivElement | null>(null);
+  const countryDropdownRef = useRef<HTMLDivElement | null>(null);
+  const countyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const subCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const wardDropdownRef = useRef<HTMLDivElement | null>(null);
+  const corporateCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const corporateSubCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const housingCountryDropdownRef = useRef<HTMLDivElement | null>(null);
+  const housingCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const housingSubCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+  const housingWardDropdownRef = useRef<HTMLDivElement | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Pattern components (memoized for performance)
@@ -568,6 +695,42 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
       if (wardDropdownRef.current && !wardDropdownRef.current.contains(event.target as Node)) {
         setIsWardDropdownOpen(false);
       }
+      if (
+        corporateCountyDropdownRef.current &&
+        !corporateCountyDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCorporateCountyDropdownOpen(false);
+      }
+      if (
+        corporateSubCountyDropdownRef.current &&
+        !corporateSubCountyDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCorporateSubCountyDropdownOpen(false);
+      }
+      if (
+        housingCountryDropdownRef.current &&
+        !housingCountryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsHousingCountryDropdownOpen(false);
+      }
+      if (
+        housingCountyDropdownRef.current &&
+        !housingCountyDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsHousingCountyDropdownOpen(false);
+      }
+      if (
+        housingSubCountyDropdownRef.current &&
+        !housingSubCountyDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsHousingSubCountyDropdownOpen(false);
+      }
+      if (
+        housingWardDropdownRef.current &&
+        !housingWardDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsHousingWardDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -596,6 +759,42 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
       setIsWardDropdownOpen(false);
     }
   }, [individualForm.ward]);
+
+  useEffect(() => {
+    if (corporateForm.county) {
+      setIsCorporateCountyDropdownOpen(false);
+    }
+  }, [corporateForm.county]);
+
+  useEffect(() => {
+    if (corporateForm.subCounty) {
+      setIsCorporateSubCountyDropdownOpen(false);
+    }
+  }, [corporateForm.subCounty]);
+
+  useEffect(() => {
+    if (housingForm.diasporaCountry) {
+      setIsHousingCountryDropdownOpen(false);
+    }
+  }, [housingForm.diasporaCountry]);
+
+  useEffect(() => {
+    if (housingForm.county) {
+      setIsHousingCountyDropdownOpen(false);
+    }
+  }, [housingForm.county]);
+
+  useEffect(() => {
+    if (housingForm.subCounty) {
+      setIsHousingSubCountyDropdownOpen(false);
+    }
+  }, [housingForm.subCounty]);
+
+  useEffect(() => {
+    if (housingForm.ward) {
+      setIsHousingWardDropdownOpen(false);
+    }
+  }, [housingForm.ward]);
 
   const filteredCountries = useMemo(
     () =>
@@ -631,12 +830,81 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
     [availableWards, wardSearchTerm],
   );
 
+  const filteredCorporateCounties = useMemo(
+    () =>
+      KENYAN_COUNTIES.filter((county) =>
+        county.toLowerCase().includes(corporateCountySearchTerm.trim().toLowerCase()),
+      ),
+    [corporateCountySearchTerm],
+  );
+
+  const filteredCorporateSubCounties = useMemo(() => {
+    const subs = SUB_COUNTIES[corporateForm.county] || [];
+    return subs.filter((sub) =>
+      sub.toLowerCase().includes(corporateSubCountySearchTerm.trim().toLowerCase()),
+    );
+  }, [corporateForm.county, corporateSubCountySearchTerm]);
+
+  const filteredHousingCountries = useMemo(
+    () =>
+      COUNTRIES.filter((country) =>
+        country.toLowerCase().includes(housingCountrySearchTerm.trim().toLowerCase()),
+      ),
+    [housingCountrySearchTerm],
+  );
+
+  const filteredHousingCounties = useMemo(
+    () =>
+      KENYAN_COUNTIES.filter((county) =>
+        county.toLowerCase().includes(housingCountySearchTerm.trim().toLowerCase()),
+      ),
+    [housingCountySearchTerm],
+  );
+
+  const filteredHousingSubCounties = useMemo(() => {
+    const subs = SUB_COUNTIES[housingForm.county] || [];
+    return subs.filter((sub) =>
+      sub.toLowerCase().includes(housingSubCountySearchTerm.trim().toLowerCase()),
+    );
+  }, [housingForm.county, housingSubCountySearchTerm]);
+
+  const housingAvailableWards = useMemo(() => {
+    const countyWards = WARDS[housingForm.county] || {};
+    return countyWards[housingForm.subCounty] || [];
+  }, [housingForm.county, housingForm.subCounty]);
+
+  const filteredHousingWards = useMemo(
+    () =>
+      housingAvailableWards.filter((ward) =>
+        ward.toLowerCase().includes(housingWardSearchTerm.trim().toLowerCase()),
+      ),
+    [housingAvailableWards, housingWardSearchTerm],
+  );
+
   const resetIndividualForm = () => {
     setIndividualForm(initialIndividualForm);
     setPaymentReference(null);
     setPaymentMessage(null);
     setIsPaying(false);
     setIsSubmittingApplication(false);
+    setSelectedTierAmount(0);
+  };
+
+  const resetCorporateForm = () => {
+    setCorporateForm(createCorporateFormState());
+    setCorporatePaymentReference(null);
+    setCorporatePaymentMessage(null);
+    setIsCorporatePaying(false);
+    setIsSubmittingCorporateApplication(false);
+    setSelectedTierAmount(0);
+  };
+
+  const resetHousingForm = () => {
+    setHousingForm(initialHousingForm);
+    setHousingPaymentMessage(null);
+  setHousingPaymentReference(null);
+  setIsHousingPaying(false);
+    setIsSubmittingHousingApplication(false);
     setSelectedTierAmount(0);
   };
 
@@ -679,11 +947,170 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
     setIsWardDropdownOpen(false);
   };
 
+  const handleSelectCorporateCounty = (county: string) => {
+    setCorporateForm((prev) => ({
+      ...prev,
+      county,
+      subCounty: '',
+    }));
+    setCorporateCountySearchTerm('');
+    setIsCorporateCountyDropdownOpen(false);
+  };
+
+  const handleSelectCorporateSubCounty = (subCounty: string) => {
+    setCorporateForm((prev) => ({
+      ...prev,
+      subCounty,
+    }));
+    setCorporateSubCountySearchTerm('');
+    setIsCorporateSubCountyDropdownOpen(false);
+  };
+
   const handleIndividualInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setIndividualForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCorporateInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    if (name === 'amountPaid') {
+      const numericValue = Number(value.replace(/,/g, ''));
+      setCorporateForm((prev) => ({
+        ...prev,
+        amountPaid: Number.isNaN(numericValue) ? 0 : numericValue,
+      }));
+      return;
+    }
+    setCorporateForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCorporateOfficialChange = (
+    role: 'chairperson' | 'secretary' | 'treasurer',
+    field: keyof CorporateOfficial,
+    value: string,
+  ) => {
+    setCorporateForm((prev) => ({
+      ...prev,
+      [role]: {
+        ...prev[role],
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleHousingInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setHousingForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleHousingPaystackPayment = () => {
+    if (!housingForm.email || !housingForm.phone || !housingForm.fullName) {
+      setHousingPaymentMessage('Please fill in your full name, phone, and email before initiating payment.');
+      return;
+    }
+    const paymentAmount = selectedTierAmount || 5000;
+    if (!paymentAmount || paymentAmount <= 0) {
+      setHousingPaymentMessage('Invalid membership tier amount. Please try again.');
+      return;
+    }
+    if (!PAYSTACK_PUBLIC_KEY) {
+      setHousingPaymentMessage('Payment gateway is not configured. Please contact support.');
+      return;
+    }
+    if (!window.PaystackPop) {
+      setHousingPaymentMessage('Payment gateway is loading. Please try again in a moment.');
+      return;
+    }
+
+    setIsHousingPaying(true);
+    setHousingPaymentMessage(null);
+
+    const handler = window.PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: housingForm.email,
+      amount: paymentAmount * 100,
+      currency: 'KES',
+      reference: `APECK-HOUSING-${Date.now()}`,
+      label: housingForm.fullName,
+      metadata: {
+        custom_fields: [
+          {
+            display_name: 'Applicant Phone',
+            variable_name: 'applicant_phone',
+            value: housingForm.phone,
+          },
+          {
+            display_name: 'Membership Tier',
+            variable_name: 'membership_tier',
+            value: selectedTier || 'Housing Corporations',
+          },
+        ],
+      },
+      callback: (response: { reference: string }) => {
+        setIsHousingPaying(false);
+        setHousingPaymentReference(response.reference);
+        setHousingPaymentMessage('Payment verified! Reference: ' + response.reference);
+      },
+      onClose: () => {
+        setIsHousingPaying(false);
+        if (!housingPaymentReference) {
+          setHousingPaymentMessage('Payment window closed before completion.');
+        }
+      },
+    });
+
+    handler.openIframe();
+  };
+
+  const handleSelectHousingCountry = (country: string) => {
+    setHousingForm((prev) => ({
+      ...prev,
+      diasporaCountry: country,
+    }));
+    setHousingCountrySearchTerm('');
+    setIsHousingCountryDropdownOpen(false);
+  };
+
+  const handleSelectHousingCounty = (county: string) => {
+    setHousingForm((prev) => ({
+      ...prev,
+      county,
+      subCounty: '',
+      ward: '',
+    }));
+    setHousingCountySearchTerm('');
+    setIsHousingCountyDropdownOpen(false);
+  };
+
+  const handleSelectHousingSubCounty = (subCounty: string) => {
+    setHousingForm((prev) => ({
+      ...prev,
+      subCounty,
+      ward: '',
+    }));
+    setHousingSubCountySearchTerm('');
+    setIsHousingSubCountyDropdownOpen(false);
+  };
+
+  const handleSelectHousingWard = (ward: string) => {
+    setHousingForm((prev) => ({
+      ...prev,
+      ward,
+    }));
+    setHousingWardSearchTerm('');
+    setIsHousingWardDropdownOpen(false);
   };
 
   const handlePaystackPayment = () => {
@@ -736,11 +1163,86 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
     handler.openIframe();
   };
 
+  const handleCorporatePaystackPayment = () => {
+    if (
+      !corporateForm.organizationEmail ||
+      !corporateForm.organizationPhone ||
+      !corporateForm.organizationName
+    ) {
+      setCorporatePaymentMessage(
+        'Please fill in the organization name, phone, and email before initiating payment.',
+      );
+      return;
+    }
+    const paymentAmount = corporateForm.amountPaid || selectedTierAmount;
+    if (!paymentAmount || paymentAmount <= 0) {
+      setCorporatePaymentMessage('Invalid membership tier amount. Please try again.');
+      return;
+    }
+    if (!PAYSTACK_PUBLIC_KEY) {
+      setCorporatePaymentMessage('Payment gateway is not configured. Please contact support.');
+      return;
+    }
+    if (!window.PaystackPop) {
+      setCorporatePaymentMessage('Payment gateway is loading. Please try again in a moment.');
+      return;
+    }
+
+    setIsCorporatePaying(true);
+    setCorporatePaymentMessage(null);
+
+    const handler = window.PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: corporateForm.organizationEmail,
+      amount: paymentAmount * 100,
+      currency: 'KES',
+      reference: `APECK-CORP-${Date.now()}`,
+      label: corporateForm.organizationName,
+      metadata: {
+        custom_fields: [
+          { display_name: 'Organization Phone', variable_name: 'organization_phone', value: corporateForm.organizationPhone },
+          {
+            display_name: 'Membership Tier',
+            variable_name: 'membership_tier',
+            value: selectedTier || 'Corporate Membership',
+          },
+        ],
+      },
+      callback: (response: { reference: string }) => {
+        setIsCorporatePaying(false);
+        setCorporatePaymentReference(response.reference);
+        setCorporatePaymentMessage('Payment verified! Reference: ' + response.reference);
+      },
+      onClose: () => {
+        setIsCorporatePaying(false);
+        if (!corporatePaymentReference) {
+          setCorporatePaymentMessage('Payment window closed before completion.');
+        }
+      },
+    });
+
+    handler.openIframe();
+  };
+
   const closeIndividualModal = () => {
     setShowIndividualModal(false);
     setSelectedTier(null);
     setSelectedTierAmount(0);
     resetIndividualForm();
+  };
+
+  const closeCorporateModal = () => {
+    setShowCorporateModal(false);
+    setSelectedTier(null);
+    setSelectedTierAmount(0);
+    resetCorporateForm();
+  };
+
+  const closeHousingModal = () => {
+    setShowHousingModal(false);
+    setSelectedTier(null);
+    setSelectedTierAmount(0);
+    resetHousingForm();
   };
 
   const handleIndividualSubmit = async (e: React.FormEvent) => {
@@ -773,7 +1275,7 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
           mpesaCode: individualForm.mpesaCode || undefined,
           paymentReference: paymentReference,
           paymentGateway: 'paystack',
-          amountPaid: selectedTierAmount,
+          amountPaid: selectedTierAmount || 0,
           membershipTier: selectedTier ?? 'Individual Member',
         }),
       });
@@ -807,6 +1309,157 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
     }
   };
 
+  const handleCorporateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!corporatePaymentReference) {
+      setCorporatePaymentMessage('Please complete your Paystack payment before submitting the application.');
+      return;
+    }
+
+    setIsSubmittingCorporateApplication(true);
+    setCorporatePaymentMessage(null);
+
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/membership/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: corporateForm.organizationName,
+          phone: corporateForm.organizationPhone,
+          idNumber: corporateForm.registrationCertificateNumber,
+          email: corporateForm.organizationEmail,
+          county: corporateForm.county,
+          subCounty: corporateForm.subCounty || undefined,
+          paymentReference: corporatePaymentReference,
+          paymentGateway: 'paystack',
+          amountPaid: selectedTierAmount,
+          membershipTier: selectedTier ?? 'Corporate Membership',
+          organizationName: corporateForm.organizationName,
+          organizationRegistrationNumber: corporateForm.registrationCertificateNumber,
+          organizationKraPin: corporateForm.organizationKraPin || undefined,
+          headquartersLocation: corporateForm.headquartersLocation || undefined,
+          organizationEmail: corporateForm.organizationEmail,
+          organizationPhone: corporateForm.organizationPhone,
+          chairpersonName: corporateForm.chairperson.fullName,
+          chairpersonIdNumber: corporateForm.chairperson.idNumber,
+          chairpersonKraPin: corporateForm.chairperson.kraPin,
+          chairpersonPhone: corporateForm.chairperson.phone,
+          chairpersonEmail: corporateForm.chairperson.email,
+          secretaryName: corporateForm.secretary.fullName,
+          secretaryIdNumber: corporateForm.secretary.idNumber,
+          secretaryKraPin: corporateForm.secretary.kraPin,
+          secretaryPhone: corporateForm.secretary.phone,
+          secretaryEmail: corporateForm.secretary.email,
+          treasurerName: corporateForm.treasurer.fullName,
+          treasurerIdNumber: corporateForm.treasurer.idNumber,
+          treasurerKraPin: corporateForm.treasurer.kraPin,
+          treasurerPhone: corporateForm.treasurer.phone,
+          treasurerEmail: corporateForm.treasurer.email,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+
+      if (data.success) {
+        setCorporatePaymentMessage(
+          'Application submitted successfully! You will receive a confirmation email shortly.',
+        );
+        setTimeout(() => {
+          resetCorporateForm();
+          setCorporatePaymentReference(null);
+          closeCorporateModal();
+        }, 2000);
+      } else {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Error submitting corporate application:', error);
+      setCorporatePaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to submit application. Please try again or contact support.',
+      );
+    } finally {
+      setIsSubmittingCorporateApplication(false);
+    }
+  };
+
+  const handleHousingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!housingPaymentReference) {
+      setHousingPaymentMessage('Please complete your Paystack payment before submitting the application.');
+      return;
+    }
+
+    setIsSubmittingHousingApplication(true);
+    setHousingPaymentMessage(null);
+
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/membership/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: housingForm.fullName,
+          idNumber: housingForm.idNumber,
+          phone: housingForm.phone,
+          email: housingForm.email,
+          county: housingForm.county,
+          subCounty: housingForm.subCounty || undefined,
+          ward: housingForm.ward || undefined,
+          diasporaCountry: housingForm.diasporaCountry || undefined,
+          referralName: housingForm.referralName || undefined,
+          referralIdNumber: housingForm.referralIdNumber || undefined,
+          referralPhone: housingForm.referralPhone || undefined,
+          paymentReference: housingPaymentReference,
+          paymentGateway: 'paystack',
+          amountPaid: selectedTierAmount || 5000,
+          membershipTier: selectedTier ?? 'Housing Corporations',
+          signature: housingForm.signature,
+          declarationDate: housingForm.declarationDate,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+
+      if (data.success) {
+        setHousingPaymentMessage(
+          'Application submitted successfully! You will receive a confirmation email shortly.',
+        );
+        setTimeout(() => {
+          resetHousingForm();
+          closeHousingModal();
+        }, 2000);
+      } else {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Error submitting housing application:', error);
+      setHousingPaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to submit application. Please try again or contact support.',
+      );
+    } finally {
+      setIsSubmittingHousingApplication(false);
+    }
+  };
+
   const triggerIndividualApplication = (tierName?: string, tierPriceLabel?: string) => {
     resetIndividualForm();
     const tier = tierName || 'Individual Member';
@@ -829,6 +1482,45 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
     }
     
     setShowIndividualModal(true);
+  };
+
+  const triggerCorporateApplication = (tierName?: string, tierPriceLabel?: string) => {
+    resetCorporateForm();
+    const tier = tierName || 'Corporate Membership';
+    setSelectedTier(tier);
+
+    let computedAmount = 10000;
+    if (tierPriceLabel) {
+      computedAmount = parsePriceFromLabel(tierPriceLabel);
+    } else {
+      const foundTier = tiers.items.find((t) => t.name === tier);
+      if (foundTier) {
+        computedAmount = parsePriceFromLabel(foundTier.priceLabel);
+      }
+    }
+
+    setSelectedTierAmount(computedAmount);
+    setCorporateForm(createCorporateFormState({ amountPaid: computedAmount }));
+    setShowCorporateModal(true);
+  };
+
+  const triggerHousingApplication = (tierName?: string, tierPriceLabel?: string) => {
+    resetHousingForm();
+    const tier = tierName || 'Housing Corporations';
+    setSelectedTier(tier);
+
+    let computedAmount = 5000;
+    if (tierPriceLabel) {
+      computedAmount = parsePriceFromLabel(tierPriceLabel);
+    } else {
+      const foundTier = tiers.items.find((t) => t.name === tier);
+      if (foundTier) {
+        computedAmount = parsePriceFromLabel(foundTier.priceLabel);
+      }
+    }
+
+    setSelectedTierAmount(computedAmount);
+    setShowHousingModal(true);
   };
 
   // --- CMS-backed content placeholders (fallbacks) ---
@@ -1707,8 +2399,11 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
           </div>
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
             {tiers.items.map((tier, index) => {
+              const normalizedTierName = tier.name.toLowerCase();
               const isFeatured = !!tier.featured;
-              const isIndividualTier = tier.name.toLowerCase().includes('individual');
+              const isIndividualTier = normalizedTierName.includes('individual');
+              const isCorporateTier = normalizedTierName.includes('corporate');
+              const isHousingTier = normalizedTierName.includes('housing');
               const headerClasses = isFeatured
                 ? 'bg-gradient-to-br from-[#8B2332] to-[#6B1A28]'
                 : index % 2 === 0
@@ -1754,6 +2449,14 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
                             triggerIndividualApplication(tier.name, tier.priceLabel);
                             return;
                           }
+                          if (isCorporateTier) {
+                            triggerCorporateApplication(tier.name, tier.priceLabel);
+                            return;
+                          }
+                          if (isHousingTier) {
+                            triggerHousingApplication(tier.name, tier.priceLabel);
+                            return;
+                          }
                           setSelectedTier(tier.name);
                           const amount = parsePriceFromLabel(tier.priceLabel);
                           setSelectedTierAmount(amount);
@@ -1761,7 +2464,7 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
                         }}
                         className={`w-full px-6 py-3 ${isFeatured ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-gray-600 hover:bg-gray-700'} text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:scale-105`}
                       >
-                        {isIndividualTier ? 'Apply & Pay' : tier.applyLabel || 'Apply Now'}
+                        {isIndividualTier || isCorporateTier || isHousingTier ? 'Apply & Pay' : tier.applyLabel || 'Apply Now'}
                       </button>
                     </div>
                   </div>
@@ -1991,16 +2694,18 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
       </section>
 
       {showIndividualModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 py-10 pt-24 md:pt-20">
-          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-[90vh]">
-            <div className="flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 py-12 pt-32 md:pt-28 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+            <form onSubmit={handleIndividualSubmit} className="flex flex-col max-h-[90vh]">
+              <div className="sticky top-0 z-20 flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-t-3xl shadow-sm">
               <div>
                 <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
-                  {selectedTier || 'Membership'} Application
+                    {selectedTier || 'Membership'} Application
                 </h3>
               </div>
               <button
                 onClick={closeIndividualModal}
+                  type="button"
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 aria-label="Close individual member application form"
               >
@@ -2008,7 +2713,7 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
               </button>
             </div>
 
-            <form onSubmit={handleIndividualSubmit} className="p-6 space-y-8">
+              <div className="flex-1 overflow-y-auto p-6 space-y-8">
               {/* APECK Membership Application Form Header */}
               <div className="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h4 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
@@ -2518,7 +3223,9 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
               </div>
 
               {/* Form Actions */}
-              <div className="flex flex-wrap gap-4 items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+              </div>
+
+              <div className="sticky bottom-0 z-20 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 py-4 rounded-b-3xl space-y-3 shadow-sm">
                 {paymentMessage && (
                   <div className={`w-full p-3 rounded-xl text-sm ${
                     paymentMessage.includes('successfully') || paymentMessage.includes('verified')
@@ -2528,9 +3235,7 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
                     {paymentMessage}
                   </div>
                 )}
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={closeIndividualModal}
@@ -2541,10 +3246,971 @@ const wardDropdownRef = useRef<HTMLDivElement | null>(null);
                 <button
                   type="submit"
                   disabled={!paymentReference || isSubmittingApplication}
-                  className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isSubmittingApplication ? 'Sending...' : 'Submit Application'}
                 </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showCorporateModal && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 py-12 pt-32 md:pt-28 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-5xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+            <form onSubmit={handleCorporateSubmit} className="flex flex-col max-h-[90vh]">
+              <div className="sticky top-0 z-20 flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-t-3xl shadow-sm">
+                <div>
+                  <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                    {selectedTier || 'Corporate Membership'} Application
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Please provide the organization and officials' details below.
+                  </p>
+                </div>
+                <button
+                  onClick={closeCorporateModal}
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"
+                >
+                  <XIcon size={24} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 space-y-10">
+              <div className="space-y-6">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        Organization Information
+                      </h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Provide the legal details of the church, organization, or ministry.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Name of the Church/Organization/Ministry *
+                      <input
+                        type="text"
+                        name="organizationName"
+                        value={corporateForm.organizationName}
+                        onChange={handleCorporateInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Registration Certificate Number *
+                      <input
+                        type="text"
+                        name="registrationCertificateNumber"
+                        value={corporateForm.registrationCertificateNumber}
+                        onChange={handleCorporateInputChange}
+                        required
+                        placeholder="e.g., Society/Trust number"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      KRA PIN Number *
+                      <input
+                        type="text"
+                        name="organizationKraPin"
+                        value={corporateForm.organizationKraPin}
+                        onChange={handleCorporateInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Location of the Headquarters *
+                      <input
+                        type="text"
+                        name="headquartersLocation"
+                        value={corporateForm.headquartersLocation}
+                        onChange={handleCorporateInputChange}
+                        required
+                        placeholder="Street name, building, town"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Organization Email Address *
+                      <input
+                        type="email"
+                        name="organizationEmail"
+                        value={corporateForm.organizationEmail}
+                        onChange={handleCorporateInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Organization Phone Number *
+                      <input
+                        type="tel"
+                        name="organizationPhone"
+                        value={corporateForm.organizationPhone}
+                        onChange={handleCorporateInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-5 mt-5">
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      County *
+                      <div className="relative" ref={corporateCountyDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => setIsCorporateCountyDropdownOpen((prev) => !prev)}
+                          className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        >
+                          <span>
+                            {corporateForm.county ? corporateForm.county : 'Select County'}
+                          </span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isCorporateCountyDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={corporateCountySearchTerm}
+                                onChange={(e) => setCorporateCountySearchTerm(e.target.value)}
+                                placeholder="Search county"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredCorporateCounties.length ? (
+                                filteredCorporateCounties.map((county) => (
+                                  <button
+                                    type="button"
+                                    key={county}
+                                    onClick={() => handleSelectCorporateCounty(county)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      corporateForm.county === county
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {county}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                  No counties found
+                                </p>
+                              )}
+                            </div>
+                            {corporateForm.county && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectCorporateCounty('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Sub-County *
+                      <div className="relative" ref={corporateSubCountyDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!corporateForm.county) return;
+                            setIsCorporateSubCountyDropdownOpen((prev) => !prev);
+                          }}
+                          disabled={!corporateForm.county}
+                          className={`w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-left focus:outline-none focus:ring-2 focus:ring-[#8B2332] ${
+                            corporateForm.county
+                              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
+                          }`}
+                        >
+                          <span>
+                            {corporateForm.subCounty
+                              ? corporateForm.subCounty
+                              : corporateForm.county
+                              ? 'Select Sub-County'
+                              : 'Select county first'}
+                          </span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isCorporateSubCountyDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={corporateSubCountySearchTerm}
+                                onChange={(e) => setCorporateSubCountySearchTerm(e.target.value)}
+                                placeholder="Search sub-county"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredCorporateSubCounties.length ? (
+                                filteredCorporateSubCounties.map((sub) => (
+                                  <button
+                                    type="button"
+                                    key={sub}
+                                    onClick={() => handleSelectCorporateSubCounty(sub)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      corporateForm.subCounty === sub
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {sub}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                  No sub-counties found
+                                </p>
+                              )}
+                            </div>
+                            {corporateForm.subCounty && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectCorporateSubCounty('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        Officials' Details
+                      </h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Provide the three mandatory officials as per registration guidelines.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-5">
+                    {[
+                      { label: "Chairperson", key: 'chairperson' as const },
+                      { label: "Secretary", key: 'secretary' as const },
+                      { label: "Treasurer", key: 'treasurer' as const },
+                    ].map((official) => (
+                      <div
+                        key={official.key}
+                        className="rounded-2xl border border-gray-200 dark:border-gray-700 p-4 space-y-4"
+                      >
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                            {official.label}
+                          </p>
+                        </div>
+                        <label className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          Full Names *
+                          <input
+                            type="text"
+                            value={corporateForm[official.key].fullName}
+                            onChange={(e) =>
+                              handleCorporateOfficialChange(official.key, 'fullName', e.target.value)
+                            }
+                            required
+                            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          />
+                        </label>
+                        <label className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          ID Number *
+                          <input
+                            type="text"
+                            value={corporateForm[official.key].idNumber}
+                            onChange={(e) =>
+                              handleCorporateOfficialChange(official.key, 'idNumber', e.target.value)
+                            }
+                            required
+                            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          />
+                        </label>
+                        <label className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          KRA PIN *
+                          <input
+                            type="text"
+                            value={corporateForm[official.key].kraPin}
+                            onChange={(e) =>
+                              handleCorporateOfficialChange(official.key, 'kraPin', e.target.value)
+                            }
+                            required
+                            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          />
+                        </label>
+                        <label className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          Phone Number *
+                          <input
+                            type="tel"
+                            value={corporateForm[official.key].phone}
+                            onChange={(e) =>
+                              handleCorporateOfficialChange(official.key, 'phone', e.target.value)
+                            }
+                            required
+                            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          />
+                        </label>
+                        <label className="space-y-1 text-xs text-gray-500 dark:text-gray-400">
+                          Email Address *
+                          <input
+                            type="email"
+                            value={corporateForm[official.key].email}
+                            onChange={(e) =>
+                              handleCorporateOfficialChange(official.key, 'email', e.target.value)
+                            }
+                            required
+                            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          />
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        Registration Payment Details
+                      </h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Payments are completed securely through Paystack. Provide any additional
+                        reference in case of M-Pesa confirmation messages.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div className="rounded-xl border border-dashed border-[#8B2332]/40 bg-[#FDF3F4] dark:bg-[#2a1619]/60 p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-[#8B2332] dark:text-[#F5C3CB]">
+                          Paystack Payment
+                        </p>
+                        <span className="text-xs font-semibold text-white bg-[#8B2332] rounded-full px-3 py-1">
+                          Required
+                        </span>
+                      </div>
+                      <p className="text-sm text-[#6B1A28] dark:text-[#FBE3E7]">
+                        Initiate payment first, then submit the application.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleCorporatePaystackPayment}
+                        disabled={isCorporatePaying}
+                        className="w-full px-4 py-3 text-sm font-semibold rounded-xl bg-[#8B2332] text-white shadow-lg hover:bg-[#6B1A28] transition disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        {isCorporatePaying ? 'Processing...' : 'Pay with Paystack'}
+                      </button>
+                      <label className="space-y-1 text-xs text-[#6B1A28] dark:text-[#F5C3CB] block">
+                        Paystack Reference *
+                        <input
+                          type="text"
+                          value={corporatePaymentReference ?? ''}
+                          readOnly
+                          placeholder="Complete payment to generate reference"
+                          className="w-full rounded-lg border border-[#E6C0C5] bg-white/70 dark:bg-gray-900 px-3 py-2 focus:outline-none"
+                        />
+                      </label>
+                    </div>
+                    <div className="space-y-4">
+                      <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300 block">
+                        Amount Paid (Ksh) *
+                        <input
+                          type="number"
+                          min={0}
+                          step="100"
+                          name="amountPaid"
+                          value={corporateForm.amountPaid ? corporateForm.amountPaid.toString() : ''}
+                          onChange={handleCorporateInputChange}
+                          required
+                          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  {corporatePaymentMessage && (
+                    <div
+                      className={`p-3 rounded-xl text-sm ${
+                        corporatePaymentMessage.includes('successfully') ||
+                        corporatePaymentMessage.includes('verified')
+                          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                          : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                      }`}
+                    >
+                      {corporatePaymentMessage}
+                    </div>
+                  )}
+                </div>
+              </div>
+              </div>
+              <div className="sticky bottom-0 z-20 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 py-4 rounded-b-3xl space-y-3 shadow-sm">
+                {corporatePaymentMessage && (
+                  <div
+                    className={`p-3 rounded-xl text-sm ${
+                      corporatePaymentMessage.includes('successfully') ||
+                      corporatePaymentMessage.includes('verified')
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                        : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                    }`}
+                  >
+                    {corporatePaymentMessage}
+                  </div>
+                )}
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={closeCorporateModal}
+                    className="px-5 py-3 rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!corporatePaymentReference || isSubmittingCorporateApplication}
+                    className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSubmittingCorporateApplication ? 'Submitting...' : 'Submit Application'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showHousingModal && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 py-12 pt-32 md:pt-28 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+            <form onSubmit={handleHousingSubmit} className="flex flex-col max-h-[90vh]">
+              <div className="sticky top-0 z-20 flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-t-3xl shadow-sm">
+                <div>
+                  <p className="text-xs font-semibold tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+                    PECK HOUSING COOPERATIVE SOCIETY (PHCS)
+                  </p>
+                  <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                    Membership Registration Form
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeHousingModal}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"
+                  aria-label="Close housing corporations application form"
+                >
+                  <XIcon size={24} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 space-y-8">
+                <section className="space-y-4">
+                  <div className="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h4 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D]">
+                      APPLICANT PERSONAL INFORMATION
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 italic mt-1">
+                      Please complete all fields below accurately
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Full Names (As on National ID) *
+                      <input
+                        type="text"
+                        name="fullName"
+                        value={housingForm.fullName}
+                        onChange={handleHousingInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      National ID No. *
+                      <input
+                        type="text"
+                        name="idNumber"
+                        value={housingForm.idNumber}
+                        onChange={handleHousingInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Phone Number *
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={housingForm.phone}
+                        onChange={handleHousingInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Email Address *
+                      <input
+                        type="email"
+                        name="email"
+                        value={housingForm.email}
+                        onChange={handleHousingInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      County of Residence (Kenya) *
+                      <div className="relative" ref={housingCountyDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => setIsHousingCountyDropdownOpen((prev) => !prev)}
+                          className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        >
+                          <span>{housingForm.county || 'Select County'}</span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isHousingCountyDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={housingCountySearchTerm}
+                                onChange={(e) => setHousingCountySearchTerm(e.target.value)}
+                                placeholder="Search county"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredHousingCounties.length ? (
+                                filteredHousingCounties.map((county) => (
+                                  <button
+                                    type="button"
+                                    key={county}
+                                    onClick={() => handleSelectHousingCounty(county)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      housingForm.county === county
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {county}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                  No counties found
+                                </p>
+                              )}
+                            </div>
+                            {housingForm.county && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectHousingCounty('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Sub-County *
+                      <div className="relative" ref={housingSubCountyDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!housingForm.county) return;
+                            setIsHousingSubCountyDropdownOpen((prev) => !prev);
+                          }}
+                          disabled={!housingForm.county}
+                          className={`w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-left focus:outline-none focus:ring-2 focus:ring-[#8B2332] ${
+                            housingForm.county
+                              ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
+                          }`}
+                        >
+                          <span>
+                            {housingForm.subCounty
+                              ? housingForm.subCounty
+                              : housingForm.county
+                              ? 'Select Sub-County'
+                              : 'Select county first'}
+                          </span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isHousingSubCountyDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={housingSubCountySearchTerm}
+                                onChange={(e) => setHousingSubCountySearchTerm(e.target.value)}
+                                placeholder="Search sub-county"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredHousingSubCounties.length ? (
+                                filteredHousingSubCounties.map((sub) => (
+                                  <button
+                                    type="button"
+                                    key={sub}
+                                    onClick={() => handleSelectHousingSubCounty(sub)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      housingForm.subCounty === sub
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {sub}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                  No sub-counties found
+                                </p>
+                              )}
+                            </div>
+                            {housingForm.subCounty && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectHousingSubCounty('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Ward *
+                      {housingAvailableWards.length ? (
+                        <div className="relative" ref={housingWardDropdownRef}>
+                          <button
+                            type="button"
+                            onClick={() => setIsHousingWardDropdownOpen((prev) => !prev)}
+                            className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                          >
+                            <span>{housingForm.ward || 'Select Ward'}</span>
+                            <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                          </button>
+                          {isHousingWardDropdownOpen && (
+                            <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                              <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                                <input
+                                  type="text"
+                                  value={housingWardSearchTerm}
+                                  onChange={(e) => setHousingWardSearchTerm(e.target.value)}
+                                  placeholder="Search ward"
+                                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                                />
+                              </div>
+                              <div className="max-h-64 overflow-y-auto">
+                                {filteredHousingWards.length ? (
+                                  filteredHousingWards.map((ward) => (
+                                    <button
+                                      type="button"
+                                      key={ward}
+                                      onClick={() => handleSelectHousingWard(ward)}
+                                      className={`w-full text-left px-4 py-2 text-sm ${
+                                        housingForm.ward === ward
+                                          ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                          : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                      }`}
+                                    >
+                                      {ward}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                    No wards found
+                                  </p>
+                                )}
+                              </div>
+                              {housingForm.ward && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectHousingWard('')}
+                                  className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                                >
+                                  Clear selection
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="text"
+                          name="ward"
+                          value={housingForm.ward}
+                          onChange={handleHousingInputChange}
+                          required
+                          placeholder={
+                            housingForm.subCounty
+                              ? 'Enter ward (no data available for this sub-county)'
+                              : 'Select sub-county first'
+                          }
+                          className={`w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332] ${
+                            !housingForm.subCounty ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''
+                          }`}
+                          disabled={!housingForm.subCounty}
+                        />
+                      )}
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      If in Diaspora, country of diaspora
+                      <div className="relative" ref={housingCountryDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => setIsHousingCountryDropdownOpen((prev) => !prev)}
+                          className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        >
+                          <span>
+                            {housingForm.diasporaCountry || 'Select Country'}
+                          </span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isHousingCountryDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={housingCountrySearchTerm}
+                                onChange={(e) => setHousingCountrySearchTerm(e.target.value)}
+                                placeholder="Search country"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredHousingCountries.length ? (
+                                filteredHousingCountries.map((country) => (
+                                  <button
+                                    type="button"
+                                    key={country}
+                                    onClick={() => handleSelectHousingCountry(country)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      housingForm.diasporaCountry === country
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {country}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                                  No countries found
+                                </p>
+                              )}
+                            </div>
+                            {housingForm.diasporaCountry && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectHousingCountry('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                    REFERRAL DETAILS
+                  </h5>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    If you were referred by an existing member, please provide their details below
+                  </p>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300 md:col-span-1">
+                      Full names of the referral
+                      <input
+                        type="text"
+                        name="referralName"
+                        value={housingForm.referralName}
+                        onChange={handleHousingInputChange}
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300 md:col-span-1">
+                      Referral's National ID Number
+                      <input
+                        type="text"
+                        name="referralIdNumber"
+                        value={housingForm.referralIdNumber}
+                        onChange={handleHousingInputChange}
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300 md:col-span-1">
+                      Referral's Phone Number
+                      <input
+                        type="tel"
+                        name="referralPhone"
+                        value={housingForm.referralPhone}
+                        onChange={handleHousingInputChange}
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                    PAYMENT AND CONFIRMATION
+                  </h5>
+                  <div className="rounded-2xl border border-dashed border-[#8B2332]/40 bg-[#FDF3F4] dark:bg-[#2a1619]/60 p-5 space-y-5">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold text-[#8B2332] dark:text-[#F5C3CB]">
+                          Mandatory Registration Fee: KES {(selectedTierAmount || 5000).toLocaleString('en-KE')}
+                        </p>
+                        <p className="text-xs text-[#6B1A28] dark:text-[#FBE3E7]">
+                          Complete the secure Paystack payment before submitting this form.
+                        </p>
+                      </div>
+                      <span className="inline-block px-4 py-1 text-xs font-semibold text-white bg-[#8B2332] rounded-full">
+                        Paystack Secure Payment
+                      </span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div className="rounded-xl border border-[#E6C0C5] dark:border-[#4B252C] bg-white/80 dark:bg-gray-900/70 p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-[#8B2332] dark:text-[#F5C3CB]">
+                            Paystack Payment
+                          </p>
+                          <span className="text-xs font-semibold text-white bg-[#8B2332] rounded-full px-3 py-1">
+                            Required
+                          </span>
+                        </div>
+                        <p className="text-sm text-[#6B1A28] dark:text-[#FBE3E7]">
+                          Initiate payment first, then submit the application once you have a Paystack reference.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleHousingPaystackPayment}
+                          disabled={isHousingPaying}
+                          className="w-full px-4 py-3 text-sm font-semibold rounded-xl bg-[#8B2332] text-white shadow-lg hover:bg-[#6B1A28] transition disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                          {isHousingPaying ? 'Processing...' : 'Pay with Paystack'}
+                        </button>
+                        <label className="space-y-1 text-xs text-[#6B1A28] dark:text-[#F5C3CB] block">
+                          Paystack Reference *
+                          <input
+                            type="text"
+                            value={housingPaymentReference ?? ''}
+                            readOnly
+                            placeholder="Complete payment to generate reference"
+                            className="w-full rounded-lg border border-[#E6C0C5] dark:border-[#4B252C] bg-white/70 dark:bg-gray-900 px-3 py-2 focus:outline-none"
+                          />
+                        </label>
+                      </div>
+                      <div className="space-y-3 text-sm text-[#6B1A28] dark:text-[#FBE3E7]">
+                        <p className="font-semibold text-gray-900 dark:text-gray-100">Payment Notes</p>
+                        <ul className="space-y-2 list-disc pl-5">
+                          <li>Use the same full name, phone, and email listed in this application.</li>
+                          <li>Allow pop-ups in your browser so the Paystack iframe can open.</li>
+                          <li>The reference appears automatically once Paystack confirms your payment.</li>
+                          <li>Contact support if you are charged but do not receive a reference.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                    DECLARATION
+                  </h5>
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                      I, the undersigned, hereby apply for membership in the Peck Housing Cooperative Society and declare that the information provided above is true and correct to the best of my knowledge. I agree to abide by the Society's by-laws and any resolutions passed by its members or governing body.
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                        Applicant's Signature (official Name will apply as signature) *
+                        <input
+                          type="text"
+                          name="signature"
+                          value={housingForm.signature}
+                          onChange={handleHousingInputChange}
+                          required
+                          placeholder="Enter your full name as signature"
+                          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        />
+                      </label>
+                      <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                        Date *
+                        <input
+                          type="date"
+                          name="declarationDate"
+                          value={housingForm.declarationDate}
+                          onChange={handleHousingInputChange}
+                          required
+                          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <div className="sticky bottom-0 z-20 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 py-4 rounded-b-3xl space-y-3 shadow-sm">
+                {housingPaymentMessage && (
+                  <div
+                    className={`p-3 rounded-xl text-sm ${
+                      housingPaymentMessage.includes('successfully') ||
+                      housingPaymentMessage.includes('verified')
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                        : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                    }`}
+                  >
+                    {housingPaymentMessage}
+                  </div>
+                )}
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={closeHousingModal}
+                    className="px-5 py-3 rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                  disabled={!housingPaymentReference || isSubmittingHousingApplication}
+                    className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSubmittingHousingApplication ? 'Submitting...' : 'Submit Application'}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
