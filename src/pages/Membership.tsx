@@ -1,20 +1,37 @@
 import { useEffect, useState, useRef, memo, useMemo } from 'react';
-import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, StarIcon, ArrowRightIcon, XIcon } from 'lucide-react';
+import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, StarIcon, ArrowRightIcon, XIcon, ChevronDownIcon } from 'lucide-react';
 import { EnrollForm } from '../components/EnrollForm';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 import { getApiBaseUrl } from '../lib/config';
 
 type IndividualFormState = {
+  // Applicant Personal Information
   fullName: string;
-  phone: string;
   idNumber: string;
+  phone: string;
   email: string;
   county: string;
   subCounty: string;
   ward: string;
   diasporaCountry: string;
+  
+  // Ministry/Church Details
+  churchName: string;
+  title: string;
+  titleOther: string;
+  
+  // Referral Details
+  referralName: string;
+  referralApeckNumber: string;
+  referralPhone: string;
+  
+  // Payment
   mpesaCode: string;
+  
+  // Declaration
+  signature: string;
+  declarationDate: string;
 };
 
 declare global {
@@ -37,16 +54,384 @@ function parsePriceFromLabel(priceLabel: string): number {
   return isNaN(amount) ? 0 : Math.round(amount);
 }
 const initialIndividualForm: IndividualFormState = {
+  // Applicant Personal Information
   fullName: '',
-  phone: '',
   idNumber: '',
+  phone: '',
   email: '',
   county: '',
   subCounty: '',
   ward: '',
   diasporaCountry: '',
+  
+  // Ministry/Church Details
+  churchName: '',
+  title: '',
+  titleOther: '',
+  
+  // Referral Details
+  referralName: '',
+  referralApeckNumber: '',
+  referralPhone: '',
+  
+  // Payment
   mpesaCode: '',
+  
+  // Declaration
+  signature: '',
+  declarationDate: new Date().toISOString().split('T')[0], // Today's date as default
 };
+
+const KENYAN_COUNTIES = [
+  'Baringo',
+  'Bomet',
+  'Bungoma',
+  'Busia',
+  'Elgeyo-Marakwet',
+  'Embu',
+  'Garissa',
+  'Homa Bay',
+  'Isiolo',
+  'Kajiado',
+  'Kakamega',
+  'Kericho',
+  'Kiambu',
+  'Kilifi',
+  'Kirinyaga',
+  'Kisii',
+  'Kisumu',
+  'Kitui',
+  'Kwale',
+  'Laikipia',
+  'Lamu',
+  'Machakos',
+  'Makueni',
+  'Mandera',
+  'Marsabit',
+  'Meru',
+  'Migori',
+  'Mombasa',
+  "Murang'a",
+  'Nairobi',
+  'Nakuru',
+  'Nandi',
+  'Narok',
+  'Nyamira',
+  'Nyandarua',
+  'Nyeri',
+  'Samburu',
+  'Siaya',
+  'Taita-Taveta',
+  'Tana River',
+  'Tharaka-Nithi',
+  'Trans Nzoia',
+  'Turkana',
+  'Uasin Gishu',
+  'Vihiga',
+  'Wajir',
+  'West Pokot',
+];
+
+const SUB_COUNTIES: Record<string, string[]> = {
+  Baringo: ['Baringo North', 'Baringo South', 'Eldama Ravine', 'Mogotio', 'Tiaty'],
+  Bomet: ['Bomet Central', 'Bomet East', 'Chepalungu', 'Konoin', 'Sotik'],
+  Bungoma: ['Bumula', 'Kabuchai', 'Kanduyi', 'Kimilili', 'Mt. Elgon', 'Sirisia', 'Tongaren', 'Webuye East', 'Webuye West'],
+  Busia: ['Budalangi', 'Butula', 'Funyula', 'Matayos', 'Nambale', 'Teso North', 'Teso South'],
+  'Elgeyo-Marakwet': ['Keiyo North', 'Keiyo South', 'Marakwet East', 'Marakwet West'],
+  Embu: ['Manyatta', 'Mbeere North', 'Mbeere South', 'Runyenjes'],
+  Garissa: ['Balambala', 'Dadaab', 'Fafi', 'Garissa Township', 'Hulugho', 'Ijara', 'Lagdera'],
+  'Homa Bay': ['Homa Bay Town', 'Kabondo Kasipul', 'Karachuonyo', 'Kasipul', 'Mbita', 'Ndhiwa', 'Rachuonyo South', 'Rangwe', 'Suba North', 'Suba South'],
+  Isiolo: ['Isiolo', 'Merti', 'Garbatulla'],
+  Kajiado: ['Kajiado Central', 'Kajiado East', 'Kajiado North', 'Kajiado South', 'Kajiado West'],
+  Kakamega: ['Butere', 'Ikolomani', 'Khwisero', 'Lugari', 'Lurambi', 'Malava', 'Matungu', 'Mumias East', 'Mumias West', 'Likuyani', 'Navakholo', 'Shinyalu'],
+  Kericho: ['Ainamoi', 'Belgut', 'Bureti', 'Kipkelion East', 'Kipkelion West', 'Sigowet-Soin'],
+  Kiambu: ['Gatundu North', 'Gatundu South', 'Githunguri', 'Juja', 'Kabete', 'Kiambaa', 'Kiambu', 'Kikuyu', 'Limuru', 'Lari', 'Ruiru', 'Thika Town'],
+  Kilifi: ['Kaloleni', 'Kilifi North', 'Kilifi South', 'Magarini', 'Malindi', 'Rabai'],
+  Kirinyaga: ['Gichugu', 'Kirinyaga Central', 'Mwea East', 'Mwea West', 'Ndia'],
+  Kisii: ['Bonchari', 'Bomachoge Borabu', 'Bomachoge Chache', 'Kitutu Chache North', 'Kitutu Chache South', 'Nyaribari Chache', 'Nyaribari Masaba', 'South Mugirango'],
+  Kisumu: ['Kisumu Central', 'Kisumu East', 'Kisumu West', 'Muhoroni', 'Nyakach', 'Nyando', 'Seme'],
+  Kitui: ['Kitui Central', 'Kitui East', 'Kitui Rural', 'Kitui South', 'Kitui West', 'Mwingi Central', 'Mwingi North', 'Mwingi West'],
+  Kwale: ['Kinango', 'Lunga Lunga', 'Msambweni', 'Matuga'],
+  Laikipia: ['Laikipia East', 'Laikipia North', 'Laikipia West', 'Nyahururu'],
+  Lamu: ['Lamu East', 'Lamu West'],
+  Machakos: ['Athi River', 'Kangundo', 'Kathiani', 'Machakos Town', 'Masinga', 'Matungulu', 'Mavoko', 'Mwala', 'Yatta'],
+  Makueni: ['Kaiti', 'Kibwezi East', 'Kibwezi West', 'Kilome', 'Makueni', 'Mbooni'],
+  Mandera: ['Banissa', 'Lafey', 'Mandera East', 'Mandera North', 'Mandera South', 'Mandera West'],
+  Marsabit: ['Laisamis', 'Moyale', 'North Horr', 'Saku'],
+  Meru: ['Buuri', 'Igembe Central', 'Igembe North', 'Igembe South', 'Imenti Central', 'Imenti North', 'Imenti South', 'Tigania East', 'Tigania West'],
+  Migori: ['Awendo', 'Kuria East', 'Kuria West', 'Nyatike', 'Rongo', 'Suna East', 'Suna West', 'Uriri'],
+  Mombasa: ['Changamwe', 'Jomvu', 'Kisauni', 'Likoni', 'Mvita', 'Nyali'],
+  "Murang'a": ['Gatanga', 'Kandara', 'Kangema', 'Kigumo', 'Kiharu', 'Mathioya', 'Maragua'],
+  Nairobi: ['Dagoretti North', 'Dagoretti South', 'Embakasi Central', 'Embakasi East', 'Embakasi North', 'Embakasi South', 'Embakasi West', 'Kasarani', 'Kamukunji', 'Langata', 'Makadara', 'Mathare', 'Roysambu', 'Ruaraka', 'Starehe', 'Westlands'],
+  Nakuru: ['Bahati', 'Gilgil', 'Kuresoi North', 'Kuresoi South', 'Molo', 'Naivasha', 'Nakuru Town East', 'Nakuru Town West', 'Njoro', 'Rongai', 'Subukia'],
+  Nandi: ['Aldai', 'Chesumei', 'Emgwen', 'Mosop', 'Nandi Hills', 'Tinderet'],
+  Narok: ['Emurua Dikirr', 'Kilgoris', 'Narok East', 'Narok North', 'Narok South', 'Narok West'],
+  Nyamira: ['Borabu', 'Manga', 'Masaba North', 'Nyamira North', 'Nyamira South'],
+  Nyandarua: ['Kinangop', 'Kipipiri', 'Mirangine', 'Ndaragwa', 'Ol Jorok', 'Ol Kalou'],
+  Nyeri: ['Kieni East', 'Kieni West', 'Mathira East', 'Mathira West', 'Mukurweini', 'Nyeri Town', 'Othaya', 'Tetu'],
+  Samburu: ['Samburu East', 'Samburu North', 'Samburu West'],
+  Siaya: ['Alego Usonga', 'Bondo', 'Gem', 'Rarieda', 'Ugenya', 'Ugunja'],
+  'Taita-Taveta': ['Mwatate', 'Taveta', 'Voi', 'Wundanyi'],
+  'Tana River': ['Bura', 'Galole', 'Garsen'],
+  'Tharaka-Nithi': ["Chuka/Igambang'ombe", 'Maara', 'Tharaka North', 'Tharaka South'],
+  'Trans Nzoia': ['Cherangany', 'Endebess', 'Kiminini', 'Kwanza', 'Saboti'],
+  Turkana: ['Loima', 'Turkana Central', 'Turkana East', 'Turkana North', 'Turkana South', 'Turkana West'],
+  'Uasin Gishu': ['Ainabkoi', 'Kapseret', 'Kesses', 'Moiben', 'Soy', 'Turbo'],
+  Vihiga: ['Emuhaya', 'Hamisi', 'Luanda', 'Sabatia', 'Vihiga'],
+  Wajir: ['Eldas', 'Tarbaj', 'Wajir East', 'Wajir North', 'Wajir South', 'Wajir West'],
+  'West Pokot': ['Kapenguria', 'Kipkomo', 'Pokot South', 'Sigor'],
+};
+
+const WARDS: Record<string, Record<string, string[]>> = {
+  Nairobi: {
+    'Dagoretti North': ['Kileleshwa', 'Kilimani', 'Kabiro'],
+    'Dagoretti South': ['Mutu-Ini', 'Ngando', 'Riruta', 'Uthiru/Ruthimitu', 'Waithaka'],
+    'Embakasi Central': ['Kayole North', 'Kayole South', 'Komarock', 'Matopeni', 'Upper Savannah'],
+    'Embakasi East': ['Utawala', 'Embakasi', 'Mihango', 'Kayole North', 'Kayole Central'],
+    'Embakasi North': ['Dandora Area I', 'Dandora Area II', 'Dandora Area III', 'Dandora Area IV', 'Kariobangi North'],
+    'Embakasi South': ['Imara Daima', 'Kwa Njenga', 'Kwa Rueben', 'Pipeline', 'Kware'],
+    'Embakasi West': ['Umoja I', 'Umoja II', 'Mowlem', 'Kariobangi South'],
+    Kasarani: ['Clay City', 'Kasarani', 'Mwiki', 'Njiru', 'Ruai'],
+    Kamukunji: ['Airbase', 'California', 'Eastleigh North', 'Eastleigh South', 'Pumwani'],
+    Langata: ['Karen', 'Langata', 'Nairobi West', 'South C'],
+    Makadara: ['Harambee', 'Makongeni', 'Maringo/Hamza', 'Viwandani'],
+    Mathare: ['Hospital', 'Huruma', 'Kiamaiko', 'Mabatini', 'Mlango Kubwa', 'Ngei'],
+    Roysambu: ['Roysambu', 'Kahawa', 'Zimmerman', 'Githurai', 'Kahawa West'],
+    Ruaraka: ["Baba Dogo", 'Utalii', 'Mathare North', 'Lucky Summer', 'Korogocho'],
+    Starehe: ['Nairobi Central', 'Ngara', 'Pangani', 'Landimawe', 'Nairobi South'],
+    Westlands: ['Kangemi', 'Kitisuru', 'Mountain View', 'Parklands/Highridge', 'Karura'],
+  },
+  Kiambu: {
+    'Kiambu': ['Riabai', 'Township', 'Ndumberi'],
+    'Ruiru': ['Biashara', 'Gitothua', 'Gatongora', 'Kahawa Sukari', 'Kahawa Wendani', 'Kiuu', 'Mwiki', 'Umoja'],
+    'Thika Town': ['Township', 'Kamenu', 'Hospital', 'Gatuanyaga'],
+    'Gatundu South': ['Kiamwangi', 'Kiganjo', 'Ndarugo'],
+    'Limuru': ['Limuru Central', 'Ndeiya', 'Bibirioni', 'Ngecha Tigoni', 'Limuru East'],
+  },
+  Mombasa: {
+    Changamwe: ['Airport', 'Changamwe', 'Chaani', 'Kipevu', 'Port Reitz'],
+    Jomvu: ['Jomvu Kuu', 'Miritini', 'Mikindani'],
+    Kisauni: ['Bamburi', 'Mjambere', 'Mwakirunge', 'Shanzu'],
+    Likoni: ['Bofu', 'Mtongwe', 'Likoni', 'Shika Adabu'],
+    Mvita: ['Buxton', 'Frere Town', 'Ganjoni', 'Kizingo', 'Mji Wa Kale/Makadara', 'Tudor'],
+    Nyali: ['Frere Town', 'Kongowea', 'Kadzandani'],
+  },
+  'Homa Bay': {
+    'Homa Bay Town': ['Central', 'Kalanya', 'Karachuonyo Central', 'Homa Bay West'],
+    'Rangwe': ['East Rangwe', 'Kanyadoto', 'Kanyikela'],
+    Ndhiwa: ['Kanyamwa Kologi', 'Kanyamwa Kosewe', 'Kabuoch North', 'Kabuoch South'],
+  },
+  Nakuru: {
+    'Nakuru Town East': ['Biashara', 'Kivumbini', 'Flamingo', 'Menengai'],
+    'Nakuru Town West': ['Barut', 'Kaptembwo', 'London', 'Rhoda', 'Shabaab'],
+    Naivasha: ['Biashara', 'Hells Gate', 'Maiella', 'Mai Mahiu', 'Ol Karia', 'Naivasha East'],
+    Bahati: ['Bahati', 'Dundori', 'Kabazi', 'Lanet/Umoja', 'Murarandia'],
+  },
+  Kisumu: {
+    'Kisumu Central': ['Market Milimani', 'Kondele', 'Railways', 'Shauri Moyo-Kaloleni'],
+    'Kisumu East': ['Kajulu', 'Kolwa East', 'Manyatta B', 'Nyalenda A'],
+    'Kisumu West': ['Central Kisumu', 'Kisumu North', 'West Kisumu', 'North West Kisumu'],
+  },
+};
+
+const COUNTRIES = [
+  'Afghanistan',
+  'Albania',
+  'Algeria',
+  'Andorra',
+  'Angola',
+  'Antigua and Barbuda',
+  'Argentina',
+  'Armenia',
+  'Australia',
+  'Austria',
+  'Azerbaijan',
+  'Bahamas',
+  'Bahrain',
+  'Bangladesh',
+  'Barbados',
+  'Belarus',
+  'Belgium',
+  'Belize',
+  'Benin',
+  'Bhutan',
+  'Bolivia',
+  'Bosnia and Herzegovina',
+  'Botswana',
+  'Brazil',
+  'Brunei',
+  'Bulgaria',
+  'Burkina Faso',
+  'Burundi',
+  'Cambodia',
+  'Cameroon',
+  'Canada',
+  'Cape Verde',
+  'Central African Republic',
+  'Chad',
+  'Chile',
+  'China',
+  'Colombia',
+  'Comoros',
+  'Congo (Republic)',
+  'Congo (Democratic Republic)',
+  'Costa Rica',
+  "Côte d'Ivoire",
+  'Croatia',
+  'Cuba',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Djibouti',
+  'Dominica',
+  'Dominican Republic',
+  'Ecuador',
+  'Egypt',
+  'El Salvador',
+  'Equatorial Guinea',
+  'Eritrea',
+  'Estonia',
+  'Eswatini (Swaziland)',
+  'Ethiopia',
+  'Fiji',
+  'Finland',
+  'France',
+  'Gabon',
+  'Gambia',
+  'Georgia',
+  'Germany',
+  'Ghana',
+  'Greece',
+  'Grenada',
+  'Guatemala',
+  'Guinea',
+  'Guinea-Bissau',
+  'Guyana',
+  'Haiti',
+  'Honduras',
+  'Hungary',
+  'Iceland',
+  'India',
+  'Indonesia',
+  'Iran',
+  'Iraq',
+  'Ireland',
+  'Israel',
+  'Italy',
+  'Jamaica',
+  'Japan',
+  'Jordan',
+  'Kazakhstan',
+  'Kenya',
+  'Kiribati',
+  'Kuwait',
+  'Kyrgyzstan',
+  'Laos',
+  'Latvia',
+  'Lebanon',
+  'Lesotho',
+  'Liberia',
+  'Libya',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Madagascar',
+  'Malawi',
+  'Malaysia',
+  'Maldives',
+  'Mali',
+  'Malta',
+  'Marshall Islands',
+  'Mauritania',
+  'Mauritius',
+  'Mexico',
+  'Micronesia',
+  'Moldova',
+  'Monaco',
+  'Mongolia',
+  'Montenegro',
+  'Morocco',
+  'Mozambique',
+  'Myanmar (Burma)',
+  'Namibia',
+  'Nauru',
+  'Nepal',
+  'Netherlands',
+  'New Zealand',
+  'Nicaragua',
+  'Niger',
+  'Nigeria',
+  'North Korea',
+  'North Macedonia',
+  'Norway',
+  'Oman',
+  'Pakistan',
+  'Palau',
+  'Panama',
+  'Papua New Guinea',
+  'Paraguay',
+  'Peru',
+  'Philippines',
+  'Poland',
+  'Portugal',
+  'Qatar',
+  'Romania',
+  'Russia',
+  'Rwanda',
+  'Saint Kitts and Nevis',
+  'Saint Lucia',
+  'Saint Vincent and the Grenadines',
+  'Samoa',
+  'San Marino',
+  'Sao Tome and Principe',
+  'Saudi Arabia',
+  'Senegal',
+  'Serbia',
+  'Seychelles',
+  'Sierra Leone',
+  'Singapore',
+  'Slovakia',
+  'Slovenia',
+  'Solomon Islands',
+  'Somalia',
+  'South Africa',
+  'South Korea',
+  'South Sudan',
+  'Spain',
+  'Sri Lanka',
+  'Sudan',
+  'Suriname',
+  'Sweden',
+  'Switzerland',
+  'Syria',
+  'Taiwan',
+  'Tajikistan',
+  'Tanzania',
+  'Thailand',
+  'Timor-Leste',
+  'Togo',
+  'Tonga',
+  'Trinidad and Tobago',
+  'Tunisia',
+  'Turkey',
+  'Turkmenistan',
+  'Tuvalu',
+  'Uganda',
+  'Ukraine',
+  'United Arab Emirates',
+  'United Kingdom',
+  'United States',
+  'Uruguay',
+  'Uzbekistan',
+  'Vanuatu',
+  'Vatican City',
+  'Venezuela',
+  'Vietnam',
+  'Yemen',
+  'Zambia',
+  'Zimbabwe',
+  'Other',
+];
 
 export function Membership() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
@@ -59,7 +444,19 @@ export function Membership() {
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [individualForm, setIndividualForm] = useState<IndividualFormState>(initialIndividualForm);
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+const [countrySearchTerm, setCountrySearchTerm] = useState('');
+const [isCountyDropdownOpen, setIsCountyDropdownOpen] = useState(false);
+const [countySearchTerm, setCountySearchTerm] = useState('');
+const [isSubCountyDropdownOpen, setIsSubCountyDropdownOpen] = useState(false);
+const [subCountySearchTerm, setSubCountySearchTerm] = useState('');
+const [isWardDropdownOpen, setIsWardDropdownOpen] = useState(false);
+const [wardSearchTerm, setWardSearchTerm] = useState('');
   const observerRef = useRef<IntersectionObserver | null>(null);
+const countryDropdownRef = useRef<HTMLDivElement | null>(null);
+const countyDropdownRef = useRef<HTMLDivElement | null>(null);
+const subCountyDropdownRef = useRef<HTMLDivElement | null>(null);
+const wardDropdownRef = useRef<HTMLDivElement | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
 
   // Pattern components (memoized for performance)
@@ -157,6 +554,83 @@ export function Membership() {
     document.body.appendChild(script);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setIsCountryDropdownOpen(false);
+      }
+      if (countyDropdownRef.current && !countyDropdownRef.current.contains(event.target as Node)) {
+        setIsCountyDropdownOpen(false);
+      }
+      if (subCountyDropdownRef.current && !subCountyDropdownRef.current.contains(event.target as Node)) {
+        setIsSubCountyDropdownOpen(false);
+      }
+      if (wardDropdownRef.current && !wardDropdownRef.current.contains(event.target as Node)) {
+        setIsWardDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (individualForm.diasporaCountry) {
+      setIsCountryDropdownOpen(false);
+    }
+  }, [individualForm.diasporaCountry]);
+
+  useEffect(() => {
+    if (individualForm.county) {
+      setIsCountyDropdownOpen(false);
+    }
+  }, [individualForm.county]);
+
+  useEffect(() => {
+    if (individualForm.subCounty) {
+      setIsSubCountyDropdownOpen(false);
+    }
+  }, [individualForm.subCounty]);
+
+  useEffect(() => {
+    if (individualForm.ward) {
+      setIsWardDropdownOpen(false);
+    }
+  }, [individualForm.ward]);
+
+  const filteredCountries = useMemo(
+    () =>
+      COUNTRIES.filter((country) =>
+        country.toLowerCase().includes(countrySearchTerm.trim().toLowerCase()),
+      ),
+    [countrySearchTerm],
+  );
+
+  const filteredCounties = useMemo(
+    () =>
+      KENYAN_COUNTIES.filter((county) =>
+        county.toLowerCase().includes(countySearchTerm.trim().toLowerCase()),
+      ),
+    [countySearchTerm],
+  );
+
+  const filteredSubCounties = useMemo(() => {
+    const subs = SUB_COUNTIES[individualForm.county] || [];
+    return subs.filter((sub) => sub.toLowerCase().includes(subCountySearchTerm.trim().toLowerCase()));
+  }, [individualForm.county, subCountySearchTerm]);
+
+  const availableWards = useMemo(() => {
+    const countyWards = WARDS[individualForm.county] || {};
+    return countyWards[individualForm.subCounty] || [];
+  }, [individualForm.county, individualForm.subCounty]);
+
+  const filteredWards = useMemo(
+    () =>
+      availableWards.filter((ward) =>
+        ward.toLowerCase().includes(wardSearchTerm.trim().toLowerCase()),
+      ),
+    [availableWards, wardSearchTerm],
+  );
+
   const resetIndividualForm = () => {
     setIndividualForm(initialIndividualForm);
     setPaymentReference(null);
@@ -164,6 +638,45 @@ export function Membership() {
     setIsPaying(false);
     setIsSubmittingApplication(false);
     setSelectedTierAmount(0);
+  };
+
+  const handleSelectCountry = (country: string) => {
+    setIndividualForm((prev) => ({
+      ...prev,
+      diasporaCountry: country,
+    }));
+    setCountrySearchTerm('');
+    setIsCountryDropdownOpen(false);
+  };
+
+  const handleSelectCounty = (county: string) => {
+    setIndividualForm((prev) => ({
+      ...prev,
+      county,
+      // Reset sub-county when county changes
+      subCounty: '',
+    }));
+    setCountySearchTerm('');
+    setIsCountyDropdownOpen(false);
+  };
+
+  const handleSelectSubCounty = (subCounty: string) => {
+    setIndividualForm((prev) => ({
+      ...prev,
+      subCounty,
+      ward: '',
+    }));
+    setSubCountySearchTerm('');
+    setIsSubCountyDropdownOpen(false);
+  };
+
+  const handleSelectWard = (ward: string) => {
+    setIndividualForm((prev) => ({
+      ...prev,
+      ward,
+    }));
+    setWardSearchTerm('');
+    setIsWardDropdownOpen(false);
   };
 
   const handleIndividualInputChange = (
@@ -232,8 +745,9 @@ export function Membership() {
 
   const handleIndividualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Require Paystack payment reference (manual payments disabled)
     if (!paymentReference) {
-      setPaymentMessage('Please complete payment before submitting the application.');
+      setPaymentMessage('Please complete your Paystack payment before submitting the application.');
       return;
     }
 
@@ -276,7 +790,7 @@ export function Membership() {
         setTimeout(() => {
           resetIndividualForm();
           setPaymentReference(null);
-          closeIndividualModal();
+    closeIndividualModal();
         }, 2000);
       } else {
         throw new Error(data.message || 'Failed to submit application');
@@ -1477,30 +1991,13 @@ export function Membership() {
       </section>
 
       {showIndividualModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10">
-          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-full">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 py-10 pt-24 md:pt-20">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-y-auto max-h-[90vh]">
             <div className="flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800">
               <div>
                 <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
                   {selectedTier || 'Membership'} Application
                 </h3>
-                {selectedTierAmount > 0 && (
-                  <p className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] mt-1">
-                    Amount: KSh {selectedTierAmount.toLocaleString()}
-                  </p>
-                )}
-                <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                  Fill in the details below, make your payment, and we will receive your application instantly.
-                  Prefer Google Forms?{' '}
-                  <a
-                    href={GOOGLE_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#8B2332] underline font-semibold"
-                  >
-                    Open the official form
-                  </a>
-                </p>
               </div>
               <button
                 onClick={closeIndividualModal}
@@ -1511,75 +2008,529 @@ export function Membership() {
               </button>
             </div>
 
-            <form onSubmit={handleIndividualSubmit} className="p-6 space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                {[
-                  { label: 'Full Name *', name: 'fullName', type: 'text', required: true },
-                  { label: 'Phone Number *', name: 'phone', type: 'tel', required: true },
-                  { label: 'ID Number *', name: 'idNumber', type: 'text', required: true },
-                  { label: 'Email Address *', name: 'email', type: 'email', required: true },
-                  { label: 'County *', name: 'county', type: 'text', required: true },
-                  { label: 'Sub-County *', name: 'subCounty', type: 'text', required: true },
-                  { label: 'Ward *', name: 'ward', type: 'text', required: true },
-                  { label: 'Diaspora / Country (if outside Kenya)', name: 'diasporaCountry', type: 'text', required: false },
-                ].map((field) => (
-                  <label key={field.name} className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                    {field.label}
+            <form onSubmit={handleIndividualSubmit} className="p-6 space-y-8">
+              {/* APECK Membership Application Form Header */}
+              <div className="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h4 className="text-xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
+                  APECK Membership Application Form
+                </h4>
+              </div>
+
+              {/* APPLICANT PERSONAL INFORMATION */}
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                  APPLICANT PERSONAL INFORMATION
+                </h5>
+                <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                  Please complete all fields below accurately
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Full Names (As on National ID) *
                     <input
-                      type={field.type}
-                      name={field.name}
-                      value={individualForm[field.name as keyof IndividualFormState]}
+                      type="text"
+                      name="fullName"
+                      value={individualForm.fullName}
                       onChange={handleIndividualInputChange}
-                      required={field.required}
-                      className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
                     />
                   </label>
-                ))}
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    National ID No. *
+                    <input
+                      type="text"
+                      name="idNumber"
+                      value={individualForm.idNumber}
+                      onChange={handleIndividualInputChange}
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Phone Number *
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={individualForm.phone}
+                      onChange={handleIndividualInputChange}
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Email Address *
+                    <input
+                      type="email"
+                      name="email"
+                      value={individualForm.email}
+                      onChange={handleIndividualInputChange}
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    County of Residence (Kenya) *
+                    <div className="relative" ref={countyDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setIsCountyDropdownOpen((prev) => !prev)}
+                        className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      >
+                        <span>{individualForm.county ? individualForm.county : 'Select County'}</span>
+                        <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                      </button>
+                      {isCountyDropdownOpen && (
+                        <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                          <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                            <input
+                              type="text"
+                              value={countySearchTerm}
+                              onChange={(e) => setCountySearchTerm(e.target.value)}
+                              placeholder="Search county"
+                              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                            />
+                          </div>
+                          <div className="max-h-64 overflow-y-auto">
+                            {filteredCounties.length ? (
+                              filteredCounties.map((county) => (
+                                <button
+                                  type="button"
+                                  key={county}
+                                  onClick={() => handleSelectCounty(county)}
+                                  className={`w-full text-left px-4 py-2 text-sm ${
+                                    individualForm.county === county
+                                      ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                  }`}
+                                >
+                                  {county}
+                                </button>
+                              ))
+                            ) : (
+                              <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No counties found</p>
+                            )}
+                          </div>
+                          {individualForm.county && (
+                            <button
+                              type="button"
+                              onClick={() => handleSelectCounty('')}
+                              className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-top border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                            >
+                              Clear selection
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Sub-County *
+                    <div className="relative" ref={subCountyDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!individualForm.county) return;
+                          setIsSubCountyDropdownOpen((prev) => !prev);
+                        }}
+                        disabled={!individualForm.county}
+                        className={`w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-3 text-left focus:outline-none focus:ring-2 focus:ring-[#8B2332] ${
+                          individualForm.county
+                            ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
+                        }`}
+                      >
+                        <span>
+                          {individualForm.subCounty
+                            ? individualForm.subCounty
+                            : individualForm.county
+                            ? 'Select Sub-County'
+                            : 'Select county first'}
+                        </span>
+                        <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                      </button>
+                      {isSubCountyDropdownOpen && (
+                        <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                          <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                            <input
+                              type="text"
+                              value={subCountySearchTerm}
+                              onChange={(e) => setSubCountySearchTerm(e.target.value)}
+                              placeholder="Search sub-county"
+                              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                            />
+                          </div>
+                          <div className="max-h-64 overflow-y-auto">
+                            {filteredSubCounties.length ? (
+                              filteredSubCounties.map((sub) => (
+                                <button
+                                  type="button"
+                                  key={sub}
+                                  onClick={() => handleSelectSubCounty(sub)}
+                                  className={`w-full text-left px-4 py-2 text-sm ${
+                                    individualForm.subCounty === sub
+                                      ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                  }`}
+                                >
+                                  {sub}
+                                </button>
+                              ))
+                            ) : (
+                              <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No sub-counties found</p>
+                            )}
+                          </div>
+                          {individualForm.subCounty && (
+                            <button
+                              type="button"
+                              onClick={() => handleSelectSubCounty('')}
+                              className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                            >
+                              Clear selection
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Ward *
+                    {availableWards.length ? (
+                      <div className="relative" ref={wardDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={() => setIsWardDropdownOpen((prev) => !prev)}
+                          className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        >
+                          <span>{individualForm.ward ? individualForm.ward : 'Select Ward'}</span>
+                          <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                        </button>
+                        {isWardDropdownOpen && (
+                          <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                              <input
+                                type="text"
+                                value={wardSearchTerm}
+                                onChange={(e) => setWardSearchTerm(e.target.value)}
+                                placeholder="Search ward"
+                                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                              />
+                            </div>
+                            <div className="max-h-64 overflow-y-auto">
+                              {filteredWards.length ? (
+                                filteredWards.map((ward) => (
+                                  <button
+                                    type="button"
+                                    key={ward}
+                                    onClick={() => handleSelectWard(ward)}
+                                    className={`w-full text-left px-4 py-2 text-sm ${
+                                      individualForm.ward === ward
+                                        ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {ward}
+                                  </button>
+                                ))
+                              ) : (
+                                <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No wards found</p>
+                              )}
+                            </div>
+                            {individualForm.ward && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectWard('')}
+                                className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                              >
+                                Clear selection
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <input
+                        type="text"
+                        name="ward"
+                        value={individualForm.ward}
+                        onChange={handleIndividualInputChange}
+                        required
+                        placeholder={
+                          individualForm.subCounty
+                            ? 'Enter ward (no data available for this sub-county)'
+                            : 'Select sub-county first'
+                        }
+                        className={`w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332] ${
+                          !individualForm.subCounty ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''
+                        }`}
+                        disabled={!individualForm.subCounty}
+                      />
+                    )}
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    If in Diaspora, country of diaspora
+                    <div className="relative" ref={countryDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setIsCountryDropdownOpen((prev) => !prev)}
+                        className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 text-left text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      >
+                        <span>
+                          {individualForm.diasporaCountry ? individualForm.diasporaCountry : 'Select Country'}
+                        </span>
+                        <ChevronDownIcon size={18} className="text-gray-500 dark:text-gray-300" />
+                      </button>
+                      {isCountryDropdownOpen && (
+                        <div className="absolute z-[120] mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+                          <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                            <input
+                              type="text"
+                              value={countrySearchTerm}
+                              onChange={(e) => setCountrySearchTerm(e.target.value)}
+                              placeholder="Search country"
+                              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                            />
+                          </div>
+                          <div className="max-h-64 overflow-y-auto">
+                            {filteredCountries.length ? (
+                              filteredCountries.map((country) => (
+                                <button
+                                  type="button"
+                                  key={country}
+                                  onClick={() => handleSelectCountry(country)}
+                                  className={`w-full text-left px-4 py-2 text-sm ${
+                                    individualForm.diasporaCountry === country
+                                      ? 'bg-[#FDF3F4] dark:bg-[#2a1619] text-[#8B2332] dark:text-[#F5C3CB]'
+                                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                  }`}
+                                >
+                                  {country}
+                                </button>
+                              ))
+                            ) : (
+                              <p className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No countries found</p>
+                            )}
+                          </div>
+                          {individualForm.diasporaCountry && (
+                            <button
+                              type="button"
+                              onClick={() => handleSelectCountry('')}
+                              className="w-full text-center text-xs font-medium text-[#8B2332] dark:text-[#F5C3CB] py-2 border-t border-gray-200 dark:border-gray-700 hover:bg-[#FDF3F4] dark:hover:bg-[#2a1619]"
+                            >
+                              Clear selection
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                </div>
               </div>
 
+              {/* MINISTRY/ CHURCH DETAILS */}
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                  MINISTRY/ CHURCH DETAILS
+                </h5>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300 md:col-span-2">
+                    Your Church/Ministry Name (The name of the main church/ministry you are representing) *
+                    <input
+                      type="text"
+                      name="churchName"
+                      value={individualForm.churchName}
+                      onChange={handleIndividualInputChange}
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
               <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-                Manual M-Pesa Code (if you already paid via Paybill 400222 / Account 9859474#)
+                    Your Title *
+                    <select
+                      name="title"
+                      value={individualForm.title}
+                      onChange={handleIndividualInputChange}
+                      required
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    >
+                      <option value="">Select Title</option>
+                      <option value="Bishop">Bishop</option>
+                      <option value="Reverend">Reverend</option>
+                      <option value="Pastor">Pastor</option>
+                      <option value="Elder">Elder</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+                  {individualForm.title === 'Other' && (
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      If selected other on the previous question, please specify *
                 <input
                   type="text"
-                  name="mpesaCode"
-                  value={individualForm.mpesaCode}
+                        name="titleOther"
+                        value={individualForm.titleOther}
                   onChange={handleIndividualInputChange}
-                  className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                        required={individualForm.title === 'Other'}
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
                 />
               </label>
-
-              <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40 text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                <p className="font-semibold text-gray-900 dark:text-gray-100">Payment Instructions</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>
-                    {selectedTier ? `${selectedTier} fee` : 'Registration fee'}:{' '}
-                    <span className="font-bold">KSh {selectedTierAmount > 0 ? selectedTierAmount.toLocaleString() : '1,050'}</span>
-                  </li>
-                  <li>Pay with Paystack (MPesa, card, bank) or use Paybill <strong>400222</strong> / Account <strong>9859474#</strong> (PECK Housing Cooperative Society Ltd).</li>
-                  <li>Keep the confirmation code; we will verify it alongside the Paystack reference.</li>
-                </ul>
+                  )}
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-4 items-center">
+              {/* REFERRAL DETAILS */}
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                  REFERRAL DETAILS
+                </h5>
+                <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                  If you were referred by an existing member, please provide their details below
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Full names of the referral
+                    <input
+                      type="text"
+                      name="referralName"
+                      value={individualForm.referralName}
+                      onChange={handleIndividualInputChange}
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Referral's APECK Number
+                    <input
+                      type="text"
+                      name="referralApeckNumber"
+                      value={individualForm.referralApeckNumber}
+                      onChange={handleIndividualInputChange}
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                  <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    Referral's Phone Number
+                    <input
+                      type="tel"
+                      name="referralPhone"
+                      value={individualForm.referralPhone}
+                      onChange={handleIndividualInputChange}
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* PAYMENT AND CONFIRMATION */}
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                  PAYMENT AND CONFIRMATION
+                </h5>
+                <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40 space-y-4">
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                      Mandatory Registration Fee: KES {selectedTierAmount > 0 ? selectedTierAmount.toLocaleString() : '5,000'}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      This fee covers the initial membership share and registration processing.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment Instructions (Paystack):</p>
+                    <div className="bg-white dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 rounded-lg p-4 space-y-2 border border-gray-200 dark:border-gray-700">
+                      <p className="font-semibold text-gray-900 dark:text-gray-100">Paystack (supports M-Pesa STK, card, bank)</p>
+                      <ol className="list-decimal list-inside space-y-1">
+                        <li>Click <strong>Pay with Paystack</strong> below.</li>
+                        <li>Select your preferred payment method (M-Pesa STK push, card, bank transfer).</li>
+                        <li>Complete payment. A reference will appear automatically once successful.</li>
+                      </ol>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        Keep the Paystack reference for your records. We receive it automatically.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Pay with Paystack</p>
                 <button
                   type="button"
                   onClick={handlePaystackPayment}
-                  disabled={isPaying}
-                  className="px-5 py-3 rounded-full bg-[#8B2332] text-white font-semibold hover:bg-[#6B1A28] transition-all shadow-lg disabled:opacity-60"
+                      disabled={isPaying || !individualForm.email || !individualForm.phone || !individualForm.fullName}
+                      className="px-5 py-3 rounded-xl bg-[#8B2332] text-white font-semibold hover:bg-[#6B1A28] transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isPaying ? 'Processing Payment...' : 'Pay with Paystack'}
                 </button>
                 {paymentReference && (
-                  <span className="text-green-600 dark:text-green-400 font-semibold">
-                    Payment verified: {paymentReference}
-                  </span>
-                )}
+                      <p className="text-green-600 dark:text-green-400 font-semibold mt-2 text-sm">
+                        ✓ Payment verified: {paymentReference}
+                      </p>
+                    )}
+                    <div className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                      <label className="space-y-2 block">
+                        Paystack Reference
+                        <input
+                          type="text"
+                          value={paymentReference ?? ''}
+                          readOnly
+                          placeholder="Reference will appear after successful payment"
+                          className="w-full rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-transparent px-4 py-3 text-gray-700 dark:text-gray-200 focus:outline-none"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* DECLARATION */}
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] border-b border-gray-200 dark:border-gray-700 pb-2">
+                  DECLARATION
+                </h5>
+                <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                    I, the undersigned, hereby apply for membership in the Peck Housing Cooperative Society and declare that the information provided above is true and correct to the best of my knowledge. I agree to abide by the Society's by-laws and any resolutions passed by its members or governing body.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Applicant's Signature (official Name will apply as signature) *
+                      <input
+                        type="text"
+                        name="signature"
+                        value={individualForm.signature}
+                        onChange={handleIndividualInputChange}
+                        required
+                        placeholder="Enter your full name as signature"
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                      Date *
+                      <input
+                        type="date"
+                        name="declarationDate"
+                        value={individualForm.declarationDate}
+                        onChange={handleIndividualInputChange}
+                        required
+                        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex flex-wrap gap-4 items-center pt-4 border-t border-gray-200 dark:border-gray-700">
                 {paymentMessage && (
-                  <span className="text-sm text-gray-600 dark:text-gray-300">{paymentMessage}</span>
+                  <div className={`w-full p-3 rounded-xl text-sm ${
+                    paymentMessage.includes('successfully') || paymentMessage.includes('verified')
+                      ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                      : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                  }`}>
+                    {paymentMessage}
+                  </div>
                 )}
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   type="button"
                   onClick={closeIndividualModal}
@@ -1590,7 +2541,7 @@ export function Membership() {
                 <button
                   type="submit"
                   disabled={!paymentReference || isSubmittingApplication}
-                  className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60"
+                  className="px-6 py-3 rounded-full bg-[#7A7A3F] text-white font-semibold shadow-lg hover:shadow-xl hover:bg-[#6A6A35] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isSubmittingApplication ? 'Sending...' : 'Submit Application'}
                 </button>

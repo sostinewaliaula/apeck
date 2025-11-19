@@ -9,14 +9,17 @@ export class MembershipController {
   @Post('applications')
   @HttpCode(HttpStatus.CREATED)
   async createApplication(@Body() dto: CreateMembershipApplicationDto) {
-    // Check if application with this payment reference already exists
-    const existing = await this.membershipService.findByPaymentReference(dto.paymentReference);
-    if (existing) {
-      return {
-        success: true,
-        message: 'Application already exists for this payment reference',
-        application: existing,
-      };
+    // Check if application with this payment reference already exists (if provided)
+    const paymentRef = dto.paymentReference || dto.mpesaCode;
+    if (paymentRef) {
+      const existing = await this.membershipService.findByPaymentReference(paymentRef);
+      if (existing) {
+        return {
+          success: true,
+          message: 'Application already exists for this payment reference',
+          application: existing,
+        };
+      }
     }
 
     const application = await this.membershipService.createApplication(dto);

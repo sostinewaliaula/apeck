@@ -38,16 +38,49 @@ export class CreateMembershipApplicationDto {
   mpesaCode?: string;
 
   @IsString()
-  @IsNotEmpty()
-  paymentReference: string;
+  @IsOptional()
+  churchName?: string;
 
   @IsString()
-  @IsNotEmpty()
-  paymentGateway: string;
+  @IsOptional()
+  title?: string;
+
+  @IsString()
+  @IsOptional()
+  titleOther?: string;
+
+  @IsString()
+  @IsOptional()
+  referralName?: string;
+
+  @IsString()
+  @IsOptional()
+  referralApeckNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  referralPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  signature?: string;
+
+  @IsString()
+  @IsOptional()
+  declarationDate?: string;
+
+  @IsString()
+  @IsOptional()
+  paymentReference?: string;
+
+  @IsString()
+  @IsOptional()
+  paymentGateway?: string;
 
   @IsNumber()
   @Min(0)
-  amountPaid: number;
+  @IsOptional()
+  amountPaid?: number;
 
   @IsString()
   @IsNotEmpty()

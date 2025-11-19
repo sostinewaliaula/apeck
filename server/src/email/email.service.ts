@@ -124,6 +124,14 @@ export class EmailService {
       ward?: string;
       diasporaCountry?: string;
       mpesaCode?: string;
+      churchName?: string;
+      title?: string;
+      titleOther?: string;
+      referralName?: string;
+      referralApeckNumber?: string;
+      referralPhone?: string;
+      signature?: string;
+      declarationDate?: string;
     };
   }): Promise<boolean> {
     const recipientEmails = data.recipientEmails;
@@ -217,8 +225,67 @@ export class EmailService {
             
             ${data.formData.mpesaCode ? `
             <div class="field">
-              <div class="label">Manual M-Pesa Code:</div>
+              <div class="label">M-Pesa Code:</div>
               <div class="value">${data.formData.mpesaCode}</div>
+            </div>
+            ` : ''}
+            
+            <h3 style="color: #8B2332; margin-top: 30px;">Ministry/Church Details</h3>
+            
+            ${data.formData.churchName ? `
+            <div class="field">
+              <div class="label">Church/Ministry Name:</div>
+              <div class="value">${data.formData.churchName}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.title ? `
+            <div class="field">
+              <div class="label">Title:</div>
+              <div class="value">${data.formData.title}${data.formData.titleOther ? ` - ${data.formData.titleOther}` : ''}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.referralName || data.formData.referralApeckNumber || data.formData.referralPhone ? `
+            <h3 style="color: #8B2332; margin-top: 30px;">Referral Details</h3>
+            ` : ''}
+            
+            ${data.formData.referralName ? `
+            <div class="field">
+              <div class="label">Referral Name:</div>
+              <div class="value">${data.formData.referralName}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.referralApeckNumber ? `
+            <div class="field">
+              <div class="label">Referral APECK Number:</div>
+              <div class="value">${data.formData.referralApeckNumber}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.referralPhone ? `
+            <div class="field">
+              <div class="label">Referral Phone:</div>
+              <div class="value">${data.formData.referralPhone}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.signature || data.formData.declarationDate ? `
+            <h3 style="color: #8B2332; margin-top: 30px;">Declaration</h3>
+            ` : ''}
+            
+            ${data.formData.signature ? `
+            <div class="field">
+              <div class="label">Signature:</div>
+              <div class="value">${data.formData.signature}</div>
+            </div>
+            ` : ''}
+            
+            ${data.formData.declarationDate ? `
+            <div class="field">
+              <div class="label">Declaration Date:</div>
+              <div class="value">${data.formData.declarationDate}</div>
             </div>
             ` : ''}
             
@@ -249,7 +316,20 @@ Applicant Information:
 ${data.formData.subCounty ? `- Sub-County: ${data.formData.subCounty}` : ''}
 ${data.formData.ward ? `- Ward: ${data.formData.ward}` : ''}
 ${data.formData.diasporaCountry ? `- Diaspora / Country: ${data.formData.diasporaCountry}` : ''}
-${data.formData.mpesaCode ? `- Manual M-Pesa Code: ${data.formData.mpesaCode}` : ''}
+${data.formData.mpesaCode ? `- M-Pesa Code: ${data.formData.mpesaCode}` : ''}
+
+Ministry/Church Details:
+${data.formData.churchName ? `- Church/Ministry Name: ${data.formData.churchName}` : ''}
+${data.formData.title ? `- Title: ${data.formData.title}${data.formData.titleOther ? ` - ${data.formData.titleOther}` : ''}` : ''}
+
+Referral Details:
+${data.formData.referralName ? `- Referral Name: ${data.formData.referralName}` : ''}
+${data.formData.referralApeckNumber ? `- Referral APECK Number: ${data.formData.referralApeckNumber}` : ''}
+${data.formData.referralPhone ? `- Referral Phone: ${data.formData.referralPhone}` : ''}
+
+Declaration:
+${data.formData.signature ? `- Signature: ${data.formData.signature}` : ''}
+${data.formData.declarationDate ? `- Declaration Date: ${data.formData.declarationDate}` : ''}
 
 This is an automated notification from the APECK membership system.
     `;

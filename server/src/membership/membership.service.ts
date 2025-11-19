@@ -23,6 +23,11 @@ export class MembershipService {
   async createApplication(dto: CreateMembershipApplicationDto) {
     const id = uuid();
 
+    // Determine payment reference - use Paystack reference if available, otherwise M-Pesa code
+    const paymentRef = dto.paymentReference || dto.mpesaCode || `MPESA-${Date.now()}`;
+    const paymentGateway = dto.paymentGateway || (dto.paymentReference ? 'paystack' : 'mpesa');
+    const amountPaid = dto.amountPaid || 0;
+
     const [application] = await this.knex('membership_applications')
       .insert({
         id,
@@ -35,9 +40,17 @@ export class MembershipService {
         ward: dto.ward || null,
         diaspora_country: dto.diasporaCountry || null,
         mpesa_code: dto.mpesaCode || null,
-        payment_reference: dto.paymentReference,
-        payment_gateway: dto.paymentGateway,
-        amount_paid: dto.amountPaid,
+        church_name: dto.churchName || null,
+        title: dto.title || null,
+        title_other: dto.titleOther || null,
+        referral_name: dto.referralName || null,
+        referral_apeck_number: dto.referralApeckNumber || null,
+        referral_phone: dto.referralPhone || null,
+        signature: dto.signature || null,
+        declaration_date: dto.declarationDate || null,
+        payment_reference: paymentRef,
+        payment_gateway: paymentGateway,
+        amount_paid: amountPaid,
         membership_tier: dto.membershipTier,
         status: 'pending',
         email_sent: false,
@@ -79,13 +92,16 @@ export class MembershipService {
         return;
       }
 
+      const paymentRef = dto.paymentReference || dto.mpesaCode || 'N/A';
+      const amountPaid = dto.amountPaid || 0;
+
       const emailSent = await this.emailService.sendMembershipApplicationEmail({
         recipientEmails,
         applicantName: dto.fullName,
         applicantEmail: dto.email,
-        paymentReference: dto.paymentReference,
+        paymentReference: paymentRef,
         membershipTier: dto.membershipTier,
-        amountPaid: dto.amountPaid,
+        amountPaid: amountPaid,
         formData: {
           fullName: dto.fullName,
           phone: dto.phone,
@@ -96,6 +112,14 @@ export class MembershipService {
           ward: dto.ward,
           diasporaCountry: dto.diasporaCountry,
           mpesaCode: dto.mpesaCode,
+          churchName: dto.churchName,
+          title: dto.title,
+          titleOther: dto.titleOther,
+          referralName: dto.referralName,
+          referralApeckNumber: dto.referralApeckNumber,
+          referralPhone: dto.referralPhone,
+          signature: dto.signature,
+          declarationDate: dto.declarationDate,
         },
       });
 
