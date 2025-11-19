@@ -9,6 +9,8 @@ import { AdminMediaLibrary } from './pages/MediaLibrary';
 import { AdminNewsList } from './pages/NewsList';
 import { AdminNewsDetail } from './pages/NewsDetail';
 import { AdminEventsList } from './pages/EventsList';
+import { AdminEmailRecipientsPage } from './pages/EmailRecipients';
+import { AdminEmailSettingsPage } from './pages/EmailSettings';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -75,6 +77,22 @@ function AdminRouter() {
         element={
           <ProtectedRoute>
             <AdminEventsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/email-recipients"
+        element={
+          <ProtectedRoute>
+            <AdminEmailRecipientsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/email-settings"
+        element={
+          <ProtectedRoute>
+            <AdminEmailSettingsPage />
           </ProtectedRoute>
         }
       />

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPinned, NotebookPen, Palette, Newspaper, Calendar } from 'lucide-react';
+import { LayoutDashboard, MapPinned, NotebookPen, Palette, Newspaper, Calendar, Mail, Settings } from 'lucide-react';
 import { useAuth } from '../auth-context';
 
 type AdminLayoutProps = {
@@ -17,6 +17,8 @@ const navItems = [
   { label: 'News', icon: Newspaper, href: '/admin/news' },
   { label: 'Events', icon: Calendar, href: '/admin/events' },
   { label: 'Media', icon: Palette, href: '/admin/media' },
+  { label: 'Email Recipients', icon: Mail, href: '/admin/email-recipients' },
+  { label: 'Email Settings', icon: Settings, href: '/admin/email-settings' },
 ];
 
 export function AdminLayout({ title, description, actions, children }: AdminLayoutProps) {

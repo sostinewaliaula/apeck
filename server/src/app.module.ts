@@ -13,6 +13,8 @@ import { RoutesModule } from './routes/routes.module';
 import { MediaModule } from './media/media.module';
 import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
+import { MembershipModule } from './membership/membership.module';
+import { EmailRecipientsModule } from './email-recipients/email-recipients.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { EventsModule } from './events/events.module';
     MediaModule,
     NewsModule,
     EventsModule,
+    MembershipModule,
+    EmailRecipientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

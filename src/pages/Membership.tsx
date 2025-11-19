@@ -3,6 +3,7 @@ import { CheckIcon, UsersIcon, AwardIcon, HeartIcon, BookOpenIcon, ShieldIcon, S
 import { EnrollForm } from '../components/EnrollForm';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
+import { getApiBaseUrl } from '../lib/config';
 
 type IndividualFormState = {
   fullName: string;
@@ -25,9 +26,16 @@ declare global {
 const PAYSTACK_PUBLIC_KEY =
   ((import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined) ?? '').trim();
 const APPLICATION_EMAIL = 'membership@apeck.org'; // TODO: Replace with official intake email
-const INDIVIDUAL_REG_FEE = 1050;
 const GOOGLE_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScI8o9LqnLQDI3TxtEL8BRuhvsfQn-dp2rTZ7cWkoxlQ9nNpQ/viewform';
+
+// Helper function to parse price from priceLabel (e.g., "KSh 1,050" -> 1050)
+function parsePriceFromLabel(priceLabel: string): number {
+  // Remove currency symbols, spaces, and commas, then extract number
+  const cleaned = priceLabel.replace(/[^\d.]/g, '');
+  const amount = parseFloat(cleaned);
+  return isNaN(amount) ? 0 : Math.round(amount);
+}
 const initialIndividualForm: IndividualFormState = {
   fullName: '',
   phone: '',
@@ -44,6 +52,7 @@ export function Membership() {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const [isEnrollFormOpen, setIsEnrollFormOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [selectedTierAmount, setSelectedTierAmount] = useState<number>(0);
   const [showIndividualModal, setShowIndividualModal] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentReference, setPaymentReference] = useState<string | null>(null);
@@ -154,6 +163,7 @@ export function Membership() {
     setPaymentMessage(null);
     setIsPaying(false);
     setIsSubmittingApplication(false);
+    setSelectedTierAmount(0);
   };
 
   const handleIndividualInputChange = (
@@ -166,6 +176,10 @@ export function Membership() {
   const handlePaystackPayment = () => {
     if (!individualForm.email || !individualForm.phone || !individualForm.fullName) {
       setPaymentMessage('Please fill in your name, phone, and email before initiating payment.');
+      return;
+    }
+    if (!selectedTierAmount || selectedTierAmount <= 0) {
+      setPaymentMessage('Invalid membership tier amount. Please try again.');
       return;
     }
     if (!PAYSTACK_PUBLIC_KEY) {
@@ -183,13 +197,14 @@ export function Membership() {
     const handler = window.PaystackPop.setup({
       key: PAYSTACK_PUBLIC_KEY,
       email: individualForm.email,
-      amount: INDIVIDUAL_REG_FEE * 100, // Paystack accepts amount in base currency minor units
+      amount: selectedTierAmount * 100, // Paystack accepts amount in base currency minor units
       currency: 'KES',
-      reference: `APECK-IND-${Date.now()}`,
+      reference: `APECK-${selectedTier?.replace(/\s+/g, '-').toUpperCase()}-${Date.now()}`,
       label: individualForm.fullName,
       metadata: {
         custom_fields: [
           { display_name: 'Phone Number', variable_name: 'phone_number', value: individualForm.phone },
+          { display_name: 'Membership Tier', variable_name: 'membership_tier', value: selectedTier || '' },
         ],
       },
       callback: (response: { reference: string }) => {
@@ -211,10 +226,11 @@ export function Membership() {
   const closeIndividualModal = () => {
     setShowIndividualModal(false);
     setSelectedTier(null);
+    setSelectedTierAmount(0);
     resetIndividualForm();
   };
 
-  const handleIndividualSubmit = (e: React.FormEvent) => {
+  const handleIndividualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!paymentReference) {
       setPaymentMessage('Please complete payment before submitting the application.');
@@ -222,34 +238,82 @@ export function Membership() {
     }
 
     setIsSubmittingApplication(true);
-    const bodyLines = [
-      'New Individual Membership Application',
-      '',
-      `Payment Reference: ${paymentReference}`,
-      `Selected Tier: ${selectedTier ?? 'Individual Member'}`,
-      `Full Name: ${individualForm.fullName}`,
-      `Phone Number: ${individualForm.phone}`,
-      `ID Number: ${individualForm.idNumber}`,
-      `Email Address: ${individualForm.email}`,
-      `County: ${individualForm.county}`,
-      `Sub-County: ${individualForm.subCounty}`,
-      `Ward: ${individualForm.ward}`,
-      `Diaspora / Country: ${individualForm.diasporaCountry}`,
-      `Manual M-Pesa Code (if applicable): ${individualForm.mpesaCode}`,
-    ];
+    setPaymentMessage(null);
 
-    const mailtoLink = `mailto:${APPLICATION_EMAIL}?subject=${encodeURIComponent(
-      'APECK Individual Membership Application'
-    )}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/membership/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: individualForm.fullName,
+          phone: individualForm.phone,
+          idNumber: individualForm.idNumber,
+          email: individualForm.email,
+          county: individualForm.county,
+          subCounty: individualForm.subCounty || undefined,
+          ward: individualForm.ward || undefined,
+          diasporaCountry: individualForm.diasporaCountry || undefined,
+          mpesaCode: individualForm.mpesaCode || undefined,
+          paymentReference: paymentReference,
+          paymentGateway: 'paystack',
+          amountPaid: selectedTierAmount,
+          membershipTier: selectedTier ?? 'Individual Member',
+        }),
+      });
 
-    window.location.href = mailtoLink;
-    setIsSubmittingApplication(false);
-    closeIndividualModal();
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+
+      if (data.success) {
+        setPaymentMessage('Application submitted successfully! You will receive a confirmation email shortly.');
+        // Reset form and close modal after a short delay
+        setTimeout(() => {
+          resetIndividualForm();
+          setPaymentReference(null);
+          closeIndividualModal();
+        }, 2000);
+      } else {
+        throw new Error(data.message || 'Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setPaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to submit application. Please try again or contact support.'
+      );
+    } finally {
+      setIsSubmittingApplication(false);
+    }
   };
 
-  const triggerIndividualApplication = () => {
+  const triggerIndividualApplication = (tierName?: string, tierPriceLabel?: string) => {
     resetIndividualForm();
-    setSelectedTier('Individual Member');
+    const tier = tierName || 'Individual Member';
+    setSelectedTier(tier);
+    
+    // Calculate amount from tier price label
+    if (tierPriceLabel) {
+      const amount = parsePriceFromLabel(tierPriceLabel);
+      setSelectedTierAmount(amount);
+    } else {
+      // Fallback: try to find the tier in the tiers list
+      const foundTier = tiers.items.find((t) => t.name === tier);
+      if (foundTier) {
+        const amount = parsePriceFromLabel(foundTier.priceLabel);
+        setSelectedTierAmount(amount);
+      } else {
+        // Default fallback
+        setSelectedTierAmount(1050);
+      }
+    }
+    
     setShowIndividualModal(true);
   };
 
@@ -655,7 +719,15 @@ export function Membership() {
                 {hero.description}
               </p>
               <button
-                onClick={triggerIndividualApplication}
+                onClick={() => {
+                  // Find the first tier (usually Individual Member) and trigger with its details
+                  const firstTier = tiers.items[0];
+                  if (firstTier) {
+                    triggerIndividualApplication(firstTier.name, firstTier.priceLabel);
+                  } else {
+                    triggerIndividualApplication();
+                  }
+                }}
                 className="inline-flex items-center space-x-2 px-8 py-4 bg-white text-[#8B2332] rounded-full font-semibold hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
               >
                 <span>{hero.primary.label}</span>
@@ -1165,10 +1237,12 @@ export function Membership() {
                       <button 
                         onClick={() => {
                           if (isIndividualTier) {
-                            triggerIndividualApplication();
+                            triggerIndividualApplication(tier.name, tier.priceLabel);
                             return;
                           }
                           setSelectedTier(tier.name);
+                          const amount = parsePriceFromLabel(tier.priceLabel);
+                          setSelectedTierAmount(amount);
                           setIsEnrollFormOpen(true);
                         }}
                         className={`w-full px-6 py-3 ${isFeatured ? 'bg-[#8B2332] hover:bg-[#6B1A28]' : 'bg-gray-600 hover:bg-gray-700'} text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:scale-105`}
@@ -1408,8 +1482,13 @@ export function Membership() {
             <div className="flex justify-between items-start p-6 border-b border-gray-100 dark:border-gray-800">
               <div>
                 <h3 className="text-2xl font-bold text-[#8B2332] dark:text-[#B85C6D]">
-                  Individual Member Application
+                  {selectedTier || 'Membership'} Application
                 </h3>
+                {selectedTierAmount > 0 && (
+                  <p className="text-lg font-semibold text-[#8B2332] dark:text-[#B85C6D] mt-1">
+                    Amount: KSh {selectedTierAmount.toLocaleString()}
+                  </p>
+                )}
                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                   Fill in the details below, make your payment, and we will receive your application instantly.
                   Prefer Google Forms?{' '}
@@ -1472,7 +1551,10 @@ export function Membership() {
               <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/40 text-sm text-gray-700 dark:text-gray-300 space-y-2">
                 <p className="font-semibold text-gray-900 dark:text-gray-100">Payment Instructions</p>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Registration fee: <span className="font-bold">KSh 1,050</span></li>
+                  <li>
+                    {selectedTier ? `${selectedTier} fee` : 'Registration fee'}:{' '}
+                    <span className="font-bold">KSh {selectedTierAmount > 0 ? selectedTierAmount.toLocaleString() : '1,050'}</span>
+                  </li>
                   <li>Pay with Paystack (MPesa, card, bank) or use Paybill <strong>400222</strong> / Account <strong>9859474#</strong> (PECK Housing Cooperative Society Ltd).</li>
                   <li>Keep the confirmation code; we will verify it alongside the Paystack reference.</li>
                 </ul>

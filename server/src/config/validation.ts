@@ -16,4 +16,12 @@ export const validationSchema = Joi.object({
   JWT_REFRESH_TTL: Joi.string().default('7d'),
 
   PASSWORD_PEPPER: Joi.string().min(8).required(),
+
+  SMTP_HOST: Joi.string().default('mail.apeck.co.ke'),
+  SMTP_PORT: Joi.number().default(465),
+  SMTP_SECURE: Joi.string().valid('true', 'false').default('true'),
+  SMTP_USER: Joi.string().email().allow('').optional(),
+  SMTP_PASSWORD: Joi.string().allow('').optional(),
+  SMTP_FROM: Joi.string().email().allow('').optional(),
+  MEMBERSHIP_EMAIL: Joi.string().email().default('membership@apeck.org'),
 });

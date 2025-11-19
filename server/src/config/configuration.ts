@@ -24,5 +24,14 @@ export default () => {
     security: {
       passwordPepper: process.env.PASSWORD_PEPPER ?? '',
     },
+    email: {
+      host: process.env.SMTP_HOST ?? 'mail.apeck.co.ke',
+      port: parseInt(process.env.SMTP_PORT ?? '465', 10),
+      secure: process.env.SMTP_SECURE === 'true',
+      user: process.env.SMTP_USER ?? '',
+      password: process.env.SMTP_PASSWORD ?? '',
+      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? 'noreply@apeck.co.ke',
+      membershipRecipient: process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.org',
+    },
   };
 };

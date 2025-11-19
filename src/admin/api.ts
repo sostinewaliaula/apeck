@@ -551,3 +551,64 @@ export function deleteEvent(accessToken: string, id: string) {
   });
 }
 
+// Email Recipients API
+export type EmailRecipientResponse = {
+  id: string;
+  email: string;
+  name?: string;
+  type: 'membership' | 'general';
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const normalizeEmailRecipient = (r: any): EmailRecipientResponse => ({
+  id: r.id,
+  email: r.email,
+  name: r.name ?? undefined,
+  type: r.type,
+  isActive: r.is_active ?? r.isActive ?? true,
+  displayOrder: r.display_order ?? r.displayOrder ?? 0,
+  createdAt: r.created_at ?? r.createdAt,
+  updatedAt: r.updated_at ?? r.updatedAt,
+});
+
+export type EmailRecipientPayload = {
+  email: string;
+  name?: string;
+  type: 'membership' | 'general';
+  isActive?: boolean;
+  displayOrder?: number;
+};
+
+export function fetchEmailRecipients(accessToken: string) {
+  return request<{ success: boolean; recipients: any[] }>('/email-recipients', {
+    method: 'GET',
+    accessToken,
+  }).then((response) => response.recipients.map((r: any) => normalizeEmailRecipient(r)));
+}
+
+export function createEmailRecipient(accessToken: string, payload: EmailRecipientPayload) {
+  return request<{ success: boolean; recipient: any }>('/email-recipients', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then((response) => normalizeEmailRecipient(response.recipient));
+}
+
+export function updateEmailRecipient(accessToken: string, id: string, payload: Partial<EmailRecipientPayload>) {
+  return request<{ success: boolean; recipient: any }>(`/email-recipients/${id}`, {
+    method: 'PUT',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then((response) => normalizeEmailRecipient(response.recipient));
+}
+
+export function deleteEmailRecipient(accessToken: string, id: string) {
+  return request<void>(`/email-recipients/${id}`, {
+    method: 'DELETE',
+    accessToken,
+  });
+}
+
