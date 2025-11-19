@@ -4,6 +4,7 @@ import { ArrowRightIcon, HeartIcon, UsersIcon, BookOpenIcon, SparklesIcon, Chevr
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
 import { fetchNewsList, PublicNewsSummary } from '../lib/news';
+import ReactPlayer from 'react-player';
 
 const STAT_ICON_MAP: Record<string, typeof UsersIcon> = {
   users: UsersIcon,
@@ -47,6 +48,9 @@ type WhoWeAreSectionContent = {
   imageAlt?: string;
   floatingBadgeTitle?: string;
   floatingBadgeSubtitle?: string;
+  videoMedia?: string;
+  videoUrl?: string;
+  videoPoster?: string;
 };
 
 type ImpactStatInput = {
@@ -162,6 +166,12 @@ const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   year: 'numeric',
 };
 
+const DIRECT_VIDEO_REGEX = /\.(mp4|webm|ogg|m4v|mov)(\?.*)?$/i;
+
+function isDirectVideoUrl(url: string) {
+  return DIRECT_VIDEO_REGEX.test(url.toLowerCase());
+}
+
 function formatNewsDate(value?: string) {
   if (!value) return 'Latest update';
   const date = new Date(value);
@@ -178,6 +188,9 @@ export function Home() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
   const [featuredNews, setFeaturedNews] = useState<PublicNewsSummary[]>([]);
+  const whoWeAreMediaRef = useRef<HTMLDivElement | null>(null);
+  const whoWeAreVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [isWhoWeAreMediaVisible, setIsWhoWeAreMediaVisible] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -270,6 +283,9 @@ export function Home() {
     ],
     image: '/assets/image1.jpg',
     imageAlt: 'Clergy gathering',
+    videoMedia: '',
+    videoUrl: '',
+    videoPoster: '',
     floatingBadgeTitle: 'Since 2009',
     floatingBadgeSubtitle: 'Serving Kenya',
   };
@@ -421,6 +437,43 @@ export function Home() {
   const whoWeAreImage = whoWeAreSection?.image
     ? resolveMediaUrl(whoWeAreSection.image)
     : defaultWhoWeAre.image;
+
+  const whoWeAreVideoUpload = whoWeAreSection?.videoMedia
+    ? resolveMediaUrl(whoWeAreSection.videoMedia)
+    : undefined;
+  const whoWeAreVideoExternal = whoWeAreSection?.videoUrl?.trim()
+    ? whoWeAreSection.videoUrl.trim()
+    : undefined;
+  const whoWeAreVideoPoster = whoWeAreSection?.videoPoster
+    ? resolveMediaUrl(whoWeAreSection.videoPoster)
+    : whoWeAreImage;
+  const whoWeAreVideoSource = whoWeAreVideoExternal || whoWeAreVideoUpload;
+  const hasWhoWeAreVideo = Boolean(whoWeAreVideoSource);
+  const whoWeAreVideoIsFile =
+    hasWhoWeAreVideo && whoWeAreVideoSource
+      ? isDirectVideoUrl(whoWeAreVideoSource)
+      : false;
+  const whoWeAreReactPlayerConfig = useMemo(
+    () => ({
+      youtube: {
+        playerVars: {
+          autoplay: isWhoWeAreMediaVisible ? 1 : 0,
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0,
+          playsinline: 1,
+        },
+      },
+      vimeo: {
+        playerOptions: {
+          autoplay: isWhoWeAreMediaVisible ? 1 : 0,
+          muted: 1,
+        },
+      },
+    }),
+    [isWhoWeAreMediaVisible],
+  );
+
   const whoWeAreCta =
     whoWeAreSection?.cta?.label
       ? {
@@ -442,6 +495,10 @@ export function Home() {
     floatingBadgeSubtitle:
       whoWeAreSection?.floatingBadgeSubtitle?.trim() || defaultWhoWeAre.floatingBadgeSubtitle,
     cta: whoWeAreCta,
+    videoSource: whoWeAreVideoSource,
+    videoPoster: whoWeAreVideoPoster,
+    hasVideo: hasWhoWeAreVideo,
+    videoIsFile: whoWeAreVideoIsFile,
   };
 
   const impactStatsSection = sectionContent['impact_stats'] as ImpactStatsSectionContent | undefined;
@@ -842,6 +899,42 @@ export function Home() {
     };
   }, [isVisible, countedValues, resolvedImpactStats]); // Keep dependencies but optimize inside
 
+  useEffect(() => {
+    if (!whoWeAreContent.hasVideo) return;
+    const target = whoWeAreMediaRef.current;
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsWhoWeAreMediaVisible(entry?.isIntersecting ?? false);
+      },
+      { threshold: 0.45 },
+    );
+    observer.observe(target);
+    return () => {
+      observer.disconnect();
+      setIsWhoWeAreMediaVisible(false);
+    };
+  }, [whoWeAreContent.hasVideo, whoWeAreContent.videoSource]);
+
+  useEffect(() => {
+    if (!whoWeAreContent.hasVideo || !whoWeAreContent.videoIsFile) return;
+    const videoEl = whoWeAreVideoRef.current;
+    if (!videoEl) return;
+    if (isWhoWeAreMediaVisible) {
+      if (videoEl.paused) {
+        const playPromise = videoEl.play();
+        playPromise?.catch((error) => {
+          if (error?.name !== 'AbortError') {
+            console.warn('Failed to autoplay Who We Are video:', error);
+          }
+        });
+      }
+    } else if (!videoEl.paused) {
+      videoEl.pause();
+    }
+  }, [isWhoWeAreMediaVisible, whoWeAreContent.hasVideo, whoWeAreContent.videoIsFile]);
+
   const nextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % heroSlides.length);
   };
@@ -1178,12 +1271,13 @@ export function Home() {
               </div>
             </div>
 
-            {/* Image Content */}
+            {/* Media Content */}
             <div 
               className="relative transform transition-all duration-700 order-1 lg:order-2"
-              data-animate-id="about-image"
+              data-animate-id="about-media"
+              ref={whoWeAreContent.hasVideo ? whoWeAreMediaRef : undefined}
             >
-              <div className={`${isVisible['about-image'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
+              <div className={`${isVisible['about-media'] ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
                 <div className="relative group">
                   {/* Background geometric patterns behind image - multiple layers */}
                   <div className="absolute -z-10 inset-0 -m-8">
@@ -1223,24 +1317,56 @@ export function Home() {
                     </div>
                   </div>
 
-                  {/* Main image with modern styling */}
+                  {/* Main media container */}
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white dark:bg-gray-800 p-1 transition-colors duration-300">
-                    <div className="relative overflow-hidden rounded-3xl">
-                      <img 
-                        src={whoWeAreContent.image} 
-                        alt={whoWeAreContent.imageAlt} 
-                        loading="lazy"
-                        className="w-full h-auto transform group-hover:scale-110 transition-transform duration-700" 
-                        style={{ willChange: 'transform' }}
-                      />
-                      {/* Overlay gradient on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      
-                      {/* Dotted pattern overlay on image (subtle) */}
-                      <div className="absolute inset-0 opacity-[0.04]" style={{
-                        backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
-                        backgroundSize: '16px 16px',
-                      }}></div>
+                    <div className="relative overflow-hidden rounded-3xl w-full aspect-[4/3]">
+                      {whoWeAreContent.hasVideo && whoWeAreContent.videoSource ? (
+                        whoWeAreContent.videoIsFile ? (
+                          <video
+                            ref={whoWeAreVideoRef}
+                            src={whoWeAreContent.videoSource}
+                            poster={whoWeAreContent.videoPoster}
+                            muted
+                            loop
+                            playsInline
+                            controls
+                            preload="metadata"
+                            className="absolute inset-0 w-full h-full object-cover"
+                            autoPlay
+                          />
+                        ) : (
+                          <div className="absolute inset-0">
+                          <ReactPlayer
+                            url={whoWeAreContent.videoSource}
+                            playing={isWhoWeAreMediaVisible}
+                            loop
+                            muted
+                            controls
+                            playsinline
+                            width="100%"
+                            height="100%"
+                            config={whoWeAreReactPlayerConfig}
+                          />
+                          </div>
+                        )
+                      ) : (
+                        <img 
+                          src={whoWeAreContent.image} 
+                          alt={whoWeAreContent.imageAlt} 
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                          style={{ willChange: 'transform' }}
+                        />
+                      )}
+                      {/* Overlay gradient / pattern */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#8B2332]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                      <div
+                        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+                        style={{
+                          backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+                          backgroundSize: '16px 16px',
+                        }}
+                      ></div>
                     </div>
                   </div>
 

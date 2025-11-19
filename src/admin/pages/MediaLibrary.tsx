@@ -6,6 +6,14 @@ import { useAuth } from '../auth-context';
 import { deleteMediaAsset, fetchMediaAssets, MediaAsset, uploadMediaAsset } from '../api';
 import { resolveMediaUrl } from '../../lib/media';
 
+const VIDEO_EXT_REGEX = /\.(mp4|webm|ogg|m4v|mov)(\?.*)?$/i;
+
+function isVideoAsset(asset: MediaAsset) {
+  if (!asset) return false;
+  if (asset.mime_type?.startsWith('video/')) return true;
+  return asset.url ? VIDEO_EXT_REGEX.test(asset.url.toLowerCase()) : false;
+}
+
 export function AdminMediaLibrary() {
   const { accessToken } = useAuth();
   const [assets, setAssets] = useState<MediaAsset[]>([]);
@@ -67,7 +75,7 @@ export function AdminMediaLibrary() {
     >
       <div className="space-y-6">
         <form className="rounded-2xl border border-[#F0E7DA] bg-white/90 p-5 space-y-4" onSubmit={handleUpload}>
-          <p className="text-sm uppercase tracking-wide text-[#B15C5C]">Upload image</p>
+          <p className="text-sm uppercase tracking-wide text-[#B15C5C]">Upload media</p>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">
@@ -75,7 +83,7 @@ export function AdminMediaLibrary() {
               </label>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                 className="mt-1 block w-full text-sm text-[#6B4E3D]"
                 required
@@ -113,13 +121,23 @@ export function AdminMediaLibrary() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {assets.map((asset) => (
                 <div key={asset.id} className="rounded-2xl border border-[#E7DED1] bg-white overflow-hidden shadow-sm">
-                  <div className="relative aspect-video bg-gray-100">
-                    <img
-                      src={resolveMediaUrl(asset.url)}
-                      alt={asset.alt_text ?? ''}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                  <div className="relative aspect-video bg-gray-100 flex items-center justify-center">
+                    {isVideoAsset(asset) ? (
+                      <video
+                        src={resolveMediaUrl(asset.url)}
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                        controls
+                      />
+                    ) : (
+                      <img
+                        src={resolveMediaUrl(asset.url)}
+                        alt={asset.alt_text ?? ''}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    )}
                     <button
                       type="button"
                       className="absolute top-2 right-2 rounded-full bg-white/80 p-1 text-red-600 hover:bg-white"

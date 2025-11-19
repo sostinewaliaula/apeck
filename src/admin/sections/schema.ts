@@ -123,6 +123,9 @@ export const SECTION_SCHEMAS: SectionSchema[] = [
       },
       { type: 'image', label: 'Primary Image', name: 'image' },
       { type: 'text', label: 'Image Alt Text', name: 'imageAlt', placeholder: 'Clergy gathering' },
+      { type: 'image', label: 'Video Upload (MP4 / WebM)', name: 'videoMedia' },
+      { type: 'text', label: 'Video URL (YouTube, Vimeo, etc.)', name: 'videoUrl', placeholder: 'https://youtube.com/...' },
+      { type: 'image', label: 'Video Poster Image', name: 'videoPoster' },
       {
         type: 'link',
         label: 'CTA Button',

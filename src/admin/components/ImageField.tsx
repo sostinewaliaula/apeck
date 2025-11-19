@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 
 import {
   fetchMediaAssets,
@@ -6,6 +6,13 @@ import {
   uploadMediaAsset,
 } from '../api';
 import { resolveMediaUrl } from '../../lib/media';
+
+const VIDEO_EXT_REGEX = /\.(mp4|webm|ogg|m4v|mov)(\?.*)?$/i;
+
+function isVideoUrl(url?: string | null) {
+  if (!url) return false;
+  return VIDEO_EXT_REGEX.test(url.toLowerCase());
+}
 
 type ImageFieldProps = {
   label: string;
@@ -21,6 +28,7 @@ export function ImageFieldEditor({
   accessToken,
 }: ImageFieldProps) {
   const [isPickerOpen, setPickerOpen] = useState(false);
+  const isVideo = useMemo(() => isVideoUrl(value), [value]);
 
   return (
     <div className="space-y-2">
@@ -45,11 +53,21 @@ export function ImageFieldEditor({
       </div>
       {value && (
         <div className="mt-2">
-          <img
-            src={resolveMediaUrl(value)}
-            alt=""
-            className="w-full max-w-xs rounded-xl border border-[#E7DED1]"
-          />
+          {isVideo ? (
+            <video
+              src={resolveMediaUrl(value)}
+              controls
+              muted
+              playsInline
+              className="w-full max-w-xs rounded-xl border border-[#E7DED1]"
+            />
+          ) : (
+            <img
+              src={resolveMediaUrl(value)}
+              alt=""
+              className="w-full max-w-xs rounded-xl border border-[#E7DED1]"
+            />
+          )}
         </div>
       )}
       {isPickerOpen && accessToken && (
@@ -126,7 +144,7 @@ function MediaPickerModal({
               Select media
             </p>
             <p className="text-xs text-[#6B4E3D]/70">
-              Pick an existing image or upload a new one.
+              Pick an existing image or video, or upload a new asset.
             </p>
           </div>
           <button
@@ -144,11 +162,11 @@ function MediaPickerModal({
           >
             <div>
               <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">
-                Upload image
+                Upload media
               </label>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                 className="mt-1 block w-full text-sm text-[#6B4E3D]"
               />
@@ -178,9 +196,9 @@ function MediaPickerModal({
             </div>
           </form>
           <div>
-            <p className="text-sm font-semibold text-[#2F1E1A] mb-3">
-              Library
-            </p>
+              <p className="text-sm font-semibold text-[#2F1E1A] mb-3">
+                Library
+              </p>
             {isLoading ? (
               <p className="text-sm text-[#6B4E3D]">Loading media…</p>
             ) : assets.length === 0 ? (
@@ -194,12 +212,21 @@ function MediaPickerModal({
                     className="text-left rounded-2xl border border-[#E7DED1] bg-white overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#8B2332]"
                     onClick={() => onSelect(asset)}
                   >
-                    <div className="aspect-video bg-gray-100">
-                      <img
-                        src={resolveMediaUrl(asset.url)}
-                        alt={asset.alt_text ?? ''}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="aspect-video bg-gray-100 flex items-center justify-center">
+                      {asset.mime_type?.startsWith('video/') || isVideoUrl(asset.url) ? (
+                        <video
+                          src={resolveMediaUrl(asset.url)}
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={resolveMediaUrl(asset.url)}
+                          alt={asset.alt_text ?? ''}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                     </div>
                     <div className="p-3">
                       <p className="text-xs font-semibold text-[#2F1E1A] truncate">

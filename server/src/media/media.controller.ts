@@ -40,18 +40,21 @@ export class MediaController {
         },
         filename: (req, file, cb) => {
           const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-          const extension = extname(file.originalname) || '.png';
+          const extension = extname(file.originalname) || '.bin';
           cb(null, `${uniqueSuffix}${extension}`);
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (!file.mimetype.startsWith('image/')) {
-          cb(new Error('Only image uploads are supported'), false);
+        if (
+          !file.mimetype.startsWith('image/') &&
+          !file.mimetype.startsWith('video/')
+        ) {
+          cb(new Error('Only image or video uploads are supported'), false);
         } else {
           cb(null, true);
         }
       },
-      limits: { fileSize: 5 * 1024 * 1024 },
+      limits: { fileSize: 100 * 1024 * 1024 },
     }),
   )
   async upload(
