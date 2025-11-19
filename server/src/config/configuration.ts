@@ -31,7 +31,8 @@ export default () => {
       user: process.env.SMTP_USER ?? '',
       password: process.env.SMTP_PASSWORD ?? '',
       from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? 'noreply@apeck.co.ke',
-      membershipRecipient: process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.org',
+      membershipRecipient: process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.co.ke',
+      contactRecipient: process.env.CONTACT_EMAIL ?? 'info@apeck.co.ke',
     },
   };
 };

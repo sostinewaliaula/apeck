@@ -24,4 +24,5 @@ export const validationSchema = Joi.object({
   SMTP_PASSWORD: Joi.string().allow('').optional(),
   SMTP_FROM: Joi.string().email().allow('').optional(),
   MEMBERSHIP_EMAIL: Joi.string().email().default('membership@apeck.org'),
+  CONTACT_EMAIL: Joi.string().email().default('info@apeck.org'),
 });

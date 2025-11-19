@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchPageContent } from '../lib/pageContent';
 import { resolveMediaUrl } from '../lib/media';
+import { getApiBaseUrl } from '../lib/config';
 
 // Fix for default marker icon in React/Webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -22,19 +23,35 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+const SUBJECT_OPTIONS = [
+  { value: 'membership', label: 'Membership Inquiry' },
+  { value: 'programs', label: 'Programs & Training' },
+  { value: 'events', label: 'Events & Conferences' },
+  { value: 'partnership', label: 'Partnership Opportunities' },
+  { value: 'general', label: 'General Inquiry' },
+  { value: 'support', label: 'Technical Support' },
+] as const;
+
+const CONTACT_FORM_INITIAL_STATE = {
+  name: '',
+  email: '',
+  phone: '',
+  subject: '',
+  message: '',
+};
+
 export function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ ...CONTACT_FORM_INITIAL_STATE });
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [sectionContent, setSectionContent] = useState<Record<string, unknown>>({});
+  const [isSubmittingMessage, setIsSubmittingMessage] = useState(false);
+  const [submissionFeedback, setSubmissionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
+    null,
+  );
+  const apiBaseUrl = useMemo(() => getApiBaseUrl(), []);
 
   // Pattern components (memoized for performance)
   const DottedPattern = memo(({ className = '', size = '24px', opacity = 0.03 }: { className?: string; size?: string; opacity?: number }) => (
@@ -172,27 +189,95 @@ export function Contact() {
     };
   }, [sectionContent]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
-    alert('Thank you for your message! We will get back to you soon.');
+    if (isSubmittingMessage) return;
+
+    setIsSubmittingMessage(true);
+    setSubmissionFeedback(null);
+
+    const subjectOption = SUBJECT_OPTIONS.find((option) => option.value === formData.subject);
+    const payloadSubject = subjectOption?.label || formData.subject || 'General Inquiry';
+    const payload: {
+      name: string;
+      email: string;
+      subject: string;
+      message: string;
+      phone?: string;
+    } = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      subject: payloadSubject,
+      message: formData.message.trim(),
+    };
+
+    const trimmedPhone = formData.phone.trim();
+    if (trimmedPhone) {
+      payload.phone = trimmedPhone;
+    }
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      let data: { message?: string } | null = null;
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Failed to send your message. Please try again.');
+      }
+
+      setSubmissionFeedback({
+        type: 'success',
+        message: data?.message || 'Thank you! Your message has been received.',
+      });
+      setFormData({ ...CONTACT_FORM_INITIAL_STATE });
+    } catch (error) {
+      setSubmissionFeedback({
+        type: 'error',
+        message:
+          error instanceof Error ? error.message : 'Something went wrong while sending your message. Please try again.',
+      });
+    } finally {
+      setIsSubmittingMessage(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (submissionFeedback) {
+      setSubmissionFeedback(null);
+    }
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
+
+  const heroContent = sectionContent['contact_hero'] as
+    | {
+        backgroundImage?: string;
+        badgeLabel?: string;
+        title?: string;
+        description?: string;
+      }
+    | undefined;
+  const heroBackgroundImage = heroContent?.backgroundImage
+    ? resolveMediaUrl(heroContent.backgroundImage)
+    : 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&q=75';
+  const heroBadgeLabel = heroContent?.badgeLabel?.trim() || 'GET IN TOUCH';
+  const heroTitle = heroContent?.title?.trim() || 'Contact Us';
+  const heroDescription =
+    heroContent?.description?.trim() ||
+    'Get in touch with us. We are here to answer your questions and support your ministry';
 
   return (
     <div className="relative w-full bg-gradient-to-b from-[#FBF7F2] via-[#F5F1EB] to-[#EFE7DE] dark:bg-gradient-to-b dark:from-[#0f0f10] dark:via-[#121214] dark:to-[#151517] pt-20 overflow-hidden transition-colors duration-300">
@@ -220,7 +305,7 @@ export function Contact() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${(sectionContent['contact_hero'] as { backgroundImage?: string } | undefined)?.backgroundImage ? resolveMediaUrl((sectionContent['contact_hero'] as any).backgroundImage) : 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&q=75'})`,
+            backgroundImage: `url(${heroBackgroundImage})`,
             willChange: 'background-image'
           }}
         ></div>
@@ -270,14 +355,14 @@ export function Contact() {
             <div className={`${isVisible['contact-hero'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="inline-block mb-6">
                 <span className="inline-block px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg border border-white/20">
-                  {(sectionContent['contact_hero'] as { badgeLabel?: string } | undefined)?.badgeLabel?.trim() || 'GET IN TOUCH'}
+                  {heroBadgeLabel}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
-                {(sectionContent['contact_hero'] as { title?: string } | undefined)?.title?.trim() || 'Contact Us'}
+                {heroTitle}
               </h1>
               <p className="text-sm md:text-base text-white/95 max-w-3xl leading-relaxed">
-                {(sectionContent['contact_hero'] as { description?: string } | undefined)?.description?.trim() || 'Get in touch with us. We are here to answer your questions and support your ministry'}
+                {heroDescription}
               </p>
             </div>
           </div>
@@ -541,12 +626,11 @@ export function Contact() {
                         className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B2332] focus:border-[#8B2332] transition-all shadow-sm hover:shadow-md bg-white dark:bg-gray-900/40 text-gray-900 dark:text-gray-100"
                       >
                         <option value="">Select a subject</option>
-                        <option value="membership">Membership Inquiry</option>
-                        <option value="programs">Programs & Training</option>
-                        <option value="events">Events & Conferences</option>
-                        <option value="partnership">Partnership Opportunities</option>
-                        <option value="general">General Inquiry</option>
-                        <option value="support">Technical Support</option>
+                        {SUBJECT_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -564,13 +648,28 @@ export function Contact() {
                         placeholder="Tell us how we can help you..."
                       ></textarea>
                     </div>
-                    <button
-                      type="submit"
-                      className="w-full px-8 py-4 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform duration-300 inline-flex items-center justify-center space-x-2"
-                    >
-                      <SendIcon size={20} strokeWidth={2.5} />
-                      <span>Send Message</span>
-                    </button>
+                    <div className="space-y-4">
+                      <button
+                        type="submit"
+                        disabled={isSubmittingMessage}
+                        className="w-full px-8 py-4 bg-gradient-to-r from-[#8B2332] to-[#6B1A28] text-white rounded-full font-semibold hover:from-[#6B1A28] hover:to-[#8B2332] transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform duration-300 inline-flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      >
+                        <SendIcon size={20} strokeWidth={2.5} className={isSubmittingMessage ? 'animate-pulse' : ''} />
+                        <span>{isSubmittingMessage ? 'Sending...' : 'Send Message'}</span>
+                      </button>
+                      {submissionFeedback && (
+                        <div
+                          className={`rounded-2xl px-4 py-3 text-sm ${
+                            submissionFeedback.type === 'success'
+                              ? 'bg-green-600/10 text-green-100 border border-green-600/40'
+                              : 'bg-red-600/10 text-red-100 border border-red-600/40'
+                          }`}
+                          aria-live="polite"
+                        >
+                          {submissionFeedback.message}
+                        </div>
+                      )}
+                    </div>
                   </form>
                 </div>
               </div>

@@ -15,6 +15,7 @@ import { NewsModule } from './news/news.module';
 import { EventsModule } from './events/events.module';
 import { MembershipModule } from './membership/membership.module';
 import { EmailRecipientsModule } from './email-recipients/email-recipients.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { EmailRecipientsModule } from './email-recipients/email-recipients.modul
     EventsModule,
     MembershipModule,
     EmailRecipientsModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [AppService],
