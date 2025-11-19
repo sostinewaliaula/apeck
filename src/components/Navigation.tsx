@@ -54,6 +54,7 @@ export function Navigation() {
   ];
 
   return (
+    <>
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
@@ -203,73 +204,76 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div 
-        className={`lg:hidden absolute top-full left-0 right-0 bg-white/98 dark:bg-gray-900/98 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 shadow-2xl transition-all duration-500 overflow-hidden ${
-          isMobileMenuOpen 
-            ? 'max-h-[600px] opacity-100' 
-            : 'max-h-0 opacity-0'
-        }`}
-      >
-        {/* Mobile menu background pattern */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-            }}
-          ></div>
-        </div>
+    </nav>
+    {isMobileMenuOpen && (
+      <div className="lg:hidden fixed inset-0 z-40">
+        <div
+          className="absolute inset-0 bg-black/45 backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        ></div>
+        <div className="absolute top-20 sm:top-24 left-0 right-0 bottom-0 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 shadow-[0_25px_45px_rgba(0,0,0,0.25)] overflow-y-auto transition-all duration-500">
+          {/* Mobile menu background pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+            <div 
+              className="w-full h-full"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #8B2332 1px, transparent 1px)',
+                backgroundSize: '24px 24px',
+              }}
+            ></div>
+          </div>
 
-        <div className="relative px-4 py-6 space-y-2">
-          {navLinks.map((link, index) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link 
-                key={link.path} 
-                to={link.path}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative group ${
-                  isActive 
-                    ? 'text-[#8B2332] dark:text-[#B85C6D] bg-gradient-to-r from-[#8B2332]/10 via-[#8B2332]/15 to-[#8B2332]/10 dark:from-[#B85C6D]/10 dark:via-[#B85C6D]/15 dark:to-[#B85C6D]/10' 
-                    : 'text-gray-700 dark:text-gray-300 hover:text-[#8B2332] dark:hover:text-[#B85C6D] hover:bg-gray-50 dark:hover:bg-gray-800'
-                }`}
-                style={{ 
-                  animationDelay: `${index * 50}ms`,
-                  animation: isMobileMenuOpen ? 'fade-in-up 0.5s ease-out forwards' : 'none'
-                }}
-              >
-                <span className="relative z-10 flex items-center justify-between">
-                  <span>{link.label}</span>
+          <div className="relative px-5 py-6 space-y-3">
+            {navLinks.map((link, index) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link 
+                  key={link.path} 
+                  to={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-5 py-3 rounded-2xl text-base font-semibold transition-all duration-300 relative group border shadow-sm ${
+                    isActive 
+                      ? 'text-[#8B2332] dark:text-[#F5C3CB] bg-gradient-to-r from-[#8B2332]/10 via-[#8B2332]/15 to-[#8B2332]/10 dark:from-[#B85C6D]/20 dark:via-[#8B2332]/15 dark:to-[#B85C6D]/20 border-[#8B2332]/30 dark:border-[#B85C6D]/30 shadow-lg shadow-[#8B2332]/10'
+                      : 'text-gray-800 dark:text-gray-200 bg-white/85 dark:bg-gray-900/80 border-gray-100 dark:border-gray-800 hover:border-[#8B2332]/30 hover:text-[#8B2332] dark:hover:text-[#F5C3CB] hover:shadow-md'
+                  }`}
+                  style={{ 
+                    animationDelay: `${index * 50}ms`,
+                    animation: 'fade-in-up 0.4s ease-out forwards'
+                  }}
+                >
+                  <span className="relative z-10 flex items-center justify-between">
+                    <span>{link.label}</span>
+                    {isActive && (
+                      <div className="w-2 h-2 rounded-full bg-[#8B2332]"></div>
+                    )}
+                  </span>
+                  
+                  {/* Left border indicator for active */}
                   {isActive && (
-                    <div className="w-2 h-2 rounded-full bg-[#8B2332]"></div>
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-5 rounded-full bg-gradient-to-b from-[#8B2332] to-[#7A7A3F]"></div>
                   )}
-                </span>
-                
-                {/* Left border indicator for active */}
-                {isActive && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#8B2332] to-[#7A7A3F] rounded-l-xl"></div>
-                )}
-              </Link>
-            );
-          })}
-          
-          {/* Mobile CTA Button */}
-          <Link 
-            to="/membership" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block w-full mt-4 px-5 py-3 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-xl font-semibold text-sm text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-[1.02] relative overflow-hidden group"
-          >
-            {/* Shimmer effect */}
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-            <span className="relative z-10 flex items-center justify-center space-x-2">
-              <span>Join Us</span>
-              <ChevronRight size={18} />
-            </span>
+                </Link>
+              );
+            })}
+            
+            {/* Mobile CTA Button */}
+            <Link 
+              to="/membership" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full mt-4 px-5 py-3 bg-gradient-to-r from-[#8B2332] via-[#7A2332] to-[#8B2332] text-white rounded-xl font-semibold text-sm text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#8B2332]/25 hover:scale-[1.02] relative overflow-hidden group"
+            >
+              {/* Shimmer effect */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+              <span className="relative z-10 flex items-center justify-center space-x-2">
+                <span>Join Us</span>
+                <ChevronRight size={18} />
+              </span>
             </Link>
           </div>
+        </div>
       </div>
-    </nav>
+    )}
+    </>
   );
 }
