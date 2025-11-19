@@ -167,9 +167,62 @@ const NEWS_DATE_FORMAT: Intl.DateTimeFormatOptions = {
 };
 
 const DIRECT_VIDEO_REGEX = /\.(mp4|webm|ogg|m4v|mov)(\?.*)?$/i;
+const YOUTUBE_SHORT_REGEX = /^https?:\/\/youtu\.be\/([A-Za-z0-9_-]{6,})/i;
+const YOUTUBE_SHORTS_REGEX = /^https?:\/\/(?:www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i;
 
 function isDirectVideoUrl(url: string) {
   return DIRECT_VIDEO_REGEX.test(url.toLowerCase());
+}
+
+function normalizeVideoUrl(rawUrl: string) {
+  if (!rawUrl) return rawUrl;
+  const buildYoutubeUrl = (videoId: string, list?: string | null) => {
+    const params = new URLSearchParams();
+    params.set('v', videoId);
+    if (list) params.set('list', list);
+    return `https://www.youtube.com/watch?${params.toString()}`;
+  };
+
+  try {
+    const url = new URL(rawUrl);
+    const hostname = url.hostname.replace(/^www\./, '').toLowerCase();
+
+    if (hostname === 'youtu.be') {
+      const videoId = url.pathname.replace('/', '').trim();
+      if (videoId) {
+        return buildYoutubeUrl(videoId, url.searchParams.get('list'));
+      }
+    }
+
+    if (hostname.endsWith('youtube.com')) {
+      let videoId = url.searchParams.get('v')?.trim();
+      if (!videoId && url.pathname.startsWith('/shorts/')) {
+        videoId = url.pathname.replace('/shorts/', '').split('/')[0]?.trim();
+      }
+      if (!videoId && url.pathname.startsWith('/embed/')) {
+        videoId = url.pathname.replace('/embed/', '').split('/')[0]?.trim();
+      }
+      if (!videoId && url.pathname.startsWith('/live/')) {
+        videoId = url.pathname.replace('/live/', '').split('/')[0]?.trim();
+      }
+
+      if (videoId) {
+        return buildYoutubeUrl(videoId, url.searchParams.get('list'));
+      }
+    }
+
+    return rawUrl;
+  } catch {
+    const matchShort = rawUrl.match(YOUTUBE_SHORT_REGEX);
+    if (matchShort?.[1]) {
+      return buildYoutubeUrl(matchShort[1]);
+    }
+    const matchShorts = rawUrl.match(YOUTUBE_SHORTS_REGEX);
+    if (matchShorts?.[1]) {
+      return buildYoutubeUrl(matchShorts[1]);
+    }
+    return rawUrl;
+  }
 }
 
 function formatNewsDate(value?: string) {
@@ -442,7 +495,7 @@ export function Home() {
     ? resolveMediaUrl(whoWeAreSection.videoMedia)
     : undefined;
   const whoWeAreVideoExternal = whoWeAreSection?.videoUrl?.trim()
-    ? whoWeAreSection.videoUrl.trim()
+    ? normalizeVideoUrl(whoWeAreSection.videoUrl.trim())
     : undefined;
   const whoWeAreVideoPoster = whoWeAreSection?.videoPoster
     ? resolveMediaUrl(whoWeAreSection.videoPoster)
@@ -458,6 +511,7 @@ export function Home() {
       youtube: {
         playerVars: {
           autoplay: isWhoWeAreMediaVisible ? 1 : 0,
+          mute: 1,
           modestbranding: 1,
           rel: 0,
           showinfo: 0,
