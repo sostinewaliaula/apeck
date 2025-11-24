@@ -47,8 +47,8 @@ export function AdminLayout({ title, description, actions, children }: AdminLayo
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-[#F4EFE6] flex">
-      <aside className="hidden md:flex flex-col w-72 bg-gradient-to-b from-white/90 via-[#FBF4EB]/90 to-[#F3E5D5]/90 border-r border-[#E0D5C6] px-6 py-8 backdrop-blur">
+    <div className="h-screen bg-[#F4EFE6] flex overflow-hidden">
+      <aside className="hidden md:flex flex-col w-72 bg-gradient-to-b from-white/90 via-[#FBF4EB]/90 to-[#F3E5D5]/90 border-r border-[#E0D5C6] px-6 py-8 backdrop-blur overflow-y-auto">
         <div>
           <p className="text-xs uppercase tracking-[0.4em] text-[#B15C5C]">APECK</p>
           <p className="text-2xl font-semibold text-[#2F1E1A]">Content Studio</p>
@@ -97,7 +97,7 @@ export function AdminLayout({ title, description, actions, children }: AdminLayo
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col bg-gradient-to-b from-[#FDF8F1] via-[#F7F0E7] to-[#F1E5D6]">
+      <div className="flex-1 flex flex-col bg-gradient-to-b from-[#FDF8F1] via-[#F7F0E7] to-[#F1E5D6] overflow-y-auto">
         <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-[#E0D5C6]/60 bg-white/70 backdrop-blur px-6 py-5">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-[#B15C5C]">Admin</p>
