@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth-context';
+import type { UserRole } from './api';
 import { AdminLoginPage } from './pages/Login';
 import { AdminDashboard } from './pages/Dashboard';
 import { AdminRoutesPage } from './pages/Routes';
@@ -11,11 +12,21 @@ import { AdminNewsDetail } from './pages/NewsDetail';
 import { AdminEventsList } from './pages/EventsList';
 import { AdminEmailRecipientsPage } from './pages/EmailRecipients';
 import { AdminEmailSettingsPage } from './pages/EmailSettings';
+import { AdminProfilePage } from './pages/Profile';
+import { AdminUsersPage } from './pages/Users';
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const { accessToken } = useAuth();
+type ProtectedRouteProps = {
+  children: JSX.Element;
+  roles?: UserRole[];
+};
+
+function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
+  const { accessToken, user } = useAuth();
   if (!accessToken) {
     return <Navigate to="/admin/login" replace />;
+  }
+  if (roles && (!user || !roles.includes(user.role as UserRole))) {
+    return <Navigate to="/admin" replace />;
   }
   return children;
 }
@@ -35,7 +46,7 @@ function AdminRouter() {
       <Route
         path="/routes"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin']}>
             <AdminRoutesPage />
           </ProtectedRoute>
         }
@@ -43,7 +54,7 @@ function AdminRouter() {
       <Route
         path="/pages"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminPagesList />
           </ProtectedRoute>
         }
@@ -51,7 +62,7 @@ function AdminRouter() {
       <Route
         path="/pages/:pageId"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminPageDetail />
           </ProtectedRoute>
         }
@@ -59,7 +70,7 @@ function AdminRouter() {
       <Route
         path="/media"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminMediaLibrary />
           </ProtectedRoute>
         }
@@ -67,7 +78,7 @@ function AdminRouter() {
       <Route
         path="/news"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminNewsList />
           </ProtectedRoute>
         }
@@ -75,7 +86,7 @@ function AdminRouter() {
       <Route
         path="/events"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminEventsList />
           </ProtectedRoute>
         }
@@ -83,7 +94,7 @@ function AdminRouter() {
       <Route
         path="/email-recipients"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin']}>
             <AdminEmailRecipientsPage />
           </ProtectedRoute>
         }
@@ -91,16 +102,32 @@ function AdminRouter() {
       <Route
         path="/email-settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin']}>
             <AdminEmailSettingsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <AdminProfilePage />
           </ProtectedRoute>
         }
       />
       <Route
         path="/news/:newsId"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute roles={['admin', 'editor']}>
             <AdminNewsDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/users"
+        element={
+          <ProtectedRoute roles={['admin']}>
+            <AdminUsersPage />
           </ProtectedRoute>
         }
       />

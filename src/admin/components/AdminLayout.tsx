@@ -1,7 +1,19 @@
-import { ReactNode } from 'react';
+import { ComponentType, ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPinned, NotebookPen, Palette, Newspaper, Calendar, Mail, Settings } from 'lucide-react';
+import {
+  LayoutDashboard,
+  MapPinned,
+  NotebookPen,
+  Palette,
+  Newspaper,
+  Calendar,
+  Mail,
+  Settings,
+  Shield,
+  UserCircle2,
+} from 'lucide-react';
 import { useAuth } from '../auth-context';
+import type { UserRole } from '../api';
 
 type AdminLayoutProps = {
   title?: string;
@@ -10,15 +22,24 @@ type AdminLayoutProps = {
   description?: string;
 };
 
-const navItems = [
+type NavItem = {
+  label: string;
+  icon: ComponentType<{ size?: number }>;
+  href: string;
+  roles?: UserRole[];
+};
+
+const navItems: NavItem[] = [
   { label: 'Overview', icon: LayoutDashboard, href: '/admin' },
-  { label: 'Routes', icon: MapPinned, href: '/admin/routes' },
-  { label: 'Pages', icon: NotebookPen, href: '/admin/pages' },
-  { label: 'News', icon: Newspaper, href: '/admin/news' },
-  { label: 'Events', icon: Calendar, href: '/admin/events' },
-  { label: 'Media', icon: Palette, href: '/admin/media' },
-  { label: 'Email Recipients', icon: Mail, href: '/admin/email-recipients' },
-  { label: 'Email Settings', icon: Settings, href: '/admin/email-settings' },
+  { label: 'My Profile', icon: UserCircle2, href: '/admin/profile' },
+  { label: 'Routes', icon: MapPinned, href: '/admin/routes', roles: ['admin'] },
+  { label: 'Pages', icon: NotebookPen, href: '/admin/pages', roles: ['admin', 'editor'] },
+  { label: 'News', icon: Newspaper, href: '/admin/news', roles: ['admin', 'editor'] },
+  { label: 'Events', icon: Calendar, href: '/admin/events', roles: ['admin', 'editor'] },
+  { label: 'Media', icon: Palette, href: '/admin/media', roles: ['admin', 'editor'] },
+  { label: 'Email Recipients', icon: Mail, href: '/admin/email-recipients', roles: ['admin'] },
+  { label: 'Email Settings', icon: Settings, href: '/admin/email-settings', roles: ['admin'] },
+  { label: 'Users & Roles', icon: Shield, href: '/admin/users', roles: ['admin'] },
 ];
 
 export function AdminLayout({ title, description, actions, children }: AdminLayoutProps) {
@@ -34,7 +55,9 @@ export function AdminLayout({ title, description, actions, children }: AdminLayo
           <p className="text-sm text-[#6B4E3D]/70 mt-1">Control every public page from here.</p>
         </div>
         <nav className="mt-10 space-y-1">
-          {navItems.map((item) => {
+          {navItems
+            .filter((item) => !item.roles || (user && item.roles.includes(user.role)))
+            .map((item) => {
             const isActive = location.pathname === item.href || location.pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
             return (

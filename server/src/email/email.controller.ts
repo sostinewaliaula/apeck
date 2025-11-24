@@ -2,9 +2,12 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { SendTestEmailDto } from './dto/send-test-email.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
 @Controller('email')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('admin')
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 

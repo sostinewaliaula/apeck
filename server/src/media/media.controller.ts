@@ -16,9 +16,12 @@ import { promises as fs } from 'fs';
 import type { Express } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 import { MediaService } from './media.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('editor', 'admin')
 @Controller('admin/media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}

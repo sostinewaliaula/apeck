@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useMemo, useState, ReactNode } from 'react';
-import { AdminRoute, fetchRoutes, loginRequest } from './api';
+import { AdminRoute, fetchProfile, fetchRoutes, loginRequest, UserRole } from './api';
 import { ACCESS_TOKEN_KEY, AUTH_USER_KEY, clearStored, getStored, REFRESH_TOKEN_KEY, setStored } from './auth-storage';
 
 type AuthUser = {
@@ -8,7 +8,7 @@ type AuthUser = {
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
+  role: UserRole;
 };
 
 type AuthContextValue = {
@@ -18,6 +18,7 @@ type AuthContextValue = {
   routes: AdminRoute[];
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshProfile: () => Promise<AuthUser | null>;
   reloadRoutes: (tokenOverride?: string) => Promise<void>;
   isLoadingRoutes: boolean;
   authError: string | null;
@@ -53,6 +54,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [accessToken],
   );
+
+  const refreshProfile = useCallback(async () => {
+    if (!accessToken) {
+      setUser(null);
+      setStored(AUTH_USER_KEY, null);
+      return null;
+    }
+    const profile = await fetchProfile(accessToken);
+    const normalized: AuthUser = {
+      id: profile.id,
+      email: profile.email,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      role: profile.role,
+    };
+    setUser(normalized);
+    setStored(AUTH_USER_KEY, normalized);
+    return normalized;
+  }, [accessToken]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -92,11 +112,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       routes,
       login,
       logout,
+      refreshProfile,
       reloadRoutes,
       isLoadingRoutes,
       authError,
     }),
-    [user, accessToken, refreshToken, routes, login, logout, reloadRoutes, isLoadingRoutes, authError],
+    [
+      user,
+      accessToken,
+      refreshToken,
+      routes,
+      login,
+      logout,
+      refreshProfile,
+      reloadRoutes,
+      isLoadingRoutes,
+      authError,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -42,7 +42,7 @@ export type LoginResponse = {
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
+    role: UserRole;
   };
 };
 
@@ -88,6 +88,122 @@ export function fetchRoutes(accessToken: string | null) {
     method: 'GET',
     accessToken,
   }).then((routes) => routes.map(normalizeRoute));
+}
+
+export type UserRole = 'admin' | 'editor' | 'viewer';
+
+export type AdminUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt?: string;
+};
+
+type UserResponse = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt?: string;
+};
+
+const normalizeUser = (user: any): AdminUser => ({
+  id: user.id,
+  firstName: user.firstName ?? user.first_name,
+  lastName: user.lastName ?? user.last_name,
+  email: user.email,
+  role: user.role,
+  isActive: user.isActive ?? user.is_active ?? true,
+  lastLoginAt: user.lastLoginAt ?? user.last_login_at ?? undefined,
+  createdAt: user.createdAt ?? user.created_at ?? undefined,
+});
+
+export function fetchAdminUsers(accessToken: string) {
+  return request<UserResponse[]>('/admin/users', {
+    method: 'GET',
+    accessToken,
+  }).then((users) => users.map(normalizeUser));
+}
+
+export function fetchProfile(accessToken: string) {
+  return request<UserResponse>('/admin/me', {
+    method: 'GET',
+    accessToken,
+  }).then(normalizeUser);
+}
+
+export type CreateAdminUserPayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: UserRole;
+};
+
+export function createAdminUser(accessToken: string, payload: CreateAdminUserPayload) {
+  return request<UserResponse>('/admin/users', {
+    method: 'POST',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeUser);
+}
+
+export type UpdateAdminUserPayload = Partial<{
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  password: string;
+}>;
+
+export function updateAdminUser(accessToken: string, id: string, payload: UpdateAdminUserPayload) {
+  return request<UserResponse>(`/admin/users/${id}`, {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeUser);
+}
+
+export function resendAdminInvite(accessToken: string, id: string) {
+  return request<{ success: boolean }>(`/admin/users/${id}/resend-invite`, {
+    method: 'POST',
+    accessToken,
+  });
+}
+
+export type UpdateProfilePayload = Partial<{
+  firstName: string;
+  lastName: string;
+  email: string;
+}>;
+
+export function updateProfile(accessToken: string, payload: UpdateProfilePayload) {
+  return request<UserResponse>('/admin/me', {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify(payload),
+  }).then(normalizeUser);
+}
+
+export type ChangePasswordPayload = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export function changePassword(accessToken: string, payload: ChangePasswordPayload) {
+  return request<{ success: boolean }>('/admin/me/password', {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify(payload),
+  });
 }
 
 export type RoutePayload = {

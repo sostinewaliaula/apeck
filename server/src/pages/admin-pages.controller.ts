@@ -11,13 +11,16 @@ import {
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { PagesService } from './pages.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('editor', 'admin')
 @Controller('admin/pages')
 export class AdminPagesController {
   constructor(private readonly pagesService: PagesService) {}

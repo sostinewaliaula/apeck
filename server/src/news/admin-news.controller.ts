@@ -13,6 +13,8 @@ import {
 import type { Request } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 import {
   CreateNewsDto,
   NEWS_STATUS_VALUES,
@@ -21,7 +23,8 @@ import {
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { NewsService } from './news.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('editor', 'admin')
 @Controller('admin/news')
 export class AdminNewsController {
   constructor(private readonly newsService: NewsService) {}

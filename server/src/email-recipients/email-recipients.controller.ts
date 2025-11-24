@@ -3,9 +3,12 @@ import { EmailRecipientsService } from './email-recipients.service';
 import { CreateEmailRecipientDto, RecipientType } from './dto/create-email-recipient.dto';
 import { UpdateEmailRecipientDto } from './dto/update-email-recipient.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
 @Controller('email-recipients')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('admin')
 export class EmailRecipientsController {
   constructor(private readonly emailRecipientsService: EmailRecipientsService) {}
 
