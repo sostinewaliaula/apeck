@@ -14,7 +14,9 @@ export class ContentSettingsService {
   ) {}
 
   async getTrashRetentionDays(): Promise<number> {
-    const row = await this.knex('content_settings').where({ key: RETENTION_KEY }).first();
+    const row = await this.knex('content_settings')
+      .where({ key: RETENTION_KEY })
+      .first();
     if (row) {
       const parsed = parseInt(row.value, 10);
       if (!Number.isNaN(parsed) && parsed > 0) {
@@ -26,7 +28,9 @@ export class ContentSettingsService {
 
   async updateTrashRetentionDays(days: number): Promise<number> {
     const normalized = Math.max(days, 1);
-    const existing = await this.knex('content_settings').where({ key: RETENTION_KEY }).first();
+    const existing = await this.knex('content_settings')
+      .where({ key: RETENTION_KEY })
+      .first();
     if (existing) {
       await this.knex('content_settings')
         .where({ key: RETENTION_KEY })
@@ -40,4 +44,3 @@ export class ContentSettingsService {
     return normalized;
   }
 }
-

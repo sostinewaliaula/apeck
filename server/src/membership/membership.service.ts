@@ -24,8 +24,10 @@ export class MembershipService {
     const id = uuid();
 
     // Determine payment reference - use Pesapal reference if available, otherwise M-Pesa code
-    const paymentRef = dto.paymentReference || dto.mpesaCode || `MPESA-${Date.now()}`;
-    const paymentGateway = dto.paymentGateway || (dto.paymentReference ? 'pesapal' : 'mpesa');
+    const paymentRef =
+      dto.paymentReference || dto.mpesaCode || `MPESA-${Date.now()}`;
+    const paymentGateway =
+      dto.paymentGateway || (dto.paymentReference ? 'pesapal' : 'mpesa');
     const amountPaid = dto.amountPaid || 0;
 
     const [application] = await this.knex('membership_applications')
@@ -49,7 +51,8 @@ export class MembershipService {
         signature: dto.signature || null,
         declaration_date: dto.declarationDate || null,
         organization_name: dto.organizationName || null,
-        organization_registration_number: dto.organizationRegistrationNumber || null,
+        organization_registration_number:
+          dto.organizationRegistrationNumber || null,
         organization_kra_pin: dto.organizationKraPin || null,
         headquarters_location: dto.headquartersLocation || null,
         organization_email: dto.organizationEmail || dto.email,
@@ -88,28 +91,41 @@ export class MembershipService {
     return application;
   }
 
-  private async sendApplicationEmail(application: any, dto: CreateMembershipApplicationDto) {
+  private async sendApplicationEmail(
+    application: any,
+    dto: CreateMembershipApplicationDto,
+  ) {
     try {
       // Get recipients from database, fallback to env if none configured
       let recipientEmails: string[] = [];
-      
+
       try {
-        recipientEmails = await this.emailRecipientsService.findActiveByType(RecipientType.MEMBERSHIP);
+        recipientEmails = await this.emailRecipientsService.findActiveByType(
+          RecipientType.MEMBERSHIP,
+        );
       } catch (error) {
         // Table might not exist yet (migration not run), log and continue with env fallback
-        this.logger.warn('Could not fetch email recipients from database, using env fallback:', error);
+        this.logger.warn(
+          'Could not fetch email recipients from database, using env fallback:',
+          error,
+        );
       }
-      
+
       if (recipientEmails.length === 0) {
         // Fallback to env variable if no recipients configured
-        const envRecipient = this.configService.get<string>('email.membershipRecipient', 'membership@apeck.org');
+        const envRecipient = this.configService.get<string>(
+          'email.membershipRecipient',
+          'membership@apeck.org',
+        );
         if (envRecipient) {
           recipientEmails = [envRecipient];
         }
       }
 
       if (recipientEmails.length === 0) {
-        this.logger.warn('No email recipients configured for membership applications');
+        this.logger.warn(
+          'No email recipients configured for membership applications',
+        );
         return;
       }
 
@@ -175,7 +191,10 @@ export class MembershipService {
         this.logger.log(`Email sent for application: ${application.id}`);
       }
     } catch (error) {
-      this.logger.error(`Error sending email for application ${application.id}:`, error);
+      this.logger.error(
+        `Error sending email for application ${application.id}:`,
+        error,
+      );
     }
   }
 
@@ -188,7 +207,8 @@ export class MembershipService {
   }
 
   async findByPaymentReference(reference: string) {
-    return this.knex('membership_applications').where({ payment_reference: reference }).first();
+    return this.knex('membership_applications')
+      .where({ payment_reference: reference })
+      .first();
   }
 }
-

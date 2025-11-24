@@ -21,6 +21,12 @@ export default () => {
       accessTtl: process.env.JWT_ACCESS_TTL ?? '900s',
       refreshTtl: process.env.JWT_REFRESH_TTL ?? '7d',
     },
+    auth: {
+      resetCodeExpiryMinutes: parseInt(
+        process.env.AUTH_RESET_CODE_MINUTES ?? '15',
+        10,
+      ),
+    },
     security: {
       passwordPepper: process.env.PASSWORD_PEPPER ?? '',
     },
@@ -30,8 +36,10 @@ export default () => {
       secure: process.env.SMTP_SECURE === 'true',
       user: process.env.SMTP_USER ?? '',
       password: process.env.SMTP_PASSWORD ?? '',
-      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? 'noreply@apeck.co.ke',
-      membershipRecipient: process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.co.ke',
+      from:
+        process.env.SMTP_FROM ?? process.env.SMTP_USER ?? 'noreply@apeck.co.ke',
+      membershipRecipient:
+        process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.co.ke',
       contactRecipient: process.env.CONTACT_EMAIL ?? 'info@apeck.co.ke',
     },
     pesapal: {
@@ -40,7 +48,10 @@ export default () => {
       sandbox: process.env.PESAPAL_SANDBOX !== 'false',
     },
     content: {
-      trashRetentionDays: parseInt(process.env.CONTENT_TRASH_RETENTION_DAYS ?? '30', 10),
+      trashRetentionDays: parseInt(
+        process.env.CONTENT_TRASH_RETENTION_DAYS ?? '30',
+        10,
+      ),
     },
   };
 };

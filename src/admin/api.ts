@@ -53,6 +53,20 @@ export function loginRequest(email: string, password: string) {
   });
 }
 
+export function requestPasswordReset(email: string) {
+  return request<{ success: boolean; message: string }>('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(payload: { email: string; code: string; newPassword: string }) {
+  return request<{ success: boolean }>('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export type AdminRoute = {
   id: string;
   slug: string;

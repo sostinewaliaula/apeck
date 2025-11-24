@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Get, Query, HttpCode, HttpStatus, Logger } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Query,
+  HttpCode,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { PesapalService } from './pesapal.service';
 import { ConfigService } from '@nestjs/config';
 
@@ -27,13 +36,19 @@ export class PaymentsController {
   @HttpCode(HttpStatus.OK)
   async initializePayment(@Body() dto: InitializePaymentDto) {
     try {
-      const frontendUrl = this.configService.get<string>('app.frontendUrl', 'http://localhost:5173');
-      const callbackUrl = dto.callbackUrl || `${frontendUrl}/membership?payment=success`;
+      const frontendUrl = this.configService.get<string>(
+        'app.frontendUrl',
+        'http://localhost:5173',
+      );
+      const callbackUrl =
+        dto.callbackUrl || `${frontendUrl}/membership?payment=success`;
       const ipnUrl = `${this.configService.get<string>('app.url', 'http://localhost:4000')}/api/payments/pesapal/ipn`;
 
       const ipnId = await this.pesapalService.getOrCreateIpnId(ipnUrl);
       if (!ipnId) {
-        throw new Error('Failed to register Pesapal IPN. Try again later or contact support.');
+        throw new Error(
+          'Failed to register Pesapal IPN. Try again later or contact support.',
+        );
       }
 
       const paymentRequest = {
@@ -66,7 +81,10 @@ export class PaymentsController {
       this.logger.error('Error initializing Pesapal payment:', error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Failed to initialize payment',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to initialize payment',
       };
     }
   }
@@ -81,7 +99,8 @@ export class PaymentsController {
         };
       }
 
-      const status = await this.pesapalService.getTransactionStatus(orderTrackingId);
+      const status =
+        await this.pesapalService.getTransactionStatus(orderTrackingId);
       return {
         success: true,
         status,
@@ -90,7 +109,10 @@ export class PaymentsController {
       this.logger.error('Error getting payment status:', error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Failed to get payment status',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get payment status',
       };
     }
   }
@@ -101,11 +123,14 @@ export class PaymentsController {
     @Query('OrderMerchantReference') merchantReference: string,
   ) {
     try {
-      this.logger.log(`IPN received: OrderTrackingId=${orderTrackingId}, MerchantReference=${merchantReference}`);
-      
+      this.logger.log(
+        `IPN received: OrderTrackingId=${orderTrackingId}, MerchantReference=${merchantReference}`,
+      );
+
       // Get transaction status
-      const status = await this.pesapalService.getTransactionStatus(orderTrackingId);
-      
+      const status =
+        await this.pesapalService.getTransactionStatus(orderTrackingId);
+
       // Here you would typically update your database with the payment status
       // For now, we'll just log it
       this.logger.log(`Payment status: ${JSON.stringify(status)}`);
@@ -118,9 +143,9 @@ export class PaymentsController {
       this.logger.error('Error handling IPN:', error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Failed to handle IPN',
+        message:
+          error instanceof Error ? error.message : 'Failed to handle IPN',
       };
     }
   }
 }
-

@@ -99,7 +99,9 @@ export class AdminPagesController {
 
   @Patch('settings/trash-retention')
   async updateRetentionSetting(@Body() dto: UpdateRetentionDto) {
-    const days = await this.contentSettingsService.updateTrashRetentionDays(dto.days);
+    const days = await this.contentSettingsService.updateTrashRetentionDays(
+      dto.days,
+    );
     return { days };
   }
 }

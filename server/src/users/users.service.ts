@@ -42,6 +42,10 @@ export class UsersService {
     return bcrypt.compare(`${plain}${this.passwordPepper}`, hash);
   }
 
+  async hashPasswordInternal(plain: string): Promise<string> {
+    return this.hashPassword(plain);
+  }
+
   private mapUser(user: UserEntity) {
     return {
       id: user.id,
@@ -64,7 +68,11 @@ export class UsersService {
   }
 
   private generateTemporaryPassword(): string {
-    return crypto.randomBytes(9).toString('base64').replace(/[^a-zA-Z0-9]/g, '').slice(0, 12);
+    return crypto
+      .randomBytes(9)
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .slice(0, 12);
   }
 
   private async requireAnotherAdmin(currentUserId: string): Promise<void> {
@@ -102,9 +110,11 @@ export class UsersService {
 
     const shouldSendInvite = payload.sendInvite ?? true;
     if (shouldSendInvite) {
-      await this.sendInvitationEmail(mapped, payload.password).catch((error) => {
-        this.logger.error('Failed to send user invitation email', error);
-      });
+      await this.sendInvitationEmail(mapped, payload.password).catch(
+        (error) => {
+          this.logger.error('Failed to send user invitation email', error);
+        },
+      );
     }
 
     return mapped;
@@ -175,7 +185,10 @@ export class UsersService {
     return this.mapUser(user);
   }
 
-  async updateSelfProfile(userId: string | undefined, payload: UpdateProfileDto) {
+  async updateSelfProfile(
+    userId: string | undefined,
+    payload: UpdateProfileDto,
+  ) {
     const id = this.ensureUserId(userId);
     const existing = await this.findById(id);
     if (!existing) {
@@ -224,17 +237,36 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const isValid = await this.comparePassword(currentPassword, user.password_hash);
+    const isValid = await this.comparePassword(
+      currentPassword,
+      user.password_hash,
+    );
     if (!isValid) {
       throw new BadRequestException('Current password is incorrect');
     }
 
     const password_hash = await this.hashPassword(newPassword);
-    await this.knex<UserEntity>('users').where({ id }).update({ password_hash });
+    await this.knex<UserEntity>('users')
+      .where({ id })
+      .update({ password_hash });
   }
 
-  private async sendInvitationEmail(user: ReturnType<typeof this.mapUser>, tempPassword: string) {
-    const frontendUrl = this.configService.get<string>('app.frontendUrl', 'http://localhost:5173');
+  async forcePasswordUpdate(userId: string, newPassword: string) {
+    const password_hash = await this.hashPassword(newPassword);
+    await this.knex<UserEntity>('users')
+      .where({ id: userId })
+      .update({ password_hash });
+    await this.knex('user_sessions').where({ user_id: userId }).delete();
+  }
+
+  private async sendInvitationEmail(
+    user: ReturnType<typeof this.mapUser>,
+    tempPassword: string,
+  ) {
+    const frontendUrl = this.configService.get<string>(
+      'app.frontendUrl',
+      'http://localhost:5173',
+    );
     const trimmedFrontend = frontendUrl.replace(/\/+$/, '');
     const adminUrl = `${trimmedFrontend}/admin`;
 

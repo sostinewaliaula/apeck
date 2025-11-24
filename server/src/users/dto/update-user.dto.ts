@@ -37,4 +37,3 @@ export class UpdateUserDto {
   @MinLength(8)
   password?: string;
 }
-

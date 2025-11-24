@@ -12,4 +12,3 @@ import { MembershipService } from './membership.service';
   exports: [MembershipService],
 })
 export class MembershipModule {}
-

@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 
 import { PagesService } from './pages.service';
 import { ContentSettingsService } from './content-settings.service';
@@ -35,4 +40,3 @@ export class PageCleanupService implements OnModuleInit, OnModuleDestroy {
     this.logger.debug(`Purged trashed pages older than ${days} days`);
   }
 }
-

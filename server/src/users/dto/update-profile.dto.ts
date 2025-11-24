@@ -13,4 +13,3 @@ export class UpdateProfileDto {
   @IsEmail()
   email?: string;
 }
-

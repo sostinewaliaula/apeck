@@ -14,7 +14,7 @@ export class EmailController {
   @Post('test')
   async sendTestEmail(@Body() dto: SendTestEmailDto) {
     const subject = dto.subject || 'APECK Email Configuration Test';
-    
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -95,4 +95,3 @@ This is an automated test email from the APECK Content Management System.
     };
   }
 }
-

@@ -7,17 +7,15 @@ import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
-import { ContentSettingsService } from './content-settings.service';
-
 @Injectable()
 export class PagesService {
-  constructor(
-    @Inject(KNEX_CONNECTION) private readonly knex: Knex,
-    private readonly contentSettingsService: ContentSettingsService,
-  ) {}
+  constructor(@Inject(KNEX_CONNECTION) private readonly knex: Knex) {}
 
   private async reloadPage(pageId: string) {
-    const page = await this.knex('pages').where({ id: pageId }).whereNull('deleted_at').first();
+    const page = await this.knex('pages')
+      .where({ id: pageId })
+      .whereNull('deleted_at')
+      .first();
     if (!page) {
       throw new NotFoundException('Page not found');
     }
@@ -85,7 +83,11 @@ export class PagesService {
     return this.knex('routes').where({ is_active: true }).select();
   }
 
-  async listPages(filter?: { slug?: string; includeDeleted?: boolean; trashedOnly?: boolean }) {
+  async listPages(filter?: {
+    slug?: string;
+    includeDeleted?: boolean;
+    trashedOnly?: boolean;
+  }) {
     const query = this.knex('pages').select('*').orderBy('updated_at', 'desc');
     if (filter?.slug) {
       query.where({ slug: filter.slug });
@@ -211,8 +213,12 @@ export class PagesService {
       await this.knex('pages').where({ id: pageId }).delete();
     } else {
       const timestamp = this.knex.fn.now();
-      await this.knex('pages').where({ id: pageId }).update({ deleted_at: timestamp });
-      await this.knex('page_sections').where({ page_id: pageId }).update({ deleted_at: timestamp });
+      await this.knex('pages')
+        .where({ id: pageId })
+        .update({ deleted_at: timestamp });
+      await this.knex('page_sections')
+        .where({ page_id: pageId })
+        .update({ deleted_at: timestamp });
     }
     return { success: true };
   }
@@ -222,13 +228,19 @@ export class PagesService {
     if (!page || !page.deleted_at) {
       throw new NotFoundException('Page not found in trash');
     }
-    await this.knex('pages').where({ id: pageId }).update({ deleted_at: null, updated_at: this.knex.fn.now() });
-    await this.knex('page_sections').where({ page_id: pageId }).update({ deleted_at: null });
+    await this.knex('pages')
+      .where({ id: pageId })
+      .update({ deleted_at: null, updated_at: this.knex.fn.now() });
+    await this.knex('page_sections')
+      .where({ page_id: pageId })
+      .update({ deleted_at: null });
     return this.reloadPage(pageId);
   }
 
   async purgeDeletedPages(olderThanDays: number) {
-    const threshold = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
+    const threshold = new Date(
+      Date.now() - olderThanDays * 24 * 60 * 60 * 1000,
+    );
     await this.knex('page_sections')
       .whereNotNull('deleted_at')
       .andWhere('deleted_at', '<', threshold)

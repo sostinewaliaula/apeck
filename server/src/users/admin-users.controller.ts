@@ -42,4 +42,3 @@ export class AdminUsersController {
     return { success: true };
   }
 }
-

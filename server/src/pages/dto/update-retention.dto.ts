@@ -5,4 +5,3 @@ export class UpdateRetentionDto {
   @Min(1)
   days: number;
 }
-

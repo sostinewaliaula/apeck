@@ -26,8 +26,11 @@ export class AdminProfileController {
   @Patch('password')
   async changePassword(@Req() req: Request, @Body() dto: ChangePasswordDto) {
     const userId = (req.user as { sub?: string } | undefined)?.sub;
-    await this.usersService.changePassword(userId, dto.currentPassword, dto.newPassword);
+    await this.usersService.changePassword(
+      userId,
+      dto.currentPassword,
+      dto.newPassword,
+    );
     return { success: true };
   }
 }
-

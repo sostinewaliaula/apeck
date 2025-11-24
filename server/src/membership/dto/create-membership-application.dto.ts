@@ -1,4 +1,11 @@
-import { IsString, IsEmail, IsNotEmpty, IsOptional, IsNumber, Min } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  Min,
+} from 'class-validator';
 
 export class CreateMembershipApplicationDto {
   @IsString()
@@ -170,4 +177,3 @@ export class CreateMembershipApplicationDto {
   @IsNotEmpty()
   membershipTier: string;
 }
-

@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { MembershipService } from './membership.service';
 import { CreateMembershipApplicationDto } from './dto/create-membership-application.dto';
 
@@ -12,7 +20,8 @@ export class MembershipController {
     // Check if application with this payment reference already exists (if provided)
     const paymentRef = dto.paymentReference || dto.mpesaCode;
     if (paymentRef) {
-      const existing = await this.membershipService.findByPaymentReference(paymentRef);
+      const existing =
+        await this.membershipService.findByPaymentReference(paymentRef);
       if (existing) {
         return {
           success: true,
@@ -54,4 +63,3 @@ export class MembershipController {
     };
   }
 }
-

@@ -1,4 +1,11 @@
-import { IsString, IsEmail, IsNotEmpty, IsOptional, IsEnum, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsBoolean,
+} from 'class-validator';
 
 export enum RecipientType {
   MEMBERSHIP = 'membership',
@@ -25,4 +32,3 @@ export class CreateEmailRecipientDto {
   @IsOptional()
   displayOrder?: number;
 }
-

@@ -1,6 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { EmailRecipientsService } from './email-recipients.service';
-import { CreateEmailRecipientDto, RecipientType } from './dto/create-email-recipient.dto';
+import {
+  CreateEmailRecipientDto,
+  RecipientType,
+} from './dto/create-email-recipient.dto';
 import { UpdateEmailRecipientDto } from './dto/update-email-recipient.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -10,7 +22,9 @@ import { Roles } from '../auth/roles.decorator';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('admin')
 export class EmailRecipientsController {
-  constructor(private readonly emailRecipientsService: EmailRecipientsService) {}
+  constructor(
+    private readonly emailRecipientsService: EmailRecipientsService,
+  ) {}
 
   @Get()
   async findAll() {
@@ -23,7 +37,9 @@ export class EmailRecipientsController {
 
   @Get('membership')
   async findMembershipRecipients() {
-    const recipients = await this.emailRecipientsService.findActiveByType(RecipientType.MEMBERSHIP);
+    const recipients = await this.emailRecipientsService.findActiveByType(
+      RecipientType.MEMBERSHIP,
+    );
     return {
       success: true,
       recipients,
@@ -57,4 +73,3 @@ export class EmailRecipientsController {
     };
   }
 }
-

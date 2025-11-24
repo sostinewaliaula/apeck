@@ -42,8 +42,14 @@ export class PesapalService {
   private readonly ipnCache = new Map<string, string>();
 
   constructor(private readonly configService: ConfigService) {
-    this.consumerKey = this.configService.get<string>('pesapal.consumerKey', '');
-    this.consumerSecret = this.configService.get<string>('pesapal.consumerSecret', '');
+    this.consumerKey = this.configService.get<string>(
+      'pesapal.consumerKey',
+      '',
+    );
+    this.consumerSecret = this.configService.get<string>(
+      'pesapal.consumerSecret',
+      '',
+    );
     const isSandbox = this.configService.get<boolean>('pesapal.sandbox', true);
     this.baseUrl = isSandbox
       ? 'https://cybqa.pesapal.com/pesapalv3'
@@ -73,7 +79,9 @@ export class PesapalService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to get access token: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Failed to get access token: ${response.status} - ${errorText}`,
+        );
       }
 
       const data = await response.json();
@@ -105,7 +113,9 @@ export class PesapalService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to register IPN: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Failed to register IPN: ${response.status} - ${errorText}`,
+        );
       }
 
       const data = await response.json();
@@ -139,22 +149,29 @@ export class PesapalService {
   /**
    * Submit order to Pesapal and get redirect URL
    */
-  async submitOrder(paymentRequest: PesapalPaymentRequest): Promise<PesapalOrderResponse> {
+  async submitOrder(
+    paymentRequest: PesapalPaymentRequest,
+  ): Promise<PesapalOrderResponse> {
     try {
       const token = await this.getAccessToken();
-      const response = await fetch(`${this.baseUrl}/api/Transactions/SubmitOrderRequest`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${this.baseUrl}/api/Transactions/SubmitOrderRequest`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(paymentRequest),
         },
-        body: JSON.stringify(paymentRequest),
-      });
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to submit order: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Failed to submit order: ${response.status} - ${errorText}`,
+        );
       }
 
       const data = await response.json();
@@ -184,7 +201,9 @@ export class PesapalService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to get transaction status: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Failed to get transaction status: ${response.status} - ${errorText}`,
+        );
       }
 
       return await response.json();
@@ -194,4 +213,3 @@ export class PesapalService {
     }
   }
 }
-

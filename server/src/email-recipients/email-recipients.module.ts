@@ -10,4 +10,3 @@ import { EmailRecipientsService } from './email-recipients.service';
   exports: [EmailRecipientsService],
 })
 export class EmailRecipientsModule {}
-

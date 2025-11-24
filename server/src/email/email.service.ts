@@ -13,14 +13,19 @@ export class EmailService {
   }
 
   private initializeTransporter() {
-    const host = this.configService.get<string>('email.host', 'mail.apeck.co.ke');
+    const host = this.configService.get<string>(
+      'email.host',
+      'mail.apeck.co.ke',
+    );
     const port = this.configService.get<number>('email.port', 465);
     const secure = this.configService.get<boolean>('email.secure', true);
     const user = this.configService.get<string>('email.user', '');
     const password = this.configService.get<string>('email.password', '');
 
     if (!user || !password) {
-      this.logger.warn('Email configuration incomplete. Email sending will be disabled.');
+      this.logger.warn(
+        'Email configuration incomplete. Email sending will be disabled.',
+      );
       return;
     }
 
@@ -46,18 +51,24 @@ export class EmailService {
     // Verify connection asynchronously (don't block startup)
     // Use a timeout to prevent hanging
     const verifyTimeout = setTimeout(() => {
-      this.logger.warn('Email transporter verification timed out. Email sending may not work until configuration is fixed.');
+      this.logger.warn(
+        'Email transporter verification timed out. Email sending may not work until configuration is fixed.',
+      );
     }, 15000); // 15 second timeout
 
     this.transporter.verify((error) => {
       clearTimeout(verifyTimeout);
       if (error) {
-        this.logger.warn('Email transporter verification failed. Email sending will be disabled until configuration is fixed.');
+        this.logger.warn(
+          'Email transporter verification failed. Email sending will be disabled until configuration is fixed.',
+        );
         this.logger.debug('SMTP Error details:', error.message);
         // Don't set transporter to null - keep it so we can try to send and get better error messages
         // The sendEmail method will check if it's actually working
       } else {
-        this.logger.log('Email transporter configured and verified successfully');
+        this.logger.log(
+          'Email transporter configured and verified successfully',
+        );
       }
     });
   }
@@ -69,11 +80,16 @@ export class EmailService {
     text?: string;
   }): Promise<boolean> {
     if (!this.transporter) {
-      this.logger.warn('Email transporter not configured. Skipping email send.');
+      this.logger.warn(
+        'Email transporter not configured. Skipping email send.',
+      );
       return false;
     }
 
-    const from = this.configService.get<string>('email.from', 'noreply@apeck.org');
+    const from = this.configService.get<string>(
+      'email.from',
+      'noreply@apeck.org',
+    );
 
     try {
       // Add timeout to prevent hanging
@@ -87,7 +103,10 @@ export class EmailService {
 
       // Add a timeout wrapper
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Email send timeout after 30 seconds')), 30000);
+        setTimeout(
+          () => reject(new Error('Email send timeout after 30 seconds')),
+          30000,
+        );
       });
 
       const info = await Promise.race([sendPromise, timeoutPromise]);
@@ -95,14 +114,21 @@ export class EmailService {
       this.logger.log(`Email sent successfully: ${info.messageId}`);
       return true;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to send email: ${errorMessage}`);
-      
+
       // If it's a connection error, log it but don't crash
-      if (errorMessage.includes('ETIMEDOUT') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('Greeting never received')) {
-        this.logger.warn('SMTP connection failed. Please check your email configuration (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD)');
+      if (
+        errorMessage.includes('ETIMEDOUT') ||
+        errorMessage.includes('ECONNREFUSED') ||
+        errorMessage.includes('Greeting never received')
+      ) {
+        this.logger.warn(
+          'SMTP connection failed. Please check your email configuration (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD)',
+        );
       }
-      
+
       return false;
     }
   }
@@ -223,71 +249,120 @@ export class EmailService {
               <div class="value">${data.formData.county}</div>
             </div>
             
-            ${data.formData.subCounty ? `
+            ${
+              data.formData.subCounty
+                ? `
             <div class="field">
               <div class="label">Sub-County:</div>
               <div class="value">${data.formData.subCounty}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationName || data.formData.organizationRegistrationNumber || data.formData.organizationKraPin || data.formData.headquartersLocation || data.formData.organizationEmail || data.formData.organizationPhone ? `
+            ${
+              data.formData.organizationName ||
+              data.formData.organizationRegistrationNumber ||
+              data.formData.organizationKraPin ||
+              data.formData.headquartersLocation ||
+              data.formData.organizationEmail ||
+              data.formData.organizationPhone
+                ? `
             <h3 style="color: #8B2332; margin-top: 30px;">Organization Details</h3>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationName ? `
+            ${
+              data.formData.organizationName
+                ? `
             <div class="field">
               <div class="label">Organization Name:</div>
               <div class="value">${data.formData.organizationName}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationRegistrationNumber ? `
+            ${
+              data.formData.organizationRegistrationNumber
+                ? `
             <div class="field">
               <div class="label">Registration Certificate No.:</div>
               <div class="value">${data.formData.organizationRegistrationNumber}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationKraPin ? `
+            ${
+              data.formData.organizationKraPin
+                ? `
             <div class="field">
               <div class="label">Organization KRA PIN:</div>
               <div class="value">${data.formData.organizationKraPin}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.headquartersLocation ? `
+            ${
+              data.formData.headquartersLocation
+                ? `
             <div class="field">
               <div class="label">Headquarters Location:</div>
               <div class="value">${data.formData.headquartersLocation}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationEmail ? `
+            ${
+              data.formData.organizationEmail
+                ? `
             <div class="field">
               <div class="label">Organization Email:</div>
               <div class="value">${data.formData.organizationEmail}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.organizationPhone ? `
+            ${
+              data.formData.organizationPhone
+                ? `
             <div class="field">
               <div class="label">Organization Phone:</div>
               <div class="value">${data.formData.organizationPhone}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.ward ? `
+            ${
+              data.formData.ward
+                ? `
             <div class="field">
               <div class="label">Ward:</div>
               <div class="value">${data.formData.ward}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.chairpersonName || data.formData.secretaryName || data.formData.treasurerName ? `
+            ${
+              data.formData.chairpersonName ||
+              data.formData.secretaryName ||
+              data.formData.treasurerName
+                ? `
             <h3 style="color: #8B2332; margin-top: 30px;">Officials</h3>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.chairpersonName ? `
+            ${
+              data.formData.chairpersonName
+                ? `
             <div class="field">
               <div class="label">Chairperson:</div>
               <div class="value">
@@ -298,9 +373,13 @@ export class EmailService {
                 ${data.formData.chairpersonEmail ? `<div><strong>Email:</strong> ${data.formData.chairpersonEmail}</div>` : ''}
               </div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.secretaryName ? `
+            ${
+              data.formData.secretaryName
+                ? `
             <div class="field">
               <div class="label">Secretary:</div>
               <div class="value">
@@ -311,9 +390,13 @@ export class EmailService {
                 ${data.formData.secretaryEmail ? `<div><strong>Email:</strong> ${data.formData.secretaryEmail}</div>` : ''}
               </div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
 
-            ${data.formData.treasurerName ? `
+            ${
+              data.formData.treasurerName
+                ? `
             <div class="field">
               <div class="label">Treasurer:</div>
               <div class="value">
@@ -324,80 +407,128 @@ export class EmailService {
                 ${data.formData.treasurerEmail ? `<div><strong>Email:</strong> ${data.formData.treasurerEmail}</div>` : ''}
               </div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.diasporaCountry ? `
+            ${
+              data.formData.diasporaCountry
+                ? `
             <div class="field">
               <div class="label">Diaspora / Country:</div>
               <div class="value">${data.formData.diasporaCountry}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.mpesaCode ? `
+            ${
+              data.formData.mpesaCode
+                ? `
             <div class="field">
               <div class="label">M-Pesa Code:</div>
               <div class="value">${data.formData.mpesaCode}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
             <h3 style="color: #8B2332; margin-top: 30px;">Ministry/Church Details</h3>
             
-            ${data.formData.churchName ? `
+            ${
+              data.formData.churchName
+                ? `
             <div class="field">
               <div class="label">Church/Ministry Name:</div>
               <div class="value">${data.formData.churchName}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.title ? `
+            ${
+              data.formData.title
+                ? `
             <div class="field">
               <div class="label">Title:</div>
               <div class="value">${data.formData.title}${data.formData.titleOther ? ` - ${data.formData.titleOther}` : ''}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.referralName || data.formData.referralApeckNumber || data.formData.referralPhone ? `
+            ${
+              data.formData.referralName ||
+              data.formData.referralApeckNumber ||
+              data.formData.referralPhone
+                ? `
             <h3 style="color: #8B2332; margin-top: 30px;">Referral Details</h3>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.referralName ? `
+            ${
+              data.formData.referralName
+                ? `
             <div class="field">
               <div class="label">Referral Name:</div>
               <div class="value">${data.formData.referralName}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.referralApeckNumber ? `
+            ${
+              data.formData.referralApeckNumber
+                ? `
             <div class="field">
               <div class="label">Referral APECK Number:</div>
               <div class="value">${data.formData.referralApeckNumber}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.referralPhone ? `
+            ${
+              data.formData.referralPhone
+                ? `
             <div class="field">
               <div class="label">Referral Phone:</div>
               <div class="value">${data.formData.referralPhone}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.signature || data.formData.declarationDate ? `
+            ${
+              data.formData.signature || data.formData.declarationDate
+                ? `
             <h3 style="color: #8B2332; margin-top: 30px;">Declaration</h3>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.signature ? `
+            ${
+              data.formData.signature
+                ? `
             <div class="field">
               <div class="label">Signature:</div>
               <div class="value">${data.formData.signature}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
-            ${data.formData.declarationDate ? `
+            ${
+              data.formData.declarationDate
+                ? `
             <div class="field">
               <div class="label">Declaration Date:</div>
               <div class="value">${data.formData.declarationDate}</div>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
             
             <div class="footer">
               <p>This is an automated notification from the APECK membership system.</p>
@@ -534,5 +665,38 @@ This is an automated confirmation email. Please do not reply to this message.
 
     return adminSent && applicantSent;
   }
-}
 
+  async sendPasswordResetEmail(payload: {
+    to: string;
+    name: string;
+    code: string;
+    expiresAt: Date;
+  }) {
+    const formattedExpiry = payload.expiresAt.toLocaleString();
+    const html = `
+      <div style="font-family: Arial, sans-serif; color: #1f1f1f; padding: 24px;">
+        <h2 style="color:#8B2332; margin-bottom: 16px;">Password reset request</h2>
+        <p>Hello ${payload.name},</p>
+        <p>We received a request to reset your APECK admin password. Use the verification code below:</p>
+        <div style="margin: 24px 0; font-size: 24px; font-weight: bold; letter-spacing: 6px; color:#8B2332;">
+          ${payload.code}
+        </div>
+        <p>This code expires on <strong>${formattedExpiry}</strong>. If you didn’t request this, you can safely ignore this email.</p>
+        <p style="margin-top: 32px;">— APECK Support</p>
+      </div>
+    `;
+    const text = `Hello ${payload.name},
+
+We received a request to reset your APECK admin password. Use this verification code: ${payload.code}
+It expires on ${formattedExpiry}. If you didn’t request this, you can ignore this email.
+
+— APECK Support`;
+
+    await this.sendEmail({
+      to: payload.to,
+      subject: 'Reset your APECK admin password',
+      html,
+      text,
+    });
+  }
+}

@@ -1,8 +1,20 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsOptional, IsEmail, IsString, IsEnum, IsBoolean, IsNumber } from 'class-validator';
-import { CreateEmailRecipientDto, RecipientType } from './create-email-recipient.dto';
+import {
+  IsOptional,
+  IsEmail,
+  IsString,
+  IsEnum,
+  IsBoolean,
+  IsNumber,
+} from 'class-validator';
+import {
+  CreateEmailRecipientDto,
+  RecipientType,
+} from './create-email-recipient.dto';
 
-export class UpdateEmailRecipientDto extends PartialType(CreateEmailRecipientDto) {
+export class UpdateEmailRecipientDto extends PartialType(
+  CreateEmailRecipientDto,
+) {
   @IsEmail()
   @IsOptional()
   email?: string;
@@ -23,4 +35,3 @@ export class UpdateEmailRecipientDto extends PartialType(CreateEmailRecipientDto
   @IsOptional()
   displayOrder?: number;
 }
-

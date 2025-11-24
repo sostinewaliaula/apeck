@@ -8,4 +8,3 @@ import { PesapalService } from './pesapal.service';
   exports: [PesapalService],
 })
 export class PaymentsModule {}
-

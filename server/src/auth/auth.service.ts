@@ -9,7 +9,6 @@ import { v4 as uuid } from 'uuid';
 import { KNEX_CONNECTION } from '../database/database.constants';
 import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-
 interface SessionMetadata {
   userAgent?: string;
   ipAddress?: string;
@@ -34,7 +33,6 @@ export interface AuthResult extends TokenBundle {
 @Injectable()
 export class AuthService {
   private readonly jwtSecrets: { access: string; refresh: string };
-
   private readonly jwtTtls: { access: StringValue; refresh: StringValue };
 
   constructor(
