@@ -50,14 +50,7 @@ type HousingFormState = {
   declarationDate: string;
 };
 
-declare global {
-  interface Window {
-    PaystackPop?: any;
-  }
-}
-
-const PAYSTACK_PUBLIC_KEY =
-  ((import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string | undefined) ?? '').trim();
+// Pesapal payment integration - no client-side SDK needed
 const APPLICATION_EMAIL = 'membership@apeck.org'; // TODO: Replace with official intake email
 const GOOGLE_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScI8o9LqnLQDI3TxtEL8BRuhvsfQn-dp2rTZ7cWkoxlQ9nNpQ/viewform';
@@ -669,16 +662,20 @@ export function Membership() {
     };
   }, []);
 
-  // Load Paystack inline script
+  // Handle Pesapal payment callback
   useEffect(() => {
-    const scriptId = 'paystack-inline';
-    if (document.getElementById(scriptId)) return;
-    const script = document.createElement('script');
-    script.id = scriptId;
-
-    script.src = 'https://js.paystack.co/v1/inline.js';
-    script.async = true;
-    document.body.appendChild(script);
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderTrackingId = urlParams.get('OrderTrackingId');
+    const orderMerchantReference = urlParams.get('OrderMerchantReference');
+    
+    if (orderTrackingId && orderMerchantReference) {
+      // Set the payment reference from callback
+      setPaymentReference(orderMerchantReference);
+      setPaymentMessage('Payment completed! Reference: ' + orderMerchantReference);
+      
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   useEffect(() => {
@@ -1015,7 +1012,7 @@ export function Membership() {
     }));
   };
 
-  const handleHousingPaystackPayment = () => {
+  const handleHousingPesapalPayment = async () => {
     if (!housingForm.email || !housingForm.phone || !housingForm.fullName) {
       setHousingPaymentMessage('Please fill in your full name, phone, and email before initiating payment.');
       return;
@@ -1025,53 +1022,51 @@ export function Membership() {
       setHousingPaymentMessage('Invalid membership tier amount. Please try again.');
       return;
     }
-    if (!PAYSTACK_PUBLIC_KEY) {
-      setHousingPaymentMessage('Payment gateway is not configured. Please contact support.');
-      return;
-    }
-    if (!window.PaystackPop) {
-      setHousingPaymentMessage('Payment gateway is loading. Please try again in a moment.');
-      return;
-    }
 
     setIsHousingPaying(true);
     setHousingPaymentMessage(null);
 
-    const handler = window.PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
-      email: housingForm.email,
-      amount: paymentAmount * 100,
-      currency: 'KES',
-      reference: `APECK-HOUSING-${Date.now()}`,
-      label: housingForm.fullName,
-      metadata: {
-        custom_fields: [
-          {
-            display_name: 'Applicant Phone',
-            variable_name: 'applicant_phone',
-            value: housingForm.phone,
-          },
-          {
-            display_name: 'Membership Tier',
-            variable_name: 'membership_tier',
-            value: selectedTier || 'Housing Corporations',
-          },
-        ],
-      },
-      callback: (response: { reference: string }) => {
-        setIsHousingPaying(false);
-        setHousingPaymentReference(response.reference);
-        setHousingPaymentMessage('Payment verified! Reference: ' + response.reference);
-      },
-      onClose: () => {
-        setIsHousingPaying(false);
-        if (!housingPaymentReference) {
-          setHousingPaymentMessage('Payment window closed before completion.');
-        }
-      },
-    });
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const reference = `APECK-HOUSING-${Date.now()}`;
+      
+      const response = await fetch(`${apiBaseUrl}/payments/pesapal/initialize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: paymentAmount,
+          currency: 'KES',
+          description: `APECK Housing Corporation Membership - ${selectedTier || 'Housing Corporations'}`,
+          email: housingForm.email,
+          phone: housingForm.phone,
+          firstName: housingForm.fullName.split(' ')[0] || housingForm.fullName,
+          lastName: housingForm.fullName.split(' ').slice(1).join(' ') || '',
+          reference: reference,
+        }),
+      });
 
-    handler.openIframe();
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to initialize payment');
+      }
+
+      if (data.orderTrackingId) {
+        setHousingPaymentReference(data.merchantReference || reference);
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received from payment gateway');
+      }
+    } catch (error) {
+      setIsHousingPaying(false);
+      setHousingPaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to initialize payment. Please try again.'
+      );
+    }
   };
 
   const handleSelectHousingCountry = (country: string) => {
@@ -1113,7 +1108,7 @@ export function Membership() {
     setIsHousingWardDropdownOpen(false);
   };
 
-  const handlePaystackPayment = () => {
+  const handlePesapalPayment = async () => {
     if (!individualForm.email || !individualForm.phone || !individualForm.fullName) {
       setPaymentMessage('Please fill in your name, phone, and email before initiating payment.');
       return;
@@ -1122,48 +1117,56 @@ export function Membership() {
       setPaymentMessage('Invalid membership tier amount. Please try again.');
       return;
     }
-    if (!PAYSTACK_PUBLIC_KEY) {
-      setPaymentMessage('Payment gateway is not configured. Please contact support.');
-      return;
-    }
-    if (!window.PaystackPop) {
-      setPaymentMessage('Payment gateway is loading. Please try again in a moment.');
-      return;
-    }
 
     setIsPaying(true);
     setPaymentMessage(null);
 
-    const handler = window.PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
-      email: individualForm.email,
-      amount: selectedTierAmount * 100, // Paystack accepts amount in base currency minor units
-      currency: 'KES',
-      reference: `APECK-${selectedTier?.replace(/\s+/g, '-').toUpperCase()}-${Date.now()}`,
-      label: individualForm.fullName,
-      metadata: {
-        custom_fields: [
-          { display_name: 'Phone Number', variable_name: 'phone_number', value: individualForm.phone },
-          { display_name: 'Membership Tier', variable_name: 'membership_tier', value: selectedTier || '' },
-        ],
-      },
-      callback: (response: { reference: string }) => {
-        setIsPaying(false);
-        setPaymentReference(response.reference);
-        setPaymentMessage('Payment verified! Reference: ' + response.reference);
-      },
-      onClose: () => {
-        setIsPaying(false);
-        if (!paymentReference) {
-          setPaymentMessage('Payment window closed before completion.');
-        }
-      },
-    });
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const reference = `APECK-${selectedTier?.replace(/\s+/g, '-').toUpperCase()}-${Date.now()}`;
+      
+      const response = await fetch(`${apiBaseUrl}/payments/pesapal/initialize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: selectedTierAmount,
+          currency: 'KES',
+          description: `APECK Membership - ${selectedTier || 'Individual Member'}`,
+          email: individualForm.email,
+          phone: individualForm.phone,
+          firstName: individualForm.fullName.split(' ')[0] || individualForm.fullName,
+          lastName: individualForm.fullName.split(' ').slice(1).join(' ') || '',
+          reference: reference,
+        }),
+      });
 
-    handler.openIframe();
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to initialize payment');
+      }
+
+      // Store the order tracking ID and reference
+      if (data.orderTrackingId) {
+        setPaymentReference(data.merchantReference || reference);
+        // Redirect to Pesapal payment page
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received from payment gateway');
+      }
+    } catch (error) {
+      setIsPaying(false);
+      setPaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to initialize payment. Please try again.'
+      );
+    }
   };
 
-  const handleCorporatePaystackPayment = () => {
+  const handleCorporatePesapalPayment = async () => {
     if (
       !corporateForm.organizationEmail ||
       !corporateForm.organizationPhone ||
@@ -1179,49 +1182,52 @@ export function Membership() {
       setCorporatePaymentMessage('Invalid membership tier amount. Please try again.');
       return;
     }
-    if (!PAYSTACK_PUBLIC_KEY) {
-      setCorporatePaymentMessage('Payment gateway is not configured. Please contact support.');
-      return;
-    }
-    if (!window.PaystackPop) {
-      setCorporatePaymentMessage('Payment gateway is loading. Please try again in a moment.');
-      return;
-    }
 
     setIsCorporatePaying(true);
     setCorporatePaymentMessage(null);
 
-    const handler = window.PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
-      email: corporateForm.organizationEmail,
-      amount: paymentAmount * 100,
-      currency: 'KES',
-      reference: `APECK-CORP-${Date.now()}`,
-      label: corporateForm.organizationName,
-      metadata: {
-        custom_fields: [
-          { display_name: 'Organization Phone', variable_name: 'organization_phone', value: corporateForm.organizationPhone },
-          {
-            display_name: 'Membership Tier',
-            variable_name: 'membership_tier',
-            value: selectedTier || 'Corporate Membership',
-          },
-        ],
-      },
-      callback: (response: { reference: string }) => {
-        setIsCorporatePaying(false);
-        setCorporatePaymentReference(response.reference);
-        setCorporatePaymentMessage('Payment verified! Reference: ' + response.reference);
-      },
-      onClose: () => {
-        setIsCorporatePaying(false);
-        if (!corporatePaymentReference) {
-          setCorporatePaymentMessage('Payment window closed before completion.');
-        }
-      },
-    });
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const reference = `APECK-CORP-${Date.now()}`;
+      
+      const response = await fetch(`${apiBaseUrl}/payments/pesapal/initialize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: paymentAmount,
+          currency: 'KES',
+          description: `APECK Corporate Membership - ${selectedTier || 'Corporate Membership'}`,
+          email: corporateForm.organizationEmail,
+          phone: corporateForm.organizationPhone,
+          firstName: corporateForm.organizationName.split(' ')[0] || corporateForm.organizationName,
+          lastName: corporateForm.organizationName.split(' ').slice(1).join(' ') || '',
+          reference: reference,
+        }),
+      });
 
-    handler.openIframe();
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to initialize payment');
+      }
+
+      if (data.orderTrackingId) {
+        setCorporatePaymentReference(data.merchantReference || reference);
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error('No redirect URL received from payment gateway');
+      }
+    } catch (error) {
+      setCorporatePaymentMessage(
+        error instanceof Error
+          ? `Error: ${error.message}`
+          : 'Failed to initialize payment. Please try again.',
+      );
+    } finally {
+      setIsCorporatePaying(false);
+    }
   };
 
   const closeIndividualModal = () => {
@@ -1247,9 +1253,9 @@ export function Membership() {
 
   const handleIndividualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Require Paystack payment reference (manual payments disabled)
+    // Require Pesapal payment reference (manual payments disabled)
     if (!paymentReference) {
-      setPaymentMessage('Please complete your Paystack payment before submitting the application.');
+      setPaymentMessage('Please complete your Pesapal payment before submitting the application.');
       return;
     }
 
@@ -1274,7 +1280,7 @@ export function Membership() {
           diasporaCountry: individualForm.diasporaCountry || undefined,
           mpesaCode: individualForm.mpesaCode || undefined,
           paymentReference: paymentReference,
-          paymentGateway: 'paystack',
+          paymentGateway: 'pesapal',
           amountPaid: selectedTierAmount || 0,
           membershipTier: selectedTier ?? 'Individual Member',
         }),
@@ -1313,7 +1319,7 @@ export function Membership() {
     e.preventDefault();
 
     if (!corporatePaymentReference) {
-      setCorporatePaymentMessage('Please complete your Paystack payment before submitting the application.');
+      setCorporatePaymentMessage('Please complete your Pesapal payment before submitting the application.');
       return;
     }
 
@@ -1335,7 +1341,7 @@ export function Membership() {
           county: corporateForm.county,
           subCounty: corporateForm.subCounty || undefined,
           paymentReference: corporatePaymentReference,
-          paymentGateway: 'paystack',
+          paymentGateway: 'pesapal',
           amountPaid: selectedTierAmount,
           membershipTier: selectedTier ?? 'Corporate Membership',
           organizationName: corporateForm.organizationName,
@@ -1396,7 +1402,7 @@ export function Membership() {
     e.preventDefault();
 
     if (!housingPaymentReference) {
-      setHousingPaymentMessage('Please complete your Paystack payment before submitting the application.');
+      setHousingPaymentMessage('Please complete your Pesapal payment before submitting the application.');
       return;
     }
 
@@ -1423,7 +1429,7 @@ export function Membership() {
           referralIdNumber: housingForm.referralIdNumber || undefined,
           referralPhone: housingForm.referralPhone || undefined,
           paymentReference: housingPaymentReference,
-          paymentGateway: 'paystack',
+          paymentGateway: 'pesapal',
           amountPaid: selectedTierAmount || 5000,
           membershipTier: selectedTier ?? 'Housing Corporations',
           signature: housingForm.signature,
@@ -3140,29 +3146,29 @@ export function Membership() {
                   </div>
                   
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment Instructions (Paystack):</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment Instructions (Pesapal):</p>
                     <div className="bg-white dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 rounded-lg p-4 space-y-2 border border-gray-200 dark:border-gray-700">
-                      <p className="font-semibold text-gray-900 dark:text-gray-100">Paystack (supports M-Pesa STK, card, bank)</p>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100">Pesapal (supports M-Pesa STK, card, bank)</p>
                       <ol className="list-decimal list-inside space-y-1">
-                        <li>Click <strong>Pay with Paystack</strong> below.</li>
+                        <li>Click <strong>Pay with Pesapal</strong> below.</li>
                         <li>Select your preferred payment method (M-Pesa STK push, card, bank transfer).</li>
                         <li>Complete payment. A reference will appear automatically once successful.</li>
                       </ol>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        Keep the Paystack reference for your records. We receive it automatically.
+                        Keep the Pesapal reference for your records. We receive it automatically.
                       </p>
                     </div>
                   </div>
 
                   <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Pay with Paystack</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Pay with Pesapal</p>
                 <button
                   type="button"
-                  onClick={handlePaystackPayment}
+                  onClick={handlePesapalPayment}
                       disabled={isPaying || !individualForm.email || !individualForm.phone || !individualForm.fullName}
                       className="px-5 py-3 rounded-xl bg-[#8B2332] text-white font-semibold hover:bg-[#6B1A28] transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {isPaying ? 'Processing Payment...' : 'Pay with Paystack'}
+                  {isPaying ? 'Processing Payment...' : 'Pay with Pesapal'}
                 </button>
                 {paymentReference && (
                       <p className="text-green-600 dark:text-green-400 font-semibold mt-2 text-sm">
@@ -3171,7 +3177,7 @@ export function Membership() {
                     )}
                     <div className="mt-3 text-sm text-gray-600 dark:text-gray-300">
                       <label className="space-y-2 block">
-                        Paystack Reference
+                        Pesapal Reference
                         <input
                           type="text"
                           value={paymentReference ?? ''}
@@ -3594,7 +3600,7 @@ export function Membership() {
                         Registration Payment Details
                       </h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Payments are completed securely through Paystack. Provide any additional
+                        Payments are completed securely through Pesapal. Provide any additional
                         reference in case of M-Pesa confirmation messages.
                       </p>
                     </div>
@@ -3603,7 +3609,7 @@ export function Membership() {
                     <div className="rounded-xl border border-dashed border-[#8B2332]/40 bg-[#FDF3F4] dark:bg-[#2a1619]/60 p-4 space-y-3">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-[#8B2332] dark:text-[#F5C3CB]">
-                          Paystack Payment
+                          Pesapal Payment
                         </p>
                         <span className="text-xs font-semibold text-white bg-[#8B2332] rounded-full px-3 py-1">
                           Required
@@ -3614,11 +3620,11 @@ export function Membership() {
                       </p>
                       <button
                         type="button"
-                        onClick={handleCorporatePaystackPayment}
+                        onClick={handleCorporatePesapalPayment}
                         disabled={isCorporatePaying}
                         className="w-full px-4 py-3 text-sm font-semibold rounded-xl bg-[#8B2332] text-white shadow-lg hover:bg-[#6B1A28] transition disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        {isCorporatePaying ? 'Processing...' : 'Pay with Paystack'}
+                        {isCorporatePaying ? 'Processing...' : 'Pay with Pesapal'}
                       </button>
                       <label className="space-y-1 text-xs text-[#6B1A28] dark:text-[#F5C3CB] block">
                         Paystack Reference *
@@ -4093,7 +4099,7 @@ export function Membership() {
                           Mandatory Registration Fee: KES {(selectedTierAmount || 5000).toLocaleString('en-KE')}
                         </p>
                         <p className="text-xs text-[#6B1A28] dark:text-[#FBE3E7]">
-                          Complete the secure Paystack payment before submitting this form.
+                          Complete the secure Pesapal payment before submitting this form.
                         </p>
                       </div>
                       <span className="inline-block px-4 py-1 text-xs font-semibold text-white bg-[#8B2332] rounded-full">
@@ -4104,25 +4110,25 @@ export function Membership() {
                       <div className="rounded-xl border border-[#E6C0C5] dark:border-[#4B252C] bg-white/80 dark:bg-gray-900/70 p-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <p className="text-sm font-semibold text-[#8B2332] dark:text-[#F5C3CB]">
-                            Paystack Payment
+                            Pesapal Payment
                           </p>
                           <span className="text-xs font-semibold text-white bg-[#8B2332] rounded-full px-3 py-1">
                             Required
                           </span>
                         </div>
                         <p className="text-sm text-[#6B1A28] dark:text-[#FBE3E7]">
-                          Initiate payment first, then submit the application once you have a Paystack reference.
+                          Initiate payment first, then submit the application once you have a Pesapal reference.
                         </p>
                         <button
                           type="button"
-                          onClick={handleHousingPaystackPayment}
+                          onClick={handleHousingPesapalPayment}
                           disabled={isHousingPaying}
                           className="w-full px-4 py-3 text-sm font-semibold rounded-xl bg-[#8B2332] text-white shadow-lg hover:bg-[#6B1A28] transition disabled:opacity-60 disabled:cursor-not-allowed"
                         >
-                          {isHousingPaying ? 'Processing...' : 'Pay with Paystack'}
+                          {isHousingPaying ? 'Processing...' : 'Pay with Pesapal'}
                         </button>
                         <label className="space-y-1 text-xs text-[#6B1A28] dark:text-[#F5C3CB] block">
-                          Paystack Reference *
+                          Pesapal Reference *
                           <input
                             type="text"
                             value={housingPaymentReference ?? ''}
@@ -4136,8 +4142,8 @@ export function Membership() {
                         <p className="font-semibold text-gray-900 dark:text-gray-100">Payment Notes</p>
                         <ul className="space-y-2 list-disc pl-5">
                           <li>Use the same full name, phone, and email listed in this application.</li>
-                          <li>Allow pop-ups in your browser so the Paystack iframe can open.</li>
-                          <li>The reference appears automatically once Paystack confirms your payment.</li>
+                          <li>You will be redirected to Pesapal's secure payment page.</li>
+                          <li>The reference appears automatically once Pesapal confirms your payment.</li>
                           <li>Contact support if you are charged but do not receive a reference.</li>
                         </ul>
                       </div>

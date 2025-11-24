@@ -13,7 +13,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('diaspora_country', 100).nullable();
     table.string('mpesa_code', 100).nullable();
     table.string('payment_reference', 255).notNullable();
-    table.string('payment_gateway', 50).notNullable().defaultTo('paystack');
+    table.string('payment_gateway', 50).notNullable().defaultTo('pesapal');
     table.decimal('amount_paid', 10, 2).notNullable();
     table.string('membership_tier', 100).notNullable().defaultTo('Individual Member');
     table.enum('status', ['pending', 'approved', 'rejected', 'completed']).notNullable().defaultTo('pending');

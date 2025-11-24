@@ -16,6 +16,7 @@ import { EventsModule } from './events/events.module';
 import { MembershipModule } from './membership/membership.module';
 import { EmailRecipientsModule } from './email-recipients/email-recipients.module';
 import { ContactModule } from './contact/contact.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ContactModule } from './contact/contact.module';
     MembershipModule,
     EmailRecipientsModule,
     ContactModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,5 +34,10 @@ export default () => {
       membershipRecipient: process.env.MEMBERSHIP_EMAIL ?? 'membership@apeck.co.ke',
       contactRecipient: process.env.CONTACT_EMAIL ?? 'info@apeck.co.ke',
     },
+    pesapal: {
+      consumerKey: process.env.PESAPAL_CONSUMER_KEY ?? '',
+      consumerSecret: process.env.PESAPAL_CONSUMER_SECRET ?? '',
+      sandbox: process.env.PESAPAL_SANDBOX !== 'false',
+    },
   };
 };

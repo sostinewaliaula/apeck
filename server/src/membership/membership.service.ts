@@ -23,9 +23,9 @@ export class MembershipService {
   async createApplication(dto: CreateMembershipApplicationDto) {
     const id = uuid();
 
-    // Determine payment reference - use Paystack reference if available, otherwise M-Pesa code
+    // Determine payment reference - use Pesapal reference if available, otherwise M-Pesa code
     const paymentRef = dto.paymentReference || dto.mpesaCode || `MPESA-${Date.now()}`;
-    const paymentGateway = dto.paymentGateway || (dto.paymentReference ? 'paystack' : 'mpesa');
+    const paymentGateway = dto.paymentGateway || (dto.paymentReference ? 'pesapal' : 'mpesa');
     const amountPaid = dto.amountPaid || 0;
 
     const [application] = await this.knex('membership_applications')
