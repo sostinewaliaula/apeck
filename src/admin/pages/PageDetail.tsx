@@ -1,6 +1,6 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AlertTriangle, ArrowLeft, Braces, Check, Save, Trash2, Plus, Trash } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Braces, Check, Save, Trash2, Plus, Trash, ChevronDown } from 'lucide-react';
 
 import { AdminLayout } from '../components/AdminLayout';
 import { useAuth } from '../auth-context';
@@ -41,6 +41,9 @@ export function AdminPageDetail() {
   const [sectionDrafts, setSectionDrafts] = useState<Record<string, Record<string, unknown>>>({});
   const [newSection, setNewSection] = useState(blankNewSection);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isMetaOpen, setIsMetaOpen] = useState(true);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
 
   useEffect(() => {
     if (!accessToken || !pageId || pageId === 'undefined') return;
@@ -57,10 +60,13 @@ export function AdminPageDetail() {
           seoDescription: data.seoDescription ?? '',
         });
         const drafts: Record<string, Record<string, unknown>> = {};
+        const toggles: Record<string, boolean> = {};
         data.sections.forEach((section) => {
           drafts[section.id] = section.content ?? {};
+          toggles[section.id] = false;
         });
         setSectionDrafts(drafts);
+        setOpenSections(toggles);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load page');
@@ -256,7 +262,13 @@ export function AdminPageDetail() {
       }
     >
       <div className="space-y-6">
-        <form className="rounded-2xl border border-[#F0E7DA] bg-white/90 p-5 space-y-4" onSubmit={updateMeta}>
+        <CollapsiblePanel
+          title="Metadata & SEO"
+          subtitle="Title, slug, excerpt, and search engine details."
+          isOpen={isMetaOpen}
+          onToggle={() => setIsMetaOpen((prev) => !prev)}
+        >
+          <form className="space-y-4" onSubmit={updateMeta}>
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Title</label>
@@ -327,145 +339,205 @@ export function AdminPageDetail() {
               Current status: {page.status}
             </span>
           </div>
-        </form>
+          </form>
+        </CollapsiblePanel>
 
-        <div className="rounded-2xl border border-[#F0E7DA] bg-white/90 p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-[#B15C5C]">Sections</p>
-              <p className="text-xs text-[#6B4E3D]/80">Hero, stats, CTA, and more.</p>
-            </div>
-          </div>
-          {orderedSections.length === 0 && <p className="text-sm text-[#6B4E3D]">No sections added yet.</p>}
-          <div className="space-y-4">
-            {orderedSections.map((section) => (
-              <div key={section.id} className="rounded-2xl border border-[#E7DED1] bg-[#FFFDF9] p-4 space-y-3">
-                <div className="flex flex-wrap gap-3 items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-[#2F1E1A]">{section.key}</p>
-                    <p className="text-xs text-[#6B4E3D]/70">Order #{section.displayOrder}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1 rounded-xl border border-[#CAB9A7] px-3 py-1 text-xs text-[#6B4E3D]"
-                      onClick={() => saveSection(section)}
-                    >
-                      <Save size={12} />
-                      Save section
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1 rounded-xl border border-red-200 px-3 py-1 text-xs text-red-700"
-                      onClick={() => removeSection(section.id)}
-                    >
-                      <Trash2 size={12} />
-                      Delete
-                    </button>
-                  </div>
+        {orderedSections.length === 0 && (
+          <p className="text-sm text-[#6B4E3D]">No sections added yet. Use “Add section” to create one.</p>
+        )}
+        <div className="space-y-4">
+          {orderedSections.map((section) => (
+            <CollapsiblePanel
+              key={section.id}
+              title={section.key}
+              subtitle={`Order #${section.displayOrder} • ${section.status}`}
+              isOpen={openSections[section.id] ?? false}
+              onToggle={() =>
+                setOpenSections((prev) => ({
+                  ...prev,
+                  [section.id]: !prev[section.id],
+                }))
+              }
+              actions={
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1 rounded-xl border border-[#CAB9A7] px-3 py-1 text-xs text-[#6B4E3D]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      saveSection(section);
+                    }}
+                  >
+                    <Save size={12} />
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1 rounded-xl border border-red-200 px-3 py-1 text-xs text-red-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSection(section.id);
+                    }}
+                  >
+                    <Trash2 size={12} />
+                    Delete
+                  </button>
                 </div>
-                {(() => {
-                  const schema = getSectionSchema(section.key);
-                  if (!schema) {
-                    return (
-                      <>
-                        <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Content (JSON)</label>
-                        <textarea
-                          className="w-full rounded-xl border border-[#E7DED1] bg-white px-4 py-2 font-mono text-xs"
-                          rows={8}
-                          value={JSON.stringify(sectionDrafts[section.id] ?? {}, null, 2)}
-                          onChange={(e) => {
-                            try {
-                              const parsed = JSON.parse(e.target.value);
-                              setSectionDrafts((prev) => ({ ...prev, [section.id]: parsed }));
-                            } catch {
-                              // ignore parse error until valid JSON
-                            }
-                          }}
-                        />
-                      </>
-                    );
-                  }
+              }
+            >
+              {(() => {
+                const schema = getSectionSchema(section.key);
+                if (!schema) {
                   return (
-                    <div className="space-y-4">
-                      {schema.fields.map((field) => (
-                        <SectionFieldEditor
-                          key={`${section.id}-${field.name}`}
-                          field={field}
-                          sectionId={section.id}
-                          draft={sectionDrafts[section.id] ?? {}}
-                          onChange={updateDraftField}
-                          accessToken={accessToken}
-                        />
-                      ))}
-                    </div>
+                    <>
+                      <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Content (JSON)</label>
+                      <textarea
+                        className="w-full rounded-xl border border-[#E7DED1] bg-white px-4 py-2 font-mono text-xs"
+                        rows={8}
+                        value={JSON.stringify(sectionDrafts[section.id] ?? {}, null, 2)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            setSectionDrafts((prev) => ({ ...prev, [section.id]: parsed }));
+                          } catch {
+                            // ignore parse error until valid JSON
+                          }
+                        }}
+                      />
+                    </>
                   );
-                })()}
-                <div className="flex flex-wrap gap-3 text-xs text-[#6B4E3D]/80">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#E6F6EF] px-3 py-1 text-[#1E7A55]">
-                    <Braces size={12} />
-                    {section.status}
-                  </span>
-                </div>
+                }
+                return (
+                  <div className="space-y-4">
+                    {schema.fields.map((field) => (
+                      <SectionFieldEditor
+                        key={`${section.id}-${field.name}`}
+                        field={field}
+                        sectionId={section.id}
+                        draft={sectionDrafts[section.id] ?? {}}
+                        onChange={updateDraftField}
+                        accessToken={accessToken}
+                      />
+                    ))}
+                  </div>
+                );
+              })()}
+              <div className="flex flex-wrap gap-3 text-xs text-[#6B4E3D]/80 pt-4">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#E6F6EF] px-3 py-1 text-[#1E7A55]">
+                  <Braces size={12} />
+                  {section.status}
+                </span>
               </div>
-            ))}
-          </div>
+            </CollapsiblePanel>
+          ))}
         </div>
 
-        <form className="rounded-2xl border border-dashed border-[#F0E7DA] bg-[#FFF8EE] p-5 space-y-3" onSubmit={addSection}>
-          <p className="text-sm uppercase tracking-wide text-[#B15C5C]">Add section</p>
-          <div className="grid gap-3 md:grid-cols-3">
-            <div>
-              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Section type</label>
-              <select
-                className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
-                value={newSection.key}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, key: e.target.value }))}
-                required
-              >
-                <option value="">Select section</option>
-                {SECTION_SCHEMAS.map((schema) => (
-                  <option key={schema.key} value={schema.key}>
-                    {schema.title}
-                  </option>
-                ))}
-              </select>
-              {newSection.key && getSectionSchema(newSection.key)?.description && (
-                <p className="text-xs text-[#6B4E3D]/70 mt-1">{getSectionSchema(newSection.key)?.description}</p>
-              )}
+        <CollapsiblePanel
+          title="Add section"
+          subtitle="Drop in a new hero, CTA, testimonials, or any custom block."
+          isOpen={isAddSectionOpen}
+          onToggle={() => setIsAddSectionOpen((prev) => !prev)}
+          tone="muted"
+        >
+          <form className="space-y-3" onSubmit={addSection}>
+            <div className="grid gap-3 md:grid-cols-3">
+              <div>
+                <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Section type</label>
+                <select
+                  className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+                  value={newSection.key}
+                  onChange={(e) => setNewSection((prev) => ({ ...prev, key: e.target.value }))}
+                  required
+                >
+                  <option value="">Select section</option>
+                  {SECTION_SCHEMAS.map((schema) => (
+                    <option key={schema.key} value={schema.key}>
+                      {schema.title}
+                    </option>
+                  ))}
+                </select>
+                {newSection.key && getSectionSchema(newSection.key)?.description && (
+                  <p className="text-xs text-[#6B4E3D]/70 mt-1">{getSectionSchema(newSection.key)?.description}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Order</label>
+                <input
+                  type="number"
+                  className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+                  value={newSection.displayOrder}
+                  onChange={(e) => setNewSection((prev) => ({ ...prev, displayOrder: Number(e.target.value) }))}
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Status</label>
+                <select
+                  className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
+                  value={newSection.status}
+                  onChange={(e) => setNewSection((prev) => ({ ...prev, status: e.target.value as 'draft' | 'published' }))}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Order</label>
-              <input
-                type="number"
-                className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
-                value={newSection.displayOrder}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, displayOrder: Number(e.target.value) }))}
-              />
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-wide text-[#6B4E3D]/70">Status</label>
-              <select
-                className="mt-1 w-full rounded-xl border border-[#E7DED1] px-3 py-2 text-sm"
-                value={newSection.status}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, status: e.target.value as 'draft' | 'published' }))}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#8B2332] px-4 py-2 text-sm font-semibold text-white hover:bg-[#761c29]"
-          >
-            Add section
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#8B2332] px-4 py-2 text-sm font-semibold text-white hover:bg-[#761c29]"
+            >
+              Add section
+            </button>
+          </form>
+        </CollapsiblePanel>
       </div>
     </AdminLayout>
   );
 }
+
+type CollapsiblePanelProps = {
+  title: string;
+  subtitle?: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  actions?: ReactNode;
+  tone?: 'default' | 'muted';
+  children: ReactNode;
+};
+
+const CollapsiblePanel = ({
+  title,
+  subtitle,
+  isOpen,
+  onToggle,
+  actions,
+  tone = 'default',
+  children,
+}: CollapsiblePanelProps) => (
+  <section
+    className={`rounded-2xl border ${
+      tone === 'muted' ? 'border-dashed border-[#F0E7DA] bg-[#FFF8EE]' : 'border-[#F0E7DA] bg-white/90'
+    } p-4`}
+  >
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between rounded-xl bg-transparent text-left text-[#2F1E1A]"
+      >
+        <div>
+          <p className="text-sm font-semibold">{title}</p>
+          {subtitle && <p className="text-xs text-[#6B4E3D]/80">{subtitle}</p>}
+        </div>
+        <ChevronDown
+                size={18}
+                className={`transition-transform ${isOpen ? 'rotate-180 text-[#8B2332]' : 'text-[#6B4E3D]'}`}
+              />
+      </button>
+      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    </div>
+    {isOpen && <div className="pt-4">{children}</div>}
+  </section>
+);
 
 type SectionFieldEditorProps = {
   field: SectionField;
