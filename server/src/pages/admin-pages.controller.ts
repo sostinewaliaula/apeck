@@ -17,17 +17,30 @@ import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
+import { UpdateRetentionDto } from './dto/update-retention.dto';
 import { PagesService } from './pages.service';
+import { ContentSettingsService } from './content-settings.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('editor', 'admin')
 @Controller('admin/pages')
 export class AdminPagesController {
-  constructor(private readonly pagesService: PagesService) {}
+  constructor(
+    private readonly pagesService: PagesService,
+    private readonly contentSettingsService: ContentSettingsService,
+  ) {}
 
   @Get()
-  list(@Query('slug') slug?: string) {
-    return this.pagesService.listPages(slug ? { slug } : undefined);
+  list(
+    @Query('slug') slug?: string,
+    @Query('includeDeleted') includeDeleted?: string,
+    @Query('trashed') trashed?: string,
+  ) {
+    return this.pagesService.listPages({
+      slug,
+      includeDeleted: includeDeleted === 'true',
+      trashedOnly: trashed === 'true',
+    });
   }
 
   @Get(':id')
@@ -66,5 +79,27 @@ export class AdminPagesController {
   @Delete('sections/:sectionId')
   removeSection(@Param('sectionId') sectionId: string) {
     return this.pagesService.deleteSection(sectionId);
+  }
+
+  @Post(':id/restore')
+  restorePage(@Param('id') id: string) {
+    return this.pagesService.restorePage(id);
+  }
+
+  @Delete(':id')
+  removePage(@Param('id') id: string, @Query('force') force?: string) {
+    return this.pagesService.deletePage(id, { force: force === 'true' });
+  }
+
+  @Get('settings/trash-retention')
+  async getRetentionSetting() {
+    const days = await this.contentSettingsService.getTrashRetentionDays();
+    return { days };
+  }
+
+  @Patch('settings/trash-retention')
+  async updateRetentionSetting(@Body() dto: UpdateRetentionDto) {
+    const days = await this.contentSettingsService.updateTrashRetentionDays(dto.days);
+    return { days };
   }
 }

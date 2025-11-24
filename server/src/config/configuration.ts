@@ -39,5 +39,8 @@ export default () => {
       consumerSecret: process.env.PESAPAL_CONSUMER_SECRET ?? '',
       sandbox: process.env.PESAPAL_SANDBOX !== 'false',
     },
+    content: {
+      trashRetentionDays: parseInt(process.env.CONTENT_TRASH_RETENTION_DAYS ?? '30', 10),
+    },
   };
 };

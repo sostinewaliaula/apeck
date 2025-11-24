@@ -286,12 +286,19 @@ export type PageDetail = {
   sections: PageSection[];
 };
 
-export function fetchPages(accessToken: string | null, slug?: string) {
+export function fetchPages(
+  accessToken: string | null,
+  options?: { slug?: string; trashed?: boolean; includeDeleted?: boolean },
+) {
   if (!accessToken) return Promise.resolve([]);
   return request<PageResponse[]>('/admin/pages', {
     method: 'GET',
     accessToken,
-    query: { slug },
+    query: {
+      slug: options?.slug,
+      trashed: options?.trashed ? 'true' : undefined,
+      includeDeleted: options?.includeDeleted ? 'true' : undefined,
+    },
   }).then((pages) => pages.map(normalizePage));
 }
 
@@ -365,6 +372,43 @@ export function publishPage(accessToken: string, pageId: string) {
     method: 'POST',
     accessToken,
   }).then(normalizePage);
+}
+
+export function deletePage(accessToken: string, pageId: string) {
+  return request<void>(`/admin/pages/${pageId}`, {
+    method: 'DELETE',
+    accessToken,
+  });
+}
+
+export function restorePage(accessToken: string, pageId: string) {
+  return request<PageResponse>(`/admin/pages/${pageId}/restore`, {
+    method: 'POST',
+    accessToken,
+  }).then(normalizePage);
+}
+
+export function forceDeletePage(accessToken: string, pageId: string) {
+  return request<void>(`/admin/pages/${pageId}`, {
+    method: 'DELETE',
+    accessToken,
+    query: { force: 'true' },
+  });
+}
+
+export function fetchPageSettings(accessToken: string) {
+  return request<{ days: number }>('/admin/pages/settings/trash-retention', {
+    method: 'GET',
+    accessToken,
+  });
+}
+
+export function updatePageSettings(accessToken: string, days: number) {
+  return request<{ days: number }>('/admin/pages/settings/trash-retention', {
+    method: 'PATCH',
+    accessToken,
+    body: JSON.stringify({ days }),
+  });
 }
 
 export type SectionPayload = {
